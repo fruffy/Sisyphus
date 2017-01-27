@@ -8,19 +8,23 @@ import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
-//import com.google.common.base.Strings;
+/*
+ * The parser class
+ * Takes a filename and attempts to parse it
+ * Right now we only have a generic file reader
+ * 
+*/
 public class SyntaxParser {
-	String fileName;
-	BufferedReader inputBuffer = null;
 
-	public SyntaxParser(String fileName) {
-		this.fileName = fileName;
+	String fileName;
+	BufferedReader inputBuffer;
+
+	public SyntaxParser(String fileName){
+		this.fileName = fileName;		
 	}
 
-	public BufferedReader getParsedObject() throws FileNotFoundException, IOException {
-		FileReader inputReader;
-		inputReader = new FileReader(fileName);
-		inputBuffer = new BufferedReader(inputReader);
+	public BufferedReader getParsedObject() throws FileNotFoundException {
+		BufferedReader inputBuffer = new BufferedReader(new FileReader (fileName));
 		return inputBuffer;
 	}
 
@@ -28,6 +32,10 @@ public class SyntaxParser {
 		inputBuffer.close();
 	}
 
+	/********************************************************************************************/
+	/*
+	 * Functions imported from the javaparser lib
+	 */
 	public void parse(String fileName) {
 		try {
 			File file = new File(fileName);
