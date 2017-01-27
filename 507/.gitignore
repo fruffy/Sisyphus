@@ -1,2 +1,12 @@
-/bin/
-/target/
+lib
+bin
+.manager
+target
+.settings
+*~
+/target
+.project
+.classpath
+.idea/
+*.iml
+release.properties
