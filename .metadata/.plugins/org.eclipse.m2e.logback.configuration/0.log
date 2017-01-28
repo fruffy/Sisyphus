@@ -1,0 +1,262 @@
+2017-01-27 17:18:05,420 [Worker-2] INFO  c.g.t.t.d.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2017-01-27 17:18:43,293 [Worker-3] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-clean-plugin/2.5/maven-clean-plugin-2.5.jar
+2017-01-27 17:18:43,433 [Worker-3] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-clean-plugin/2.5/maven-clean-plugin-2.5.jar
+2017-01-27 17:18:43,823 [Worker-3] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-install-plugin/2.4/maven-install-plugin-2.4.jar
+2017-01-27 17:18:43,881 [Worker-3] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-install-plugin/2.4/maven-install-plugin-2.4.jar
+2017-01-27 17:18:45,701 [Worker-3] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: 507:507:0.0.1-SNAPSHOT @ /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/pom.xml.
+2017-01-27 17:18:45,909 [Thread-8] ERROR org.eclipse.jgit.util.FS - fatal: Could not switch to '/Applications/Xcode.app/Contents/Developer/usr/etc/': No such file or directory
+
+2017-01-27 17:18:45,914 [Worker-3] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/com/github/javaparser/javaparser-core/3.0.0/javaparser-core-3.0.0.pom
+2017-01-27 17:18:45,948 [Worker-3] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/com/github/javaparser/javaparser-core/3.0.0/javaparser-core-3.0.0.pom
+2017-01-27 17:18:45,983 [Worker-3] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/com/github/javaparser/javaparser-parent/3.0.0/javaparser-parent-3.0.0.pom
+2017-01-27 17:18:46,018 [Worker-3] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/com/github/javaparser/javaparser-parent/3.0.0/javaparser-parent-3.0.0.pom
+2017-01-27 17:18:46,057 [Worker-3] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/com/github/javaparser/javaparser-core/3.0.0/javaparser-core-3.0.0.jar
+2017-01-27 17:18:47,102 [Worker-3] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/com/github/javaparser/javaparser-core/3.0.0/javaparser-core-3.0.0.jar
+2017-01-27 17:18:47,155 [Worker-3] WARN  o.e.a.i.i.DefaultRepositoryEventDispatcher - Failed to dispatch repository event to org.eclipse.m2e.core.internal.embedder.EclipseRepositoryListener: null
+2017-01-27 17:18:47,245 [Worker-0] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: 507:507:0.0.1-SNAPSHOT @ /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/pom.xml.
+2017-01-27 17:18:48,000 [Worker-0] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:18:48,001 [Worker-0] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:18:48,006 [Worker-0] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:18:48,007 [Worker-0] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:18:48,550 [Worker-13] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:18:48,553 [Worker-13] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:18:48,557 [Worker-13] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:18:48,558 [Worker-13] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:18:48,688 [Worker-13] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using NULL lifecycle mapping for MavenProject: com.github.javaparser:javaparser-parent:3.0.2-SNAPSHOT @ /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/javaparser/pom.xml.
+2017-01-27 17:18:49,777 [Worker-5] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: 507:507:0.0.1-SNAPSHOT @ /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/pom.xml.
+2017-01-27 17:18:51,018 [Worker-6] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:18:51,019 [Worker-6] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:18:51,024 [Worker-6] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:18:51,025 [Worker-6] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:22:14,738 [Worker-7] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:22:14,744 [Worker-7] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:22:14,746 [Worker-7] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:22:14,747 [Worker-7] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:34:02,289 [Worker-14] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:34:02,300 [Worker-14] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:34:02,303 [Worker-14] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:34:02,304 [Worker-14] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:35:53,974 [Worker-14] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:35:53,981 [Worker-14] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:35:53,983 [Worker-14] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:35:53,984 [Worker-14] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:36:25,913 [Worker-19] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:36:25,925 [Worker-19] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:36:25,927 [Worker-19] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:36:25,928 [Worker-19] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:38:32,375 [Worker-16] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:38:32,383 [Worker-16] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:38:32,385 [Worker-16] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:38:32,386 [Worker-16] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:39:25,434 [Worker-15] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:39:25,440 [Worker-15] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:39:25,442 [Worker-15] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:39:25,443 [Worker-15] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:41:08,137 [Worker-21] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:41:08,141 [Worker-21] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:41:08,145 [Worker-21] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:41:08,145 [Worker-21] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:42:45,212 [Worker-14] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:42:45,220 [Worker-14] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:42:45,221 [Worker-14] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:42:45,222 [Worker-14] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:42:58,074 [Worker-14] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:42:58,076 [Worker-14] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:42:58,078 [Worker-14] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:42:58,079 [Worker-14] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:43:08,311 [Worker-15] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:43:08,316 [Worker-15] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:43:08,318 [Worker-15] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:43:08,318 [Worker-15] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:43:18,958 [Worker-14] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:43:18,966 [Worker-14] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:43:18,968 [Worker-14] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:43:18,969 [Worker-14] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:45:29,724 [Worker-14] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:45:29,732 [Worker-14] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:45:29,734 [Worker-14] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:45:29,735 [Worker-14] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:46:03,336 [Worker-16] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:46:03,339 [Worker-16] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:46:03,344 [Worker-16] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:46:03,345 [Worker-16] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:46:40,051 [Worker-5] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:46:40,052 [Worker-5] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:46:40,054 [Worker-5] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:46:40,054 [Worker-5] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:46:51,608 [Worker-21] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:46:51,613 [Worker-21] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:46:51,616 [Worker-21] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:46:51,617 [Worker-21] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:48:19,558 [Worker-23] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:48:19,565 [Worker-23] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:48:19,567 [Worker-23] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:48:19,568 [Worker-23] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 17:49:08,209 [Worker-5] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:49:08,215 [Worker-5] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 17:49:08,217 [Worker-5] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 17:49:08,218 [Worker-5] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 18:00:48,738 [Worker-22] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:00:48,746 [Worker-22] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 18:00:48,748 [Worker-22] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:00:48,749 [Worker-22] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 18:03:40,797 [Worker-16] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:03:40,805 [Worker-16] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 18:03:40,806 [Worker-16] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:03:40,806 [Worker-16] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 18:08:34,365 [Worker-25] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:08:34,372 [Worker-25] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 18:08:34,373 [Worker-25] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:08:34,374 [Worker-25] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 18:09:22,116 [Worker-15] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:09:22,119 [Worker-15] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 18:09:22,120 [Worker-15] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:09:22,121 [Worker-15] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 18:10:21,723 [Worker-16] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:10:21,726 [Worker-16] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 18:10:21,727 [Worker-16] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:10:21,728 [Worker-16] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 18:11:01,034 [Worker-5] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:11:01,040 [Worker-5] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 18:11:01,043 [Worker-5] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:11:01,044 [Worker-5] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 18:13:45,515 [Worker-25] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:13:45,524 [Worker-25] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 18:13:45,526 [Worker-25] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:13:45,527 [Worker-25] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 18:14:17,956 [Worker-25] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:14:17,959 [Worker-25] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 18:14:17,960 [Worker-25] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:14:17,961 [Worker-25] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 18:48:38,717 [Worker-28] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:48:38,724 [Worker-28] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 18:48:38,726 [Worker-28] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:48:38,726 [Worker-28] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 18:49:53,156 [Worker-27] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:49:53,159 [Worker-27] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 18:49:53,173 [Worker-27] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:49:53,174 [Worker-27] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 18:50:00,937 [Worker-27] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:50:00,940 [Worker-27] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 18:50:00,941 [Worker-27] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:50:00,944 [Worker-27] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 18:52:54,405 [Worker-28] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:52:54,413 [Worker-28] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 18:52:54,415 [Worker-28] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:52:54,415 [Worker-28] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 18:53:37,706 [Worker-28] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:53:37,712 [Worker-28] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 18:53:37,714 [Worker-28] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:53:37,714 [Worker-28] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 18:54:19,350 [Worker-27] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:54:19,352 [Worker-27] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 18:54:19,354 [Worker-27] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:54:19,354 [Worker-27] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 18:55:41,764 [Worker-22] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:55:41,766 [Worker-22] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 18:55:41,768 [Worker-22] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 18:55:41,768 [Worker-22] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:05:55,965 [Worker-30] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:05:55,973 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:05:55,974 [Worker-30] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:05:55,975 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:10:48,183 [Worker-34] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:10:48,190 [Worker-34] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:10:48,192 [Worker-34] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:10:48,193 [Worker-34] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:10:53,037 [Worker-33] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:10:53,037 [Worker-33] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:10:53,038 [Worker-33] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:10:53,039 [Worker-33] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:12:36,924 [Worker-35] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:12:36,930 [Worker-35] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:12:36,932 [Worker-35] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:12:36,932 [Worker-35] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:13:12,174 [Worker-31] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:13:12,180 [Worker-31] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:13:12,182 [Worker-31] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:13:12,183 [Worker-31] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:13:30,098 [Worker-34] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:13:30,105 [Worker-34] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:13:30,106 [Worker-34] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:13:30,107 [Worker-34] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:14:20,414 [Worker-22] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:14:20,420 [Worker-22] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:14:20,422 [Worker-22] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:14:20,423 [Worker-22] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:15:04,141 [Worker-32] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:15:04,147 [Worker-32] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:15:04,149 [Worker-32] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:15:04,149 [Worker-32] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:17:15,573 [Worker-34] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:17:15,581 [Worker-34] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:17:15,587 [Worker-34] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:17:15,588 [Worker-34] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:17:47,174 [Worker-22] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:17:47,180 [Worker-22] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:17:47,182 [Worker-22] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:17:47,182 [Worker-22] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:18:09,728 [Worker-33] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:18:09,731 [Worker-33] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:18:09,732 [Worker-33] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:18:09,732 [Worker-33] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:32:06,228 [Worker-38] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:32:06,235 [Worker-38] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:32:06,236 [Worker-38] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:32:06,237 [Worker-38] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:32:14,314 [Worker-41] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:32:14,320 [Worker-41] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:32:14,321 [Worker-41] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:32:14,322 [Worker-41] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:33:25,767 [Worker-37] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:33:25,773 [Worker-37] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:33:25,774 [Worker-37] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:33:25,774 [Worker-37] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:33:34,781 [Worker-33] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:33:34,782 [Worker-33] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:33:34,783 [Worker-33] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:33:34,785 [Worker-33] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:36:29,925 [Worker-38] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:36:29,932 [Worker-38] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:36:29,934 [Worker-38] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:36:29,935 [Worker-38] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:36:38,199 [Worker-39] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:36:38,203 [Worker-39] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:36:38,204 [Worker-39] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:36:38,205 [Worker-39] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:36:53,148 [Worker-41] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:36:53,154 [Worker-41] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:36:53,156 [Worker-41] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:36:53,156 [Worker-41] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:44:04,192 [Worker-33] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:44:04,200 [Worker-33] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:44:04,202 [Worker-33] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:44:04,202 [Worker-33] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:46:31,696 [Worker-41] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:46:31,700 [Worker-41] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:46:31,700 [Worker-41] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:46:31,701 [Worker-41] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:47:40,248 [Worker-43] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:47:40,254 [Worker-43] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:47:40,257 [Worker-43] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:47:40,257 [Worker-43] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:48:00,677 [Worker-33] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:48:00,677 [Worker-33] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:48:00,678 [Worker-33] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:48:00,679 [Worker-33] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:54:33,260 [Worker-46] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:54:33,265 [Worker-46] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:54:33,269 [Worker-46] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:54:33,270 [Worker-46] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:56:14,184 [Worker-45] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:56:14,191 [Worker-45] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:56:14,193 [Worker-45] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:56:14,194 [Worker-45] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:56:37,640 [Worker-45] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:56:37,641 [Worker-45] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:56:37,642 [Worker-45] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:56:37,643 [Worker-45] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources
+2017-01-27 19:57:23,117 [Worker-45] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:57:23,122 [Worker-45] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/main/resources
+2017-01-27 19:57:23,124 [Worker-45] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2017-01-27 19:57:23,124 [Worker-45] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/iaakhter/Documents/UBC/Winter2/SoftEng/CPSC_507/507/src/test/resources

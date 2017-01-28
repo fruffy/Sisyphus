@@ -1,34 +1,51 @@
 import java.io.IOException;
+import java.util.*;
 
 public class CodeHelper {
 	public static void main(String[] args) {
 		
-		SyntaxParser libParser;
-		SyntaxParser functionParser;
 		String libName = "lib.txt";
 		// String functionCode = args[0];
-		String functionName = "code.txt";
+		String srcName = "code.txt";
+		ArrayList<String> libMethodNames = new ArrayList<String>(); 
+		ArrayList<String> srcMethodNames = new ArrayList<String>();
+		ArrayList<String> libMethodReturnTypes = new ArrayList<String>(); 
+		ArrayList<String> srcMethodReturnTypes = new ArrayList<String>();
+		
+		//initialize java parser for both library and source code.
+		try{
+			SyntaxParser libparser = new SyntaxParser(libName);
+			SyntaxParser srcparser = new SyntaxParser(srcName);
+			libMethodNames = libparser.getMethodNames();
+			srcMethodNames = srcparser.getMethodNames();
+			libMethodReturnTypes = libparser.getReturnTypes();
+			srcMethodReturnTypes = srcparser.getReturnTypes();
+			
+		}catch (IOException e) {
+			new RuntimeException(e);
+		}
+		
 		
 		// Debug
-		System.out.println("Working Directory = " + System.getProperty("user.dir"));
+		//System.out.println("Working Directory = " + System.getProperty("user.dir"));
 		
-		// Where the parsed data should be returned
-			libParser = new SyntaxParser(libName);
-			functionParser = new SyntaxParser(functionName);
+		// Test the results of javaparser functions
+		System.out.println("library method names");
+		System.out.println(libMethodNames);
+		System.out.println("library method return types");
+		System.out.println(libMethodReturnTypes);
+		System.out.println("source code method names");
+		System.out.println(srcMethodNames);
+		System.out.println("source method return types");
+		System.out.println(srcMethodReturnTypes);
 		
-		// Test the javaparser function
-		libParser.parse(libName);
-
-		try {
-			// ugly stuff
-			CloneDetector cloneDect = new CloneDetector();
-			System.out.println(cloneDect.detectClone(libParser.getParsedObject(), functionParser.getParsedObject()));
-			libParser.closeParser();
-			functionParser.closeParser();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
+		// ugly stuff
+		CloneDetector cloneDetect = new CloneDetector();
+		ArrayList<String[]> nearMatches = cloneDetect.analyzeMethodNames(libMethodNames, srcMethodNames);
+		System.out.println("near matches of method names between lib and src are: ");
+		for(String[] match: nearMatches){
+			System.out.print("["+match[0]+" "+match[1]+"], ");
 		}
-
+		System.out.println("");
 	}
 }

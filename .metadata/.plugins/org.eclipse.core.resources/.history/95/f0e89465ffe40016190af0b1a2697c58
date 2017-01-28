@@ -1,0 +1,29 @@
+import java.io.IOException;
+import java.util.*;
+
+public class CodeHelper {
+	public static void main(String[] args) {
+		
+		SyntaxParser parser = new SyntaxParser();
+		String libName = "lib.txt";
+		// String functionCode = args[0];
+		String srcName = "code.txt";
+		
+		// Debug
+		System.out.println("Working Directory = " + System.getProperty("user.dir"));
+		
+		// Test the javaparser functions
+		ArrayList<String> libMethodNames = parser.getMethodNames(libName);
+		ArrayList<String> srcMethodNames = parser.getMethodNames(srcName);
+		System.out.println("library method names");
+		System.out.println(libMethodNames);
+		System.out.println("source code method names");
+		System.out.println(srcMethodNames);
+		
+		// ugly stuff
+		CloneDetector cloneDetect = new CloneDetector();
+		ArrayList<String[]> nearMatches = cloneDetect.analyzeMethodNames(libMethodNames, srcMethodNames);
+		System.out.println("near matches of method names between lib and src are: ");
+		System.out.println(nearMatches);
+	}
+}
