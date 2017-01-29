@@ -4,9 +4,9 @@ import java.util.*;
 public class CodeHelper {
 	public static void main(String[] args) {
 		
-		String libName = "lib.txt";
+		String libName = "Math.class";
 		// String functionCode = args[0];
-		String srcName = "code.txt";
+		String srcName = "src/TestCode.java";
 		ArrayList<String> libMethodNames = new ArrayList<String>(); 
 		ArrayList<String> srcMethodNames = new ArrayList<String>();
 		ArrayList<String> libMethodReturnTypes = new ArrayList<String>(); 
@@ -22,6 +22,7 @@ public class CodeHelper {
 			srcMethodReturnTypes = srcparser.getReturnTypes();
 			
 		}catch (IOException e) {
+			e.printStackTrace();
 			new RuntimeException(e);
 		}
 		
