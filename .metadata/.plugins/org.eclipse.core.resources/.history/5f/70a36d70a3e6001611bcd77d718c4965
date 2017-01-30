@@ -7,11 +7,11 @@ import com.github.javaparser.ast.type.Type;
 public class CodeHelper {
 	public static void main(String[] args) {
 		
-		String libName = "Math.class";
+		//String libName = "Math.class";
 		// String functionCode = args[0];
-		String srcName = "src/TestCode.java";
-		//String libName = "lib.txt";
-		//String srcName = "code.txt";
+		//String srcName = "src/TestCode.java";
+		String libName = "lib.txt";
+		String srcName = "code.txt";
 		ArrayList<String> libMethodNames = new ArrayList<String>(); 
 		ArrayList<String> srcMethodNames = new ArrayList<String>();
 		ArrayList<Type> libMethodReturnTypes = new ArrayList<Type>(); 
@@ -30,8 +30,8 @@ public class CodeHelper {
 			srcMethodReturnTypes = srcparser.getReturnTypes();
 			libMethods = libparser.getMethods();
 			srcMethods = srcparser.getMethods();
-			srcMethodParameter = srcMethods.get(0).getMethodParameters();
-			srcMethodBody = srcMethods.get(0).getBody();
+			srcMethodParameter = srcMethods.get(3).getMethodParameters();
+			srcMethodBody = srcMethods.get(3).getBody();
 		}catch (IOException e) {
 			e.printStackTrace();
 			new RuntimeException(e);
@@ -58,12 +58,12 @@ public class CodeHelper {
 		// ugly stuff
 		CloneDetector cloneDetect = new CloneDetector();
 		System.out.println("Testing match method");
-		Method libMethod = libMethods.get(0);
-		Method srcMethod = srcMethods.get(0);
+		Method libMethod = libMethods.get(1);
+		Method srcMethod = srcMethods.get(1);
 		System.out.println("Method1: "+libMethod.getMethodName()+" Method2: "+srcMethod.getMethodName());
 		System.out.println(cloneDetect.matchMethods(libMethod, srcMethod));
-		libMethod = libMethods.get(1);
-		srcMethod = srcMethods.get(1);
+		libMethod = libMethods.get(2);
+		srcMethod = srcMethods.get(2);
 		System.out.println("Method1: "+libMethod.getMethodName()+" Method2: "+srcMethod.getMethodName());
 		System.out.println(cloneDetect.matchMethods(libMethod, srcMethod));
 	}
