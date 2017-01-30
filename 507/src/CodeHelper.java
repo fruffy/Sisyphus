@@ -1,5 +1,7 @@
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.Type;
@@ -7,11 +9,11 @@ import com.github.javaparser.ast.type.Type;
 public class CodeHelper {
 	public static void main(String[] args) {
 		
-		String libName = "Math.class";
+		//String libName = "Math.class";
 		// String functionCode = args[0];
-		String srcName = "src/TestCode.java";
-		//String libName = "lib.txt";
-		//String srcName = "code.txt";
+		//String srcName = "src/TestCode.java";
+		String libName = "lib.txt";
+		String srcName = "code.txt";
 		ArrayList<String> libMethodNames = new ArrayList<String>(); 
 		ArrayList<String> srcMethodNames = new ArrayList<String>();
 		ArrayList<Type> libMethodReturnTypes = new ArrayList<Type>(); 
@@ -51,7 +53,7 @@ public class CodeHelper {
 		System.out.println("source method return types");
 		System.out.println(srcMethodReturnTypes);
 		System.out.println("Parameter type of main method");
-		System.out.println(srcMethodParameter.get(0).getType());
+		//System.out.println(srcMethodParameter.get(0).getType());
 		System.out.println("Body of main method");
 		System.out.println(srcMethodBody.toString());
 		
@@ -66,5 +68,12 @@ public class CodeHelper {
 		srcMethod = srcMethods.get(1);
 		System.out.println("Method1: "+libMethod.getMethodName()+" Method2: "+srcMethod.getMethodName());
 		System.out.println(cloneDetect.matchMethods(libMethod, srcMethod));
+		
+		for (Method match : cloneDetect.findSimiliarMethods(srcMethods, libMethods)) {
+			System.out.println("Matched Method is: "+match.getMethodName());
+
+		}
+		
+		
 	}
 }
