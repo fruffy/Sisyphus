@@ -7,9 +7,9 @@ import com.github.javaparser.ast.type.Type;
 public class CodeHelper {
 	public static void main(String[] args) {
 		
-		String libName = "lib.txt";
+		String libName = "Math.class";
 		// String functionCode = args[0];
-		String srcName = "code.txt";
+		String srcName = "src/TestCode.java";
 		ArrayList<String> libMethodNames = new ArrayList<String>(); 
 		ArrayList<String> srcMethodNames = new ArrayList<String>();
 		ArrayList<Type> libMethodReturnTypes = new ArrayList<Type>(); 
@@ -31,6 +31,7 @@ public class CodeHelper {
 			srcMethodParameter = srcMethods.get(3).getMethodParameters();
 			srcMethodBody = srcMethods.get(3).getBody();
 		}catch (IOException e) {
+			e.printStackTrace();
 			new RuntimeException(e);
 		}
 		

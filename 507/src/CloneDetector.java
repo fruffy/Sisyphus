@@ -19,27 +19,6 @@ public class CloneDetector {
 		
 	}
 
-	// The algorithm
-	public boolean detectClone(BufferedReader bufferedLibReader, BufferedReader bufferedFunctionReader)
-			throws IOException {
-		String funLine;
-		String libLine;
-		
-		while (true) {
-
-			libLine = bufferedLibReader.readLine();
-			funLine = bufferedFunctionReader.readLine();
-
-			if (libLine == null || funLine == null) {
-				break;
-			}
-			if (!(libLine.equals(funLine))) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
 	/*
 	 * This method should do some kind of comparison between Method 1 and Method 2 and return
 	 * true if they are exact/near matches. Right now they just return true if they 
