@@ -11,7 +11,7 @@ public class CodeHelper {
 		// String functionCode = args[0];
 		//String srcName = "src/TestCode.java";
 		String libName = "lib.txt";
-		String srcName = "code.txt";
+		String srcName = "code.txt"
 		ArrayList<String> libMethodNames = new ArrayList<String>(); 
 		ArrayList<String> srcMethodNames = new ArrayList<String>();
 		ArrayList<Type> libMethodReturnTypes = new ArrayList<Type>(); 

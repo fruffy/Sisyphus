@@ -7,11 +7,9 @@ import com.github.javaparser.ast.type.Type;
 public class CodeHelper {
 	public static void main(String[] args) {
 		
-		//String libName = "Math.class";
+		String libName = "Math.class";
 		// String functionCode = args[0];
-		//String srcName = "src/TestCode.java";
-		String libName = "lib.txt";
-		String srcName = "code.txt";
+		String srcName = "src/TestCode.java";
 		ArrayList<String> libMethodNames = new ArrayList<String>(); 
 		ArrayList<String> srcMethodNames = new ArrayList<String>();
 		ArrayList<Type> libMethodReturnTypes = new ArrayList<Type>(); 
