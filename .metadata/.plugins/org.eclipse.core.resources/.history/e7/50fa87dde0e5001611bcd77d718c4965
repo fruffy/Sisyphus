@@ -1,0 +1,34 @@
+import com.github.javaparser.ast.body.MethodDeclaration;
+
+/*
+ * Method class that holds information about a particular method
+ * - the name of the method, the return type of the method.
+ */
+
+public class Method {
+	private String methodName;
+	private String returnType;
+	
+	public Method(MethodDeclaration methodDeclaration){
+		this.methodName = methodDeclaration.getNameAsString();
+		String stringDeclaration = methodDeclaration.getDeclarationAsString();
+		String[] splitedDeclaration = stringDeclaration.split("\\s");
+		for(int i = 0; i<splitedDeclaration.length; i++){
+			//System.out.println(splitedDeclaration[i]);
+			int openParenIndex = splitedDeclaration[i].indexOf('(');
+			if(openParenIndex>-1){
+				if(methodName.compareTo(splitedDeclaration[i].substring(0,openParenIndex))==0){
+					this.returnType = splitedDeclaration[i-1];
+				}
+			}
+		}
+	}
+	
+	public String getMethodName(){
+		return this.methodName;
+	}
+	
+	public String getReturnType(){
+		return this.returnType;
+	}
+}

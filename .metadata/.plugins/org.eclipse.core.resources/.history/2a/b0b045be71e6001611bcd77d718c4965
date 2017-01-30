@@ -1,0 +1,23 @@
+
+public class MethodParameter {
+	private String name;
+	private String type;
+	
+	public MethodParameter(String paramName, String paramType){
+		this.name = paramName;
+		this.type = paramType;
+	}
+	
+	public String getParamName(){
+		return this.name;
+	}
+	
+	public String getParamType(){
+		return this.type;
+	}
+	
+	
+	public String toString(){
+		return this.type + " " + this.name
+	}
+}

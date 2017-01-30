@@ -2,6 +2,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.*;
 
+import com.github.javaparser.ast.body.Parameter;
+import com.github.javaparser.ast.stmt.BlockStmt;
+
 /*
  * The detector class
  * Takes the parser output and tries to find similarities
@@ -38,21 +41,46 @@ public class CloneDetector {
 	}
 	
 	/*
-	 * This method should do some kind of comparison between the method names in the lib file
-	 * and the source file. Right now it just checks if two methods have the same name.
-	 * The method should return a list of near matches of method names.
+	 * This method should do some kind of comparison between Method 1 and Method 2 and return
+	 * true if they are exact/near matches. Right now they just return true if they 
+	 * are exact matches
 	 */
-	public ArrayList<String[]> analyzeMethodNames(ArrayList<String> libMethodNames, ArrayList<String> srcMethodNames){
-		ArrayList<String[]> similarMethodNames = new ArrayList<String[]> ();
-		for (String libMethod: libMethodNames){
-			for(String srcMethod: srcMethodNames){
-				if(libMethod.compareToIgnoreCase(srcMethod)==0){
-					String[] matches = {libMethod, srcMethod};
-					similarMethodNames.add(matches);
+	public boolean matchMethods(Method method1, Method method2){
+		if(method1.getMethodName().compareToIgnoreCase(method2.getMethodName())!=0){
+			return false;
+			
+		}
+		if(method1.getReturnType().toString().compareTo(method2.getReturnType().toString())!=0){
+			return false;
+		}
+		List<Parameter> parameters1 = method1.getMethodParameters();
+		List<Parameter> parameters2 = method2.getMethodParameters();
+		if(parameters1.size()!=parameters2.size()){
+			return false;
+		}
+		boolean[] param2Matched = new boolean[parameters2.size()];
+		for(int i = 0; i<parameters1.size(); i++){
+			boolean foundMatch = false;
+			for(int j = 0; j<parameters2.size(); j++){
+				if(parameters1.get(i).getType().toString().compareTo(parameters2.get(j).toString())==0){
+					if(!param2Matched[j]){
+						param2Matched[j] = true;
+						foundMatch = true;
+					}
+					
 				}
 			}
+			if(!foundMatch){
+				return false;
+			}
 		}
-		return similarMethodNames;	
+		BlockStmt body1 = method1.getBody();
+		BlockStmt body2 = method2.getBody();
+		if(body1.toString().compareToIgnoreCase(body2.toString())!=0){
+			return false;
+		}
+		return true;
 		
 	}
+	
 }

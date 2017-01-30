@@ -1,5 +1,8 @@
 import java.io.IOException;
 import java.util.*;
+import com.github.javaparser.ast.body.Parameter;
+import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.type.Type;
 
 public class CodeHelper {
 	public static void main(String[] args) {
@@ -9,9 +12,12 @@ public class CodeHelper {
 		String srcName = "code.txt";
 		ArrayList<String> libMethodNames = new ArrayList<String>(); 
 		ArrayList<String> srcMethodNames = new ArrayList<String>();
-		ArrayList<String> libMethodReturnTypes = new ArrayList<String>(); 
-		ArrayList<String> srcMethodReturnTypes = new ArrayList<String>();
-		
+		ArrayList<Type> libMethodReturnTypes = new ArrayList<Type>(); 
+		ArrayList<Type> srcMethodReturnTypes = new ArrayList<Type>();
+		List<Parameter> srcMethodParameter = new ArrayList<Parameter> ();
+		BlockStmt srcMethodBody = new BlockStmt();
+		ArrayList<Method> libMethods = new ArrayList<Method>();
+		ArrayList<Method> srcMethods = new ArrayList<Method>();
 		//initialize java parser for both library and source code.
 		try{
 			SyntaxParser libparser = new SyntaxParser(libName);
@@ -20,7 +26,10 @@ public class CodeHelper {
 			srcMethodNames = srcparser.getMethodNames();
 			libMethodReturnTypes = libparser.getReturnTypes();
 			srcMethodReturnTypes = srcparser.getReturnTypes();
-			
+			libMethods = libparser.getMethods();
+			srcMethods = srcparser.getMethods();
+			srcMethodParameter = srcMethods.get(3).getMethodParameters();
+			srcMethodBody = srcMethods.get(3).getBody();
 		}catch (IOException e) {
 			new RuntimeException(e);
 		}
@@ -38,14 +47,21 @@ public class CodeHelper {
 		System.out.println(srcMethodNames);
 		System.out.println("source method return types");
 		System.out.println(srcMethodReturnTypes);
+		System.out.println("Parameter type of main method");
+		System.out.println(srcMethodParameter.get(0).getType());
+		System.out.println("Body of main method");
+		System.out.println(srcMethodBody.toString());
 		
 		// ugly stuff
 		CloneDetector cloneDetect = new CloneDetector();
-		ArrayList<String[]> nearMatches = cloneDetect.analyzeMethodNames(libMethodNames, srcMethodNames);
-		System.out.println("near matches of method names between lib and src are: ");
-		for(String[] match: nearMatches){
-			System.out.print("["+match[0]+" "+match[1]+"], ");
-		}
-		System.out.println("");
+		System.out.println("Testing match method");
+		Method libMethod = libMethods.get(1);
+		Method srcMethod = srcMethods.get(1);
+		System.out.println("Method1: "+libMethod.getMethodName()+" Method2: "+srcMethod.getMethodName());
+		System.out.println(cloneDetect.matchMethods(libMethod, srcMethod));
+		libMethod = libMethods.get(2);
+		srcMethod = srcMethods.get(2);
+		System.out.println("Method1: "+libMethod.getMethodName()+" Method2: "+srcMethod.getMethodName());
+		System.out.println(cloneDetect.matchMethods(libMethod, srcMethod));
 	}
 }

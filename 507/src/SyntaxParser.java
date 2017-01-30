@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.ast.CompilationUnit;
@@ -64,33 +65,33 @@ public class SyntaxParser {
 		return methodDecList;
 	}
 	
-	
-	/*Returns an arraylist of method names in the class*/
-	public ArrayList<String> getMethodNames() {
-		ArrayList<String> methodList = new ArrayList<String> ();
-		for(MethodDeclaration call: this.methodDeclarationList){
-			methodList.add(call.getNameAsString());
+	/*
+	 * Returns an arraylist of Method objects from parsing information
+	 */
+	public ArrayList<Method> getMethods(){
+		ArrayList<Method> methodList = new ArrayList<Method>();
+		for(MethodDeclaration n: this.methodDeclarationList){
+			methodList.add(new Method(n));
 		}
 		return methodList;
 	}
+	
+	/*Returns an arraylist of method names in the class*/
+	public ArrayList<String> getMethodNames() {
+		ArrayList<Method> methodList = this.getMethods();
+		ArrayList<String> methodNames = new ArrayList<String>();
+		for(Method call: methodList){
+			methodNames.add(call.getMethodName());
+		}
+		return methodNames;
+	}
 
 	/*Returns an arraylist of method return types in the class*/
-	public ArrayList<String> getReturnTypes(){
-		ArrayList<String> returnTypes = new ArrayList<String>();
-		for(MethodDeclaration call: this.methodDeclarationList){
-			String methodName = call.getNameAsString();
-			String stringDeclaration = call.getDeclarationAsString();
-			String[] splitedDeclaration = stringDeclaration.split("\\s");
-			for(int i = 0; i<splitedDeclaration.length; i++){
-				//System.out.println(splitedDeclaration[i]);
-				int openParenIndex = splitedDeclaration[i].indexOf('(');
-				if(openParenIndex>-1){
-					if(methodName.compareTo(splitedDeclaration[i].substring(0,openParenIndex))==0){
-						returnTypes.add(splitedDeclaration[i-1]);
-					}
-				}
-			}
-			
+	public ArrayList<Type> getReturnTypes(){
+		ArrayList<Method> methodList = this.getMethods();
+		ArrayList<Type> returnTypes = new ArrayList<Type>();
+		for(Method call: methodList){
+			returnTypes.add(call.getReturnType());
 		}
 		return returnTypes;
 	}	
