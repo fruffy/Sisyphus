@@ -17,7 +17,6 @@ public class CodeHelper {
 		ArrayList<Type> libMethodReturnTypes = new ArrayList<Type>(); 
 		ArrayList<Type> srcMethodReturnTypes = new ArrayList<Type>();
 		List<Parameter> srcMethodParameter = new ArrayList<Parameter> ();
-		BlockStmt srcMethodBody = new BlockStmt();
 		ArrayList<Method> libMethods = new ArrayList<Method>();
 		ArrayList<Method> srcMethods = new ArrayList<Method>();
 		//initialize java parser for both library and source code.
@@ -31,7 +30,6 @@ public class CodeHelper {
 			libMethods = libparser.getMethods();
 			srcMethods = srcparser.getMethods();
 			srcMethodParameter = srcMethods.get(0).getMethodParameters();
-			srcMethodBody = srcMethods.get(0).getBody();
 		}catch (IOException e) {
 			e.printStackTrace();
 			new RuntimeException(e);
@@ -52,8 +50,10 @@ public class CodeHelper {
 		System.out.println(srcMethodReturnTypes);
 		System.out.println("Parameter type of main method");
 		System.out.println(srcMethodParameter.get(0).getType());
-		System.out.println("Body of main method");
-		System.out.println(srcMethodBody.toString());
+		System.out.println("Body of method with comments");
+		System.out.println(srcMethods.get(0).getBody());
+		System.out.println("Body of method without comments");
+		System.out.println(srcMethods.get(0).getBodyWithoutComments());
 		
 		// ugly stuff
 		CloneDetector cloneDetect = new CloneDetector();

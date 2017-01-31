@@ -1,14 +1,19 @@
 
 public class TestCode {
 
-	
 	public int absoluteVal(int number) {
+		//hello?
 		System.out.println("functionCall");
+		/*testing comments
+		Mogambo
+		*/
 		if (number < 0) {
-			return 0 - number;
+			return 0 - number; //Check1
 		} else {
 			return number;
-		}	
+		}	/*
+		Check2
+		*/
 
 	}
 

@@ -53,8 +53,8 @@ public class CloneDetector {
 				return false;
 			}
 		}
-		BlockStmt body1 = method1.getBody();
-		BlockStmt body2 = method2.getBody();
+		String body1 = method1.getBodyWithoutComments();
+		String body2 = method2.getBodyWithoutComments();
 		if(body1.toString().compareToIgnoreCase(body2.toString())!=0){
 			return false;
 		}
