@@ -9,16 +9,17 @@ import com.github.javaparser.ast.type.Type;
 public class CodeHelper {
 	public static void main(String[] args) {
 		
-		String libName = "Math.class";
+		//String libName = "Math.class";
 		// String functionCode = args[0];
-		String srcName = "src/TestCode.java";
-		//String libName = "lib.txt";
-		//String srcName = "code.txt";
+		//String srcName = "src/TestCode.java";
+		String libName = "lib.txt";
+		String srcName = "code.txt";
 		ArrayList<String> libMethodNames = new ArrayList<String>(); 
 		ArrayList<String> srcMethodNames = new ArrayList<String>();
 		ArrayList<Type> libMethodReturnTypes = new ArrayList<Type>(); 
 		ArrayList<Type> srcMethodReturnTypes = new ArrayList<Type>();
 		List<Parameter> srcMethodParameter = new ArrayList<Parameter> ();
+		BlockStmt srcMethodBody = new BlockStmt();
 		ArrayList<Method> libMethods = new ArrayList<Method>();
 		ArrayList<Method> srcMethods = new ArrayList<Method>();
 		//initialize java parser for both library and source code.
@@ -32,6 +33,7 @@ public class CodeHelper {
 			libMethods = libparser.getMethods();
 			srcMethods = srcparser.getMethods();
 			srcMethodParameter = srcMethods.get(0).getMethodParameters();
+			srcMethodBody = srcMethods.get(0).getBody();
 		}catch (IOException e) {
 			e.printStackTrace();
 			new RuntimeException(e);
@@ -51,11 +53,9 @@ public class CodeHelper {
 		System.out.println("source method return types");
 		System.out.println(srcMethodReturnTypes);
 		System.out.println("Parameter type of main method");
-		System.out.println(srcMethodParameter.get(0).getType());
-		System.out.println("Body of method with comments");
-		System.out.println(srcMethods.get(0).getBody());
-		System.out.println("Body of method without comments");
-		System.out.println(srcMethods.get(0).getFilteredBody());
+		//System.out.println(srcMethodParameter.get(0).getType());
+		System.out.println("Body of main method");
+		System.out.println(srcMethodBody.toString());
 		
 		// ugly stuff
 		CloneDetector cloneDetect = new CloneDetector();

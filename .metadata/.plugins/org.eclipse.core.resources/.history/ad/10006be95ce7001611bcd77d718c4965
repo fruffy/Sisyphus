@@ -55,7 +55,7 @@ public class CodeHelper {
 		System.out.println("Body of method with comments");
 		System.out.println(srcMethods.get(0).getBody());
 		System.out.println("Body of method without comments");
-		System.out.println(srcMethods.get(0).getFilteredBody());
+		System.out.println(srcMethods.get(0).getBodyWithoutComments());
 		
 		// ugly stuff
 		CloneDetector cloneDetect = new CloneDetector();

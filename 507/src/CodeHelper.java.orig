@@ -9,11 +9,11 @@ import com.github.javaparser.ast.type.Type;
 public class CodeHelper {
 	public static void main(String[] args) {
 		
-		String libName = "Math.class";
+		//String libName = "Math.class";
 		// String functionCode = args[0];
-		String srcName = "src/TestCode.java";
-		//String libName = "lib.txt";
-		//String srcName = "code.txt";
+		//String srcName = "src/TestCode.java";
+		String libName = "lib.txt";
+		String srcName = "code.txt";
 		ArrayList<String> libMethodNames = new ArrayList<String>(); 
 		ArrayList<String> srcMethodNames = new ArrayList<String>();
 		ArrayList<Type> libMethodReturnTypes = new ArrayList<Type>(); 
@@ -51,11 +51,17 @@ public class CodeHelper {
 		System.out.println("source method return types");
 		System.out.println(srcMethodReturnTypes);
 		System.out.println("Parameter type of main method");
+<<<<<<< HEAD
 		System.out.println(srcMethodParameter.get(0).getType());
 		System.out.println("Body of method with comments");
 		System.out.println(srcMethods.get(0).getBody());
 		System.out.println("Body of method without comments");
-		System.out.println(srcMethods.get(0).getFilteredBody());
+		System.out.println(srcMethods.get(0).getBodyWithoutComments());
+=======
+		//System.out.println(srcMethodParameter.get(0).getType());
+		System.out.println("Body of main method");
+		System.out.println(srcMethodBody.toString());
+>>>>>>> 868840f61dd69a60e5d4f88a714c23d74534d223
 		
 		// ugly stuff
 		CloneDetector cloneDetect = new CloneDetector();
