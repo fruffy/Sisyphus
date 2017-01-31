@@ -42,10 +42,11 @@ public class Method {
 	}
 
 	public BlockStmt getFilteredBody() {
-		for (Comment co : this.body.getAllContainedComments()) {
+		BlockStmt filteredBody = (BlockStmt) this.body.clone();
+		for (Comment co : filteredBody.getAllContainedComments()) {
 			co.remove();
 		}
 
-		return this.body;
+		return filteredBody;
 	}
 }
