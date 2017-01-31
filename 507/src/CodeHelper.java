@@ -1,5 +1,7 @@
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.Type;
@@ -66,5 +68,12 @@ public class CodeHelper {
 		srcMethod = srcMethods.get(1);
 		System.out.println("Method1: "+libMethod.getMethodName()+" Method2: "+srcMethod.getMethodName());
 		System.out.println(cloneDetect.matchMethods(libMethod, srcMethod));
+		
+		for (Method match : cloneDetect.findSimiliarMethods(srcMethods, libMethods)) {
+			System.out.println("Matched Method is: "+match.getMethodName());
+
+		}
+		
+		
 	}
 }
