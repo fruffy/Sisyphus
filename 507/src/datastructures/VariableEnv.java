@@ -57,6 +57,19 @@ public class VariableEnv implements Iterable<Pair<String, String>> {
 	public boolean isEmpty(){
 		return this.headVar == null;
 	}
+	
+	/**
+	 * Returns null if the given key isn't in the env
+	 * Otherwise, it returns the string associated with it
+	 */
+	public String lookup(String key){
+		for (Pair<String, String> pair : this){
+			if (pair.a.equals(key)){
+				return pair.b;
+			}
+		}
+		return null;
+	}
 
 	@Override
 	public Iterator<Pair<String, String>> iterator() {
