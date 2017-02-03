@@ -22,5 +22,10 @@ public class TestCode {
 		int test2 = 2;
 		return test + test2;
 	}
+	
+	//Exact copy of version from math, with different variable names
+	public static int abs(int x){
+		return (x < 0) ? -x : x;
+	}
 
 }
