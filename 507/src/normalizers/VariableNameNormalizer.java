@@ -84,11 +84,11 @@ public class VariableNameNormalizer extends Normalizer {
 		//When we see a variable, we rename it to whatever we've stored in our Gamma
 		@Override
 		public Visitable visit(SimpleName n, VisitInfo info) {
-			n.setIdentifier(info.gamma.lookup(n.getIdentifier()));
-			if (n.getIdentifier() != null){
-				return n;
+			String newIdent = info.gamma.lookup(n.getIdentifier());
+			if (newIdent != null){
+				n.setIdentifier(newIdent);
 			}
-			return null;
+			return n;
 		}
 
 		//We need to process the statements of a BlockStmt in order
@@ -165,11 +165,11 @@ public class VariableNameNormalizer extends Normalizer {
 	}
 
 	@Override
-	public BlockStmt result() {
+	public Node result() {
 		VariableNameVisitor v = new VariableNameVisitor();
 		Visitable ret = this.startBlock.clone().accept(v, 
 				new VisitInfo(VariableEnv.empty(), new LinkedList<Pair<String, String>>()));
-		return (BlockStmt)ret;
+		return (Node)ret;
 	}
 
 }
