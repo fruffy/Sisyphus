@@ -4,6 +4,8 @@ import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.Type;
 
+import normalizers.Normalizer;
+
 import java.util.*;
 
 /*
@@ -16,8 +18,10 @@ public class Method {
 	private Type returnType;
 	private List<Parameter> parameters;
 	private BlockStmt body;
+	private MethodDeclaration originalDecl;
 
 	public Method(MethodDeclaration methodDeclaration) {
+		this.originalDecl = methodDeclaration;
 		this.methodName = methodDeclaration.getNameAsString();
 		this.parameters = methodDeclaration.getParameters();
 		this.returnType = methodDeclaration.getType();
@@ -48,5 +52,14 @@ public class Method {
 		}
 
 		return filteredBody;
+	}
+	
+	/**
+	 * Return a new method that is equivalent to this method,
+	 * but normalized by the given normalizer
+	 */
+	public Method normalize(Normalizer norm){
+		norm.initialize(this.originalDecl);
+		return new Method((MethodDeclaration)norm.result());
 	}
 }
