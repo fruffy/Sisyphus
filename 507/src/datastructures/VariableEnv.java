@@ -1,6 +1,9 @@
 package datastructures;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.github.javaparser.utils.Pair;
 
@@ -74,6 +77,28 @@ public class VariableEnv implements Iterable<Pair<String, String>> {
 	@Override
 	public Iterator<Pair<String, String>> iterator() {
 		return new VarEnvIter(this);
+	}
+	
+	public String freshKey(String base){
+		//Find all strings matching the prefix
+		HashSet<String> matching = new HashSet<String>();
+		for (Pair<String, String> entry : this){
+			if (entry.a.startsWith(base)){
+				matching.add(entry.a);
+			}
+		}
+		//Our fresh key is our base, plus the lowest number
+		//that's greater >= the length of all matching
+		//that isn't in the matching list,
+		//Usually this should succeed after one try, but we want to be defensive
+		int length = matching.size();
+		for(int i = 0; i < length + 1; i++){
+			String candidate = base + (length + i);
+			if (!matching.contains(candidate)){
+				return candidate;
+			}
+		}
+		throw new RuntimeException("Impossible, matching must contain a finine number of strings, can't match more than its length");
 	}
 	
 	
