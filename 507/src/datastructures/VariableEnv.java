@@ -39,9 +39,9 @@ public class VariableEnv implements Iterable<Pair<String, String>> {
 		
 	}
 	
-	private String headVar;
-	private String headElem;
-	private VariableEnv tail;
+	private final String headVar;
+	private final String headElem;
+	private final VariableEnv tail;
 	
 	private VariableEnv(String headVar, String headElem, VariableEnv tail){
 		this.headVar = headVar;
