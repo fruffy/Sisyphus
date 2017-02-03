@@ -1,5 +1,5 @@
 package normalizers;
-import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.Node;
 
 /**
  * A Normalizer performs a transformation on BlockStmts (more) normalized form, so that
@@ -8,12 +8,12 @@ import com.github.javaparser.ast.stmt.BlockStmt;
  *
  */
 public abstract class Normalizer {
-	protected BlockStmt startBlock;
+	protected Node startBlock;
 
-	public void initialize(BlockStmt startBlock){
+	public void initialize(Node startBlock){
 		this.startBlock = startBlock;
 	}
-	
-	public abstract BlockStmt result();
+
+	public abstract Node result();
 
 }
