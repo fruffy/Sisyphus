@@ -53,8 +53,8 @@ public class VariableEnv implements Iterable<Pair<String, String>> {
 		return new VariableEnv(null, null, null);
 	}
 	
-	public VariableEnv cons(String headVar, String tailVar){
-		return new VariableEnv(headVar, tailVar, this);
+	public VariableEnv cons(String headKey, String headElem){
+		return new VariableEnv(headVar, headElem, this);
 	}
 	
 	public boolean isEmpty(){
@@ -99,6 +99,18 @@ public class VariableEnv implements Iterable<Pair<String, String>> {
 			}
 		}
 		throw new RuntimeException("Impossible, matching must contain a finine number of strings, can't match more than its length");
+	}
+	
+	/**
+	 * Add all elements of the given container to the front of this list
+	 * The order of the input container may not be preserved
+	 */
+	public VariableEnv appendFront(Iterable<Pair<String, String>> toAppend){
+		VariableEnv ret = this;
+		for (Pair<String, String> pair : toAppend){
+			ret = ret.cons(pair.a, pair.b);
+		}
+		return ret;
 	}
 	
 	
