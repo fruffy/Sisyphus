@@ -10,7 +10,9 @@ import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.Expression;
+import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.SimpleName;
+import com.github.javaparser.ast.nodeTypes.NodeWithAnnotations;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.type.ReferenceType;
@@ -69,7 +71,7 @@ public class VariableNameNormalizer extends Normalizer {
 			}
 
 			//We generate a new, standardized name for this declaration, based on its type
-			String newName = info.gamma.freshKey("var" + type.toString());
+			String newName = info.gamma.freshKey("var_" + type.toString());
 			n.setName(newName);
 
 			//Tell our parent that we declared a new name
@@ -81,12 +83,53 @@ public class VariableNameNormalizer extends Normalizer {
 			return n;
 		}
 
+		//Similar to variable declarator, but for method params
+		@Override
+		public Visitable visit(final Parameter n, final VisitInfo info) {
+			//visitComment(n, info);
+			visitAnnotations(n, info);
+
+			final SimpleName id = (SimpleName) n.getName();
+
+			Type type = (Type) n.getType().accept(this, info);
+
+			//We generate a new, standardized name for this declaration, based on its type
+			String newName = info.gamma.freshKey("param_" + type.toString());
+			System.out.println("Choosing new name " + newName + " for param " + n);
+			n.setName(newName);
+
+			//Tell our parent that we declared a new name
+			info.declsForParent.add(new Pair<String, String>(id.getIdentifier(), newName));
+
+			n.setType(type);
+			return n;
+		}
+
 		//When we see a variable, we rename it to whatever we've stored in our Gamma
 		@Override
 		public Visitable visit(SimpleName n, VisitInfo info) {
+			System.out.println("Visiting SimpleName " + n);
 			String newIdent = info.gamma.lookup(n.getIdentifier());
 			if (newIdent != null){
+				System.out.println("Renaming " + n + " to " + newIdent);
 				n.setIdentifier(newIdent);
+			}
+			return n;
+		}
+
+		//Same as simple name
+		//TODO need both?
+		@Override
+		public Visitable visit(final NameExpr n, final VisitInfo info) {
+			//visitComment(n, info);
+			System.out.println("Visiting NameExpr " + n);
+			String newIdent = info.gamma.lookup(n.getNameAsString());
+			if (newIdent != null){
+				System.out.println("Renaming " + n + " to " + newIdent);
+				n.setName(newIdent);
+			}
+			else {
+				System.out.println("Couldn't find name " + n.getNameAsString() + " in gamma ");
 			}
 			return n;
 		}
@@ -126,8 +169,8 @@ public class VariableNameNormalizer extends Normalizer {
 			n.setAnnotations((NodeList<AnnotationExpr>) n.getAnnotations().accept(this, info));
 			n.setTypeParameters(modifyList(n.getTypeParameters(), info));
 			n.setType((Type) n.getType().accept(this, info));
-			
-			
+
+
 			//We process parameters manually so we can rename them
 			//and store their new names, to use when processing the body
 			NodeList<Parameter> newParams = new NodeList<Parameter>();
@@ -137,10 +180,10 @@ public class VariableNameNormalizer extends Normalizer {
 				newParams.add(newParam);
 			}
 			n.setParameters(newParams);
-			
-			
+
+
 			n.setThrownExceptions((NodeList<ReferenceType>) n.getThrownExceptions().accept(this, info));
-			
+
 			//Now, when processing the body, use an extended environment with the parameters' new names
 			VariableEnv newGamma = info.gamma.appendFront(childDecls);
 			if (n.getBody().isPresent()) {
@@ -155,6 +198,10 @@ public class VariableNameNormalizer extends Normalizer {
 				return null;
 			}
 			return (NodeList<N>) list.accept(this, arg);
+		}
+
+		private void visitAnnotations(NodeWithAnnotations<?> n, VisitInfo arg) {
+			n.setAnnotations((NodeList<AnnotationExpr>) n.getAnnotations().accept(this, arg));
 		}
 
 
