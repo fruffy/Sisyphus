@@ -5,6 +5,8 @@ import java.util.List;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.type.Type;
 
+import normalizers.VariableNameNormalizer;
+
 public class CodeHelper {
 	public static void main(String[] args) {
 		
@@ -55,6 +57,8 @@ public class CodeHelper {
 		System.out.println(srcMethods.get(0).getBody());
 		System.out.println("Body of method without comments");
 		System.out.println(srcMethods.get(0).getFilteredBody());
+		System.out.println("Body of method after renaming");
+		System.out.println(srcMethods.get(0).normalize(new VariableNameNormalizer()).getFilteredBody());
 		
 		// ugly stuff
 		CloneDetector cloneDetect = new CloneDetector();
