@@ -39,6 +39,8 @@ public class VariableEnv implements Iterable<Pair<String, String>> {
 		
 	}
 	
+	//We store key, value, and the rest of the list
+	//If our list is empty, these are all set to null
 	private final String headVar;
 	private final String headElem;
 	private final VariableEnv tail;
@@ -54,7 +56,7 @@ public class VariableEnv implements Iterable<Pair<String, String>> {
 	}
 	
 	public VariableEnv cons(String headKey, String headElem){
-		return new VariableEnv(headVar, headElem, this);
+		return new VariableEnv(headKey, headElem, this);
 	}
 	
 	public boolean isEmpty(){
