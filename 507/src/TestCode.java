@@ -7,6 +7,7 @@ public class TestCode {
 		/*testing comments
 		Mogambo
 		*/
+		int temp = 4;
 		if (number < 0) {
 			return 0 - number; //Check1
 		} else {
@@ -19,11 +20,23 @@ public class TestCode {
 	
 	public int absolute(int num) {
 		System.out.println("hello");
+		int temp2 = 5;
 		if (num < 0) {
 			return 0 - num; 
-		} else {
+		} 
+		else {
 			return num;
 		}
+
+	}
+	
+	public int absolute2(int num) {
+		System.out.println("hello");
+		int temp2 = 5;
+		if (num < 0) {
+			return 0 - num; 
+		} 
+		return num;
 
 	}
 

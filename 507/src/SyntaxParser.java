@@ -1,6 +1,8 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
@@ -60,6 +62,7 @@ public class SyntaxParser {
 		}.visit(this.cu, null);
 		return methodDecList;
 	}
+	
 	
 	/*
 	 * Returns an arraylist of Method objects from parsing information

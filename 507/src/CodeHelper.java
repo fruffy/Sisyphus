@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.github.javaparser.ast.Node;
@@ -65,10 +66,14 @@ public class CodeHelper {
 		System.out.println(srcMethods.get(0).getFilteredBody());*/
 		System.out.println("Body of method after renaming");
 		System.out.println(srcMethods.get(0).normalize(new VariableNameNormalizer()).getFilteredBody());
-		System.out.println("Nodes of method");
+		/*System.out.println("Nodes of method");
 		for(Node node: srcMethodNodes){
-			System.out.println(node.toString());
-		}
+			System.out.println(node.getClass().toString());
+		}*/
+		System.out.println("Testing NodeFeature of method");
+		NodeFeature nodeFeature = srcMethods.get(0).getMethodFeature();
+		System.out.println(nodeFeature.getFeatureMap());
+		System.out.println(nodeFeature.getFeatureVector());
 		
 		// ugly stuff
 		CloneDetector cloneDetect = new CloneDetector();
@@ -92,6 +97,13 @@ public class CodeHelper {
 		System.out.println("Testing matchMethodNodes");
 		System.out.println("Method1: "+srcMethod1.getMethodName()+" Method2: "+srcMethod2.getMethodName());
 		System.out.println(cloneDetect.matchMethodNodes(srcMethod1, srcMethod2));
+		System.out.println("Testing matchMethodNodeFeatures");
+		srcMethod2 = srcMethods.get(2);
+		System.out.println("Method1: "+srcMethod1.getMethodName()+" Method2: "+srcMethod2.getMethodName());
+		System.out.println(cloneDetect.matchMethodNodeFeatures(srcMethod1, srcMethod2,0.0));
+		srcMethod2 = srcMethods.get(3);
+		System.out.println("Method1: "+srcMethod1.getMethodName()+" Method2: "+srcMethod2.getMethodName());
+		System.out.println(cloneDetect.matchMethodNodeFeatures(srcMethod1, srcMethod2,0.0));
 		
 		
 	}
