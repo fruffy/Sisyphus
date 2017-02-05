@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.stmt.BlockStmt;
 
@@ -36,6 +38,22 @@ public class CloneDetector {
 		return matchedMethods;
 
 	}
+	
+	/*
+	 * Checks if the abstract syntax tree of the body of method 1
+	 * is the same as that of method2
+	 */
+	public boolean matchMethodNodes(Method method1, Method method2){
+		List<Node> nodes1 = method1.getMethodNodes();
+		List<Node> nodes2 = method2.getMethodNodes();
+		
+		for(int i = 0; i<nodes1.size(); i++){
+			if(!nodes1.get(i).getClass().equals(nodes2.get(i).getClass())){
+				return false;
+			}
+		}
+		return true;
+	}
 
 	public boolean matchMethods(Method method1, Method method2) {
 		if (method1.getMethodName().compareToIgnoreCase(method2.getMethodName()) != 0) {
@@ -66,12 +84,7 @@ public class CloneDetector {
 				return false;
 			}
 		}
-		BlockStmt body1 = method1.getBody();
-		BlockStmt body2 = method2.getBody();
-		if (body1.toString().compareToIgnoreCase(body2.toString()) != 0) {
-			return false;
-		}
-		return true;
+		return matchMethodNodes(method1,method2);
 
 	}
 

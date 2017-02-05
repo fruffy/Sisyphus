@@ -1,3 +1,5 @@
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.comments.Comment;
@@ -52,6 +54,30 @@ public class Method {
 		}
 
 		return filteredBody;
+	}
+	
+	
+	/*
+	 * Do a traversal of the nodes of the method body without
+	 * comments and return the list
+	 */
+	public List<Node> getMethodNodes(){
+		List<Node> methodNodes = new ArrayList<Node>();
+		List<Node> queueNodes = new ArrayList<Node>();
+		queueNodes.add(this.getFilteredBody());
+		while(!queueNodes.isEmpty()){
+			Node current = queueNodes.remove(0);
+			if(!(current instanceof Comment)){
+				methodNodes.add(current);
+			}
+			List<Node> currentChildren = current.getChildNodes();
+			for(Node child: currentChildren){
+				queueNodes.add(child);
+			}
+		}
+		methodNodes.remove(0);
+		return methodNodes;
+		
 	}
 	
 	/**

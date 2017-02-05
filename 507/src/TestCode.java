@@ -16,6 +16,16 @@ public class TestCode {
 		*/
 
 	}
+	
+	public int absolute(int num) {
+		System.out.println("hello");
+		if (num < 0) {
+			return 0 - num; 
+		} else {
+			return num;
+		}
+
+	}
 
 	public int noOfLegs() {
 		int test = 3 + 3;
