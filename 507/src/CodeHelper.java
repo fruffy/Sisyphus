@@ -62,10 +62,10 @@ public class CodeHelper {
 		System.out.println("Body of method with comments");
 		System.out.println(srcMethods.get(0).getBody());
 		System.out.println("Body of method without comments");
-		System.out.println(srcMethods.get(0).getFilteredBody());
+		System.out.println(srcMethods.get(0).getFilteredBody());*/
 		System.out.println("Body of method after renaming");
 		System.out.println(srcMethods.get(0).normalize(new VariableNameNormalizer()).getFilteredBody());
-		*/System.out.println("Nodes of method");
+		System.out.println("Nodes of method");
 		for(Node node: srcMethodNodes){
 			System.out.println(node.toString());
 		}
