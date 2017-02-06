@@ -1,5 +1,7 @@
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.comments.Comment;
@@ -7,8 +9,6 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.Type;
 
 import normalizers.Normalizer;
-
-import java.util.*;
 
 /*
  * Method class that holds information about a particular method
@@ -28,7 +28,6 @@ public class Method {
 		this.parameters = methodDeclaration.getParameters();
 		this.returnType = methodDeclaration.getType();
 		this.body = methodDeclaration.getBody().get();
-
 	}
 
 	public String getMethodName() {

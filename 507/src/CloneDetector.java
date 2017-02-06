@@ -2,9 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.Parameter;
-import com.github.javaparser.ast.stmt.BlockStmt;
 
 /*
  * The detector class
