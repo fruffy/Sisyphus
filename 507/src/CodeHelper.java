@@ -1,10 +1,8 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import com.github.javaparser.ParseException;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.type.Type;
@@ -28,6 +26,13 @@ public class CodeHelper {
 			// System.out.println("Working Directory = " +
 			// System.getProperty("user.dir"));
 			return;
+		}
+		if (!(libFile.exists()) || libFile.isDirectory()) {
+			System.out.println("Error reading reference library.");
+			// Debug
+			// System.out.println("Working Directory = " +
+			// System.getProperty("user.dir"));
+			return;			
 		}
 
 		ArrayList<String> libMethodNames = new ArrayList<String>();
@@ -95,7 +100,6 @@ public class CodeHelper {
 		System.out.println(nodeFeature.getFeatureMap());
 		System.out.println(nodeFeature.getFeatureVector());
 
-		// ugly stuff
 		CloneDetector cloneDetect = new CloneDetector();
 
 		Method srcMethod1 = srcMethods.get(0);
