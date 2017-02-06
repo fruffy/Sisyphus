@@ -74,9 +74,35 @@ public class Method {
 				queueNodes.add(child);
 			}
 		}
-		methodNodes.remove(0);
 		return methodNodes;
 		
+	}
+	
+	
+	/*
+	 * Combine the NodeFeatures of all Nodes into one NodeFeature at the root
+	 * This will be the characteristic feature of the whole method
+	 * (from the Deckard paper)
+	 */
+	private NodeFeature getMethodFeature(Node current){
+		NodeFeature nodeFeature = new NodeFeature();
+		nodeFeature.addClasses(current.getClass().toString());
+		if(current.getChildNodes().size()==0){
+			return nodeFeature;
+		}
+		List<Node> currentChildren = current.getChildNodes();
+		for(Node child: currentChildren){
+			NodeFeature childMethodFeature = getMethodFeature(child);
+			nodeFeature.combineNodeFeatures(childMethodFeature);
+		}
+		return nodeFeature;
+		
+	}
+	
+	public NodeFeature getMethodFeature(){
+		List<Node> methodNodes = getMethodNodes();
+		NodeFeature methodFeature = getMethodFeature(methodNodes.get(0));
+		return methodFeature;
 	}
 	
 	/**

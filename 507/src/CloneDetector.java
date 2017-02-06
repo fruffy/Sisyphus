@@ -16,12 +16,7 @@ public class CloneDetector {
 	public CloneDetector() {
 
 	}
-
-	/*
-	 * This method should do some kind of comparison between Method 1 and Method
-	 * 2 and return true if they are exact/near matches. Right now they just
-	 * return true if they are exact matches
-	 */
+	
 	
 	public List<Method> findSimiliarMethods(List<Method> srcMethods, List<Method> refMethods) {
 		List<Method> matchedMethods = new ArrayList<Method>();
@@ -44,15 +39,55 @@ public class CloneDetector {
 	public boolean matchMethodNodes(Method method1, Method method2){
 		List<Node> nodes1 = method1.getMethodNodes();
 		List<Node> nodes2 = method2.getMethodNodes();
-		
+		if(nodes1.size()!=nodes2.size()){
+			return false;
+		}
+
 		for(int i = 0; i<nodes1.size(); i++){
+			//System.out.println(nodes1.get(i).getClass());
 			if(!nodes1.get(i).getClass().equals(nodes2.get(i).getClass())){
 				return false;
 			}
 		}
 		return true;
 	}
-
+	
+	/*
+	 * Calculate the squared euclidean distance between vec1 and vec2
+	 */
+	public double calculateDistance(int[] vec1, int[] vec2){
+		double distance = 0.0;
+		for(int i = 0; i<vec1.length; i++){
+			distance += (vec1[i] - vec2[i])*(vec1[i] - vec2[i]);
+		}
+		return distance;
+	}
+	
+	/*
+	 * Check if distance between method1 NodeFeature and method2 NodeFeature is below the
+	 * threshold
+	 */
+	public boolean matchMethodNodeFeatures(Method method1, Method method2,double threshold){
+		NodeFeature feature1 = method1.getMethodFeature();
+		NodeFeature feature2 = method2.getMethodFeature();
+		feature1.makeComparableNodeFeatures(feature2);
+		//System.out.println(feature1.getFeatureVectorSize());
+		//System.out.println(feature2.getFeatureVectorSize());
+		int[] featureArray1 = feature1.getFeatureVector();
+		int[] featureArray2 = feature2.getFeatureVector();
+		double dist = calculateDistance(featureArray1,featureArray2);
+		if(dist <= threshold){
+			return true;
+		}
+		return false;
+	}
+	
+	
+	/*
+	 * This method should do some kind of comparison between Method 1 and Method
+	 * 2 and return true if they are exact/near matches. Right now they just
+	 * return true if they are exact matches
+	 */
 	public boolean matchMethods(Method method1, Method method2) {
 		if (method1.getMethodName().compareToIgnoreCase(method2.getMethodName()) != 0) {
 			return false;
