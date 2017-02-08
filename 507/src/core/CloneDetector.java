@@ -1,3 +1,4 @@
+package core;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,17 +13,19 @@ import com.github.javaparser.ast.body.Parameter;
 */
 
 public class CloneDetector {
+	private List <Method> methodLibrary;
 
-	public CloneDetector() {
-
+	public CloneDetector(List<Method> libMethods) {
+		this.methodLibrary = libMethods;
 	}
 	
 	
-	public List<Method> findSimiliarMethods(List<Method> srcMethods, List<Method> refMethods) {
+	public List<Method> findSimiliarMethods(List<Method> srcMethods) {
 		List<Method> matchedMethods = new ArrayList<Method>();
 		for (Method src : srcMethods) {
-			for (Method ref : refMethods) {
-				if (matchMethods(src, ref)) {
+			for (Method ref : methodLibrary) {
+				if (matchMethodNodeFeatures(src, ref, 1)) {
+					System.out.println("Match! "+ src.getMethodName() +" can be replaced by "+ ref.getMethodName());
 					matchedMethods.add(src);
 				}
 
@@ -36,7 +39,7 @@ public class CloneDetector {
 	 * Checks if the abstract syntax tree of the body of method 1
 	 * is the same as that of method2
 	 */
-	public boolean matchMethodNodes(Method method1, Method method2){
+	private boolean matchMethodNodes(Method method1, Method method2){
 		List<Node> nodes1 = method1.getMethodNodes();
 		List<Node> nodes2 = method2.getMethodNodes();
 		if(nodes1.size()!=nodes2.size()){
@@ -55,7 +58,7 @@ public class CloneDetector {
 	/*
 	 * Calculate the squared euclidean distance between vec1 and vec2
 	 */
-	public double calculateDistance(int[] vec1, int[] vec2){
+	private double calculateDistance(int[] vec1, int[] vec2){
 		double distance = 0.0;
 		for(int i = 0; i<vec1.length; i++){
 			distance += (vec1[i] - vec2[i])*(vec1[i] - vec2[i]);

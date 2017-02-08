@@ -36,23 +36,30 @@ public class EclipseParser {
 				Block block = meth.getBody();
 				System.out.println(
 						"Method '" + meth.getName() + "' at line " + cu.getLineNumber(meth.getStartPosition()));
-				//System.out.println("Body " + meth.getBody().toString());
+				// System.out.println("Body " + meth.getBody().toString());
 
-				System.out.println("Declarations " + meth.parameters());
-				//here can access the first element of the returned statement list
-				String str = block.statements().get(0).toString();
-		 
-				System.out.println(str);
-		 
+				// System.out.println("Declarations " + meth.parameters());
+				// here can access the first element of the returned statement
+				// list
+				// String str = block.statements().get(0).toString();
+
+				// System.out.println("Statements " +str);
+
 				block.accept(new ASTVisitor() {
-		 
+
 					public boolean visit(SimpleName node) {
-		 
+					/*	Expression exp = node.getExpression();
+						if (exp != null) {
+						    ITypeBinding typeBinding = node.getExpression().resolveTypeBinding();
+						    System.out.println("Type: " + typeBinding);	
+						}*/
+					   // ITypeBinding typeBinding = node.getExpression().resolveTypeBinding();
+					   // System.out.println("Type: " + typeBinding.toString());
 						System.out.println("Name: " + node.getFullyQualifiedName());
-		 
+
 						return true;
 					}
-		 
+
 				});
 				return true;
 
@@ -76,7 +83,7 @@ public class EclipseParser {
 		char[] buf = new char[10];
 		int numRead = 0;
 		while ((numRead = reader.read(buf)) != -1) {
-			System.out.println(numRead);
+			//System.out.println(numRead);
 			String readData = String.valueOf(buf, 0, numRead);
 			fileData.append(readData);
 			buf = new char[1024];

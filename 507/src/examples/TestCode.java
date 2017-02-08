@@ -1,3 +1,4 @@
+package examples;
 
 public class TestCode {
 
@@ -39,10 +40,10 @@ public class TestCode {
 		return num;
 
 	}
-//	public int absoluteLib(int num) {
-//		return Math.abs(num);
-//
-//	}
+	public int absoluteLib(int num) {
+		return Math.abs(num);
+
+	}
 	public int noOfLegs() {
 		int test = 3 + 3;
 		int test2 = 2;
@@ -53,5 +54,4 @@ public class TestCode {
 	public static int abs(int x){
 		return (x < 0) ? -x : x;
 	}
-
 }
