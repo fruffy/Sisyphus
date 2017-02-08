@@ -1,4 +1,5 @@
 package core;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,19 +14,28 @@ import com.github.javaparser.ast.body.Parameter;
 */
 
 public class CloneDetector {
-	private List <Method> methodLibrary;
+	private List<Method> methodLibrary;
 
 	public CloneDetector(List<Method> libMethods) {
 		this.methodLibrary = libMethods;
 	}
-	
-	
+
+	public CloneDetector() {
+	}
+
+	/**
+	 * Takes a list of Method objects and matches it against a reference library
+	 * Returns a list of matched methods
+	 * 
+	 * @param srcMethods
+	 * @return
+	 */
 	public List<Method> findSimiliarMethods(List<Method> srcMethods) {
 		List<Method> matchedMethods = new ArrayList<Method>();
 		for (Method src : srcMethods) {
 			for (Method ref : methodLibrary) {
-				if (matchMethodNodeFeatures(src, ref, 1)) {
-					System.out.println("Match! "+ src.getMethodName() +" can be replaced by "+ ref.getMethodName());
+				if (matchMethodNodes(src, ref)) {
+					System.out.println("Match! " + src.getMethodName() + " can be replaced by " + ref.getMethodName());
 					matchedMethods.add(src);
 				}
 
@@ -34,58 +44,79 @@ public class CloneDetector {
 		return matchedMethods;
 
 	}
-	
-	/*
-	 * Checks if the abstract syntax tree of the body of method 1
-	 * is the same as that of method2
+
+	/**
+	 * Takes a list of Method objects and matches it against a provided
+	 * reference library Returns a list of matched methods
+	 * 
+	 * @param srcMethods
+	 * @return
 	 */
-	private boolean matchMethodNodes(Method method1, Method method2){
+	public List<Method> findSimiliarMethods(List<Method> srcMethods, List<Method> refMethods) {
+		List<Method> matchedMethods = new ArrayList<Method>();
+		for (Method src : srcMethods) {
+			for (Method ref : refMethods) {
+				if (matchMethodNodes(src, ref)) {
+					System.out.println("Match! " + src.getMethodName() + " can be replaced by " + ref.getMethodName());
+					matchedMethods.add(src);
+				}
+
+			}
+		}
+		return matchedMethods;
+
+	}
+
+	/*
+	 * Checks if the abstract syntax tree of the body of method 1 is the same as
+	 * that of method2
+	 */
+	public boolean matchMethodNodes(Method method1, Method method2) {
 		List<Node> nodes1 = method1.getMethodNodes();
 		List<Node> nodes2 = method2.getMethodNodes();
-		if(nodes1.size()!=nodes2.size()){
+		if (nodes1.size() != nodes2.size()) {
 			return false;
 		}
 
-		for(int i = 0; i<nodes1.size(); i++){
-			//System.out.println(nodes1.get(i).getClass());
-			if(!nodes1.get(i).getClass().equals(nodes2.get(i).getClass())){
+		for (int i = 0; i < nodes1.size(); i++) {
+			// System.out.println(nodes1.get(i).getClass());
+			if (!nodes1.get(i).getClass().equals(nodes2.get(i).getClass())) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
+
 	/*
 	 * Calculate the squared euclidean distance between vec1 and vec2
 	 */
-	private double calculateDistance(int[] vec1, int[] vec2){
+	private double calculateDistance(int[] vec1, int[] vec2) {
 		double distance = 0.0;
-		for(int i = 0; i<vec1.length; i++){
-			distance += (vec1[i] - vec2[i])*(vec1[i] - vec2[i]);
+		for (int i = 0; i < vec1.length; i++) {
+			distance += (vec1[i] - vec2[i]) * (vec1[i] - vec2[i]);
 		}
 		return distance;
 	}
-	
+
 	/*
-	 * Check if distance between method1 NodeFeature and method2 NodeFeature is below the
-	 * threshold
+	 * Check if distance between method1 NodeFeature and method2 NodeFeature is
+	 * below the threshold
 	 */
-	public boolean matchMethodNodeFeatures(Method method1, Method method2,double threshold){
+	public boolean matchMethodNodeFeatures(Method method1, Method method2, double threshold) {
 		NodeFeature feature1 = method1.getMethodFeature();
 		NodeFeature feature2 = method2.getMethodFeature();
 		feature1.makeComparableNodeFeatures(feature2);
-		//System.out.println(feature1.getFeatureVectorSize());
-		//System.out.println(feature2.getFeatureVectorSize());
+		// System.out.println(feature1.getFeatureVectorSize());
+		// System.out.println(feature2.getFeatureVectorSize());
 		int[] featureArray1 = feature1.getFeatureVector();
 		int[] featureArray2 = feature2.getFeatureVector();
-		double dist = calculateDistance(featureArray1,featureArray2);
-		if(dist <= threshold){
+		double dist = calculateDistance(featureArray1, featureArray2);
+		if (dist <= threshold) {
 			return true;
 		}
 		return false;
 	}
-	
-	
+
 	/*
 	 * This method should do some kind of comparison between Method 1 and Method
 	 * 2 and return true if they are exact/near matches. Right now they just
@@ -120,7 +151,7 @@ public class CloneDetector {
 				return false;
 			}
 		}
-		return matchMethodNodes(method1,method2);
+		return matchMethodNodes(method1, method2);
 
 	}
 
