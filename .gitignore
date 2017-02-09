@@ -5,7 +5,7 @@ target
 .settings
 *~
 /target
-.project
+.project'
 .classpath
 .idea/
 *.iml
@@ -13,7 +13,7 @@ release.properties
 .metadata
 .recommenders
 
-*.class
+
 
 # BlueJ files
 *.ctxt

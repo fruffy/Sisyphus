@@ -1,4 +1,5 @@
 package core;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class Method {
 		this.parameters = methodDeclaration.getParameters();
 		this.returnType = methodDeclaration.getType();
 		this.body = methodDeclaration.getBody().get();
+		this.trimBody();
 	}
 
 	public String getMethodName() {
@@ -55,63 +57,68 @@ public class Method {
 
 		return filteredBody;
 	}
-	
-	
+
+	public void trimBody() {
+		BlockStmt filteredBody = (BlockStmt) this.body.clone();
+		for (Comment co : filteredBody.getAllContainedComments()) {
+			co.remove();
+		}
+	}
+
 	/*
-	 * Do a traversal of the nodes of the method body without
-	 * comments and return the list
+	 * Do a traversal of the nodes of the method body without comments and
+	 * return the list
 	 */
-	public List<Node> getMethodNodes(){
+	public List<Node> getMethodNodes() {
 		List<Node> methodNodes = new ArrayList<Node>();
 		List<Node> queueNodes = new ArrayList<Node>();
 		queueNodes.add(this.getFilteredBody());
-		while(!queueNodes.isEmpty()){
+		while (!queueNodes.isEmpty()) {
 			Node current = queueNodes.remove(0);
-			if(!(current instanceof Comment)){
+			if (!(current instanceof Comment)) {
 				methodNodes.add(current);
 			}
 			List<Node> currentChildren = current.getChildNodes();
-			for(Node child: currentChildren){
+			for (Node child : currentChildren) {
 				queueNodes.add(child);
 			}
 		}
 		return methodNodes;
-		
+
 	}
-	
-	
+
 	/*
 	 * Combine the NodeFeatures of all Nodes into one NodeFeature at the root
-	 * This will be the characteristic feature of the whole method
-	 * (from the Deckard paper)
+	 * This will be the characteristic feature of the whole method (from the
+	 * Deckard paper)
 	 */
-	private NodeFeature getMethodFeature(Node current){
+	private NodeFeature getMethodFeature(Node current) {
 		NodeFeature nodeFeature = new NodeFeature();
 		nodeFeature.addClasses(current.getClass().toString());
-		if(current.getChildNodes().size()==0){
+		if (current.getChildNodes().size() == 0) {
 			return nodeFeature;
 		}
 		List<Node> currentChildren = current.getChildNodes();
-		for(Node child: currentChildren){
+		for (Node child : currentChildren) {
 			NodeFeature childMethodFeature = getMethodFeature(child);
 			nodeFeature.combineNodeFeatures(childMethodFeature);
 		}
 		return nodeFeature;
-		
+
 	}
-	
-	public NodeFeature getMethodFeature(){
+
+	public NodeFeature getMethodFeature() {
 		List<Node> methodNodes = getMethodNodes();
 		NodeFeature methodFeature = getMethodFeature(methodNodes.get(0));
 		return methodFeature;
 	}
-	
+
 	/**
-	 * Return a new method that is equivalent to this method,
-	 * but normalized by the given normalizer
+	 * Return a new method that is equivalent to this method, but normalized by
+	 * the given normalizer
 	 */
-	public Method normalize(Normalizer norm){
+	public Method normalize(Normalizer norm) {
 		norm.initialize(this.originalDecl);
-		return new Method((MethodDeclaration)norm.result());
+		return new Method((MethodDeclaration) norm.result());
 	}
 }

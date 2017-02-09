@@ -31,10 +31,15 @@ public class CloneDetector {
 	 * @return
 	 */
 	public List<Method> findSimiliarMethods(List<Method> srcMethods) {
+
 		List<Method> matchedMethods = new ArrayList<Method>();
+		if (methodLibrary == null) {
+			System.out.println("Warning: Method library not initialised, nothing to compare to!");
+			return matchedMethods;
+		}
 		for (Method src : srcMethods) {
 			for (Method ref : methodLibrary) {
-				if (matchMethodNodes(src, ref)) {
+				if (matchMethodNodeFeatures(src, ref,1)) {
 					System.out.println("Match! " + src.getMethodName() + " can be replaced by " + ref.getMethodName());
 					matchedMethods.add(src);
 				}

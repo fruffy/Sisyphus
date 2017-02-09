@@ -96,7 +96,7 @@ public class EclipseParser {
 
 	// loop directory to get file list
 	public static void ParseFilesInDir() throws IOException {
-		parse(readFileToString("src/TestCode.java"));
+		parse(readFileToString("src/examples/TestCode.java"));
 		/*
 		 * File dirs = new File("."); String dirPath = dirs.getCanonicalPath() +
 		 * File.separator+"src"+File.separator;
