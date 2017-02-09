@@ -65,6 +65,15 @@ public class Method {
 		}
 	}
 
+	public MethodDeclaration getFilteredMethod() {
+		MethodDeclaration methodDeclaration = this.originalDecl;
+		for (Comment co : methodDeclaration.getAllContainedComments()) {
+			co.remove();
+		}
+
+		return methodDeclaration;
+	}
+
 	/*
 	 * Do a traversal of the nodes of the method body without comments and
 	 * return the list
@@ -72,7 +81,7 @@ public class Method {
 	public List<Node> getMethodNodes() {
 		List<Node> methodNodes = new ArrayList<Node>();
 		List<Node> queueNodes = new ArrayList<Node>();
-		queueNodes.add(this.getFilteredBody());
+		queueNodes.add(this.getFilteredMethod());
 		while (!queueNodes.isEmpty()) {
 			Node current = queueNodes.remove(0);
 			if (!(current instanceof Comment)) {
