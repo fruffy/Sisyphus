@@ -106,8 +106,10 @@ public class Method {
 		NodeFeature nodeFeature = new NodeFeature();
 		// If a node is of Primitive type then we want to store its value(whether it
 		// is an int or double) rather than the fact that it is a Primitive type 
-		// because that information is more useful
-		if(current.getClass().toString().equals("class com.github.javaparser.ast.type.PrimitiveType")){
+		// because that information is more useful.
+		//Do the same for MethodCallExpression.
+		if(current.getClass().toString().equals("class com.github.javaparser.ast.type.PrimitiveType") || 
+				current.getClass().toString().equals("class com.github.javaparser.ast.expr.MethodCallExpr")	){
 			nodeFeature.addClasses(current.toString());
 		}
 		else{

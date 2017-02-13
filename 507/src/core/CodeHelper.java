@@ -92,16 +92,16 @@ public class CodeHelper {
 		System.out.println("Nodes of method"); for(Node node:
 		srcMethodNodes){ System.out.println(node.getClass().toString()); }*/
 		 
-		System.out.println("Testing Source NodeFeature of method: "+srcMethods.get(3).getMethodName());
-		NodeFeature nodeFeature = srcMethods.get(3).getMethodFeature();
+		System.out.println("Testing Source NodeFeature of method: "+srcMethods.get(4).getMethodName());
+		NodeFeature nodeFeature = srcMethods.get(4).getMethodFeature();
 		System.out.println(nodeFeature.getFeatureMap());
 		
-		System.out.println("Testing Lib NodeFeature of method: "+libMethods.get(39).getMethodName());
-		NodeFeature nodeFeature2 = libMethods.get(41).getMethodFeature();
+		System.out.println("Testing Lib NodeFeature of method: "+libMethods.get(3).getMethodName());
+		NodeFeature nodeFeature2 = libMethods.get(3).getMethodFeature();
 		System.out.println(nodeFeature2.getFeatureMap());
 		
 		CloneDetector cloneDetect = new CloneDetector();
-		System.out.println(cloneDetect.matchMethodNodeFeatures(srcMethods.get(3), libMethods.get(41), 1.0));
+		System.out.println(cloneDetect.matchMethodNodeFeatures(srcMethods.get(4), libMethods.get(3), 1.0));
 
 		// ugly stuff
 		/*CloneDetector cloneDetect = new CloneDetector();
