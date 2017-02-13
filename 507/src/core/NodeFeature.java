@@ -68,23 +68,9 @@ public class NodeFeature {
 	 */
 	public void combineNodeFeatures(NodeFeature n){
 		for(String key: n.getFeatureMap().keySet()){
-			if(!featureMap.containsKey(key)){
-				addClasses(key);
-			}
+			addClasses(key);
 		}
 		
-	}
-	
-	/*
-	 * Return the featureMap as an int array
-	 */
-	public int[] getFeatureVector(){
-		int[] featureVector = new int[featureVectorSize];
-		int i = 0;
-		for(String key: featureMap.keySet()){
-			featureVector[i++] = featureMap.get(key);
-		}
-		return featureVector;
 	}
 
 }

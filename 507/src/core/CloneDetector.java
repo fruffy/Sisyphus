@@ -1,6 +1,7 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.github.javaparser.ast.Node;
@@ -40,7 +41,8 @@ public class CloneDetector {
 		for (Method src : srcMethods) {
 			for (Method ref : methodLibrary) {
 				if (matchMethodNodeFeatures(src, ref,1)) {
-					System.out.println("Match! " + src.getMethodName() + " can be replaced by " + ref.getMethodName());
+					System.out.println("Match! " + src.getMethodName() + " with return type " + src.getReturnType() + 
+							" can be replaced by " + ref.getMethodName()+ " with return type " + ref.getReturnType());
 					matchedMethods.add(src);
 				}
 
@@ -84,7 +86,6 @@ public class CloneDetector {
 		}
 
 		for (int i = 0; i < nodes1.size(); i++) {
-			// System.out.println(nodes1.get(i).getClass());
 			if (!nodes1.get(i).getClass().equals(nodes2.get(i).getClass())) {
 				return false;
 			}
@@ -111,10 +112,30 @@ public class CloneDetector {
 		NodeFeature feature1 = method1.getMethodFeature();
 		NodeFeature feature2 = method2.getMethodFeature();
 		feature1.makeComparableNodeFeatures(feature2);
-		// System.out.println(feature1.getFeatureVectorSize());
-		// System.out.println(feature2.getFeatureVectorSize());
-		int[] featureArray1 = feature1.getFeatureVector();
-		int[] featureArray2 = feature2.getFeatureVector();
+		HashMap<String,Integer> featureMap1 = feature1.getFeatureMap();
+		HashMap<String,Integer> featureMap2 = feature2.getFeatureMap();
+		
+		int[] featureArray1 = new int[feature1.getFeatureVectorSize()];
+		int[] featureArray2 = new int[feature2.getFeatureVectorSize()];
+		int count = 0;
+		for(String key:featureMap1.keySet()){
+			featureArray1[count] = featureMap1.get(key);
+			featureArray2[count] = featureMap2.get(key);
+			count++;
+		}
+		
+		/*System.out.println("After comparison: ");
+		System.out.println(method1.getMethodName());
+		System.out.println(feature1.getFeatureMap());
+		for(Integer val: featureArray1){
+			System.out.print(val+" ");
+		}
+		System.out.println(method2.getMethodName());
+		System.out.println(feature2.getFeatureMap());
+		for(Integer val: featureArray2){
+			System.out.print(val+" ");
+		}*/
+		
 		double dist = calculateDistance(featureArray1, featureArray2);
 		if (dist <= threshold) {
 			return true;

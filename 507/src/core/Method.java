@@ -84,6 +84,7 @@ public class Method {
 		queueNodes.add(this.getFilteredMethod());
 		while (!queueNodes.isEmpty()) {
 			Node current = queueNodes.remove(0);
+			//System.out.println("current: "+current+", class: "+current.getClass());
 			if (!(current instanceof Comment)) {
 				methodNodes.add(current);
 			}
@@ -103,7 +104,15 @@ public class Method {
 	 */
 	private NodeFeature getMethodFeature(Node current) {
 		NodeFeature nodeFeature = new NodeFeature();
-		nodeFeature.addClasses(current.getClass().toString());
+		// If a node is of Primitive type then we want to store its value(whether it
+		// is an int or double) rather than the fact that it is a Primitive type 
+		// because that information is more useful
+		if(current.getClass().toString().equals("class com.github.javaparser.ast.type.PrimitiveType")){
+			nodeFeature.addClasses(current.toString());
+		}
+		else{
+			nodeFeature.addClasses(current.getClass().toString());
+		}
 		if (current.getChildNodes().size() == 0) {
 			return nodeFeature;
 		}

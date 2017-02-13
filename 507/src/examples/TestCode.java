@@ -44,6 +44,11 @@ public class TestCode {
 		return Math.abs(num);
 
 	}
+	
+	public double absoluteLib(double num) {
+		return Math.abs(num);
+	}
+	
 	public int noOfLegs() {
 		int test = 3 + 3;
 		int test2 = 2;

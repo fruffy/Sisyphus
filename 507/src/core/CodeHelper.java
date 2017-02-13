@@ -66,13 +66,13 @@ public class CodeHelper {
 		ArrayList<Type> libMethodReturnTypes = new ArrayList<Type>();
 		ArrayList<Type> srcMethodReturnTypes = new ArrayList<Type>();
 		ArrayList<Parameter> srcMethodParameter = new ArrayList<Parameter>();
-		ArrayList<Method> libMethods = new ArrayList<Method>();
-		ArrayList<Method> srcMethods = new ArrayList<Method>();
+		ArrayList<Method> libMethods = libparser.getMethods();
+		ArrayList<Method> srcMethods = srcparser.getMethods();
 		ArrayList<Node> libMethodNodes = new ArrayList<Node>();
 		ArrayList<Node> srcMethodNodes = new ArrayList<Node>();
 		// Test the results of javaparser functions
 		
-		  System.out.println("library method names");
+		  /*System.out.println("library method names");
 		  System.out.println(libMethodNames);
 		  System.out.println("library method return types");
 		  System.out.println(libMethodReturnTypes);
@@ -90,15 +90,21 @@ public class CodeHelper {
 		System.out.println("Body of method after renaming");
 		System.out.println(srcMethods.get(0).normalize(new VariableNameNormalizer()).getFilteredBody());
 		System.out.println("Nodes of method"); for(Node node:
-		srcMethodNodes){ System.out.println(node.getClass().toString()); }
+		srcMethodNodes){ System.out.println(node.getClass().toString()); }*/
 		 
-		System.out.println("Testing NodeFeature of method");
-		NodeFeature nodeFeature = srcMethods.get(0).getMethodFeature();
+		System.out.println("Testing Source NodeFeature of method: "+srcMethods.get(3).getMethodName());
+		NodeFeature nodeFeature = srcMethods.get(3).getMethodFeature();
 		System.out.println(nodeFeature.getFeatureMap());
-		System.out.println(nodeFeature.getFeatureVector());
+		
+		System.out.println("Testing Lib NodeFeature of method: "+libMethods.get(39).getMethodName());
+		NodeFeature nodeFeature2 = libMethods.get(41).getMethodFeature();
+		System.out.println(nodeFeature2.getFeatureMap());
+		
+		CloneDetector cloneDetect = new CloneDetector();
+		System.out.println(cloneDetect.matchMethodNodeFeatures(srcMethods.get(3), libMethods.get(41), 1.0));
 
 		// ugly stuff
-		CloneDetector cloneDetect = new CloneDetector();
+		/*CloneDetector cloneDetect = new CloneDetector();
 		
 		  System.out.println("Testing match method"); Method libMethod =
 		  libMethods.get(0); Method srcMethod = srcMethods.get(0);
@@ -127,7 +133,7 @@ public class CodeHelper {
 		srcMethod2 = srcMethods.get(3);
 		System.out.println("Method1: " + srcMethod1.getMethodName() + " Method2: " + srcMethod2.getMethodName());
 		System.out.println(cloneDetect.matchMethodNodeFeatures(srcMethod1, srcMethod2, 0.0));
-
+	*/
 	}
 
 }
