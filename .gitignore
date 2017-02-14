@@ -13,7 +13,7 @@ release.properties
 .metadata
 .recommenders
 
-
+*.class
 
 # BlueJ files
 *.ctxt

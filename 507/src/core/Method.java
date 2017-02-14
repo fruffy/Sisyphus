@@ -1,6 +1,7 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.github.javaparser.ast.Node;
@@ -74,6 +75,35 @@ public class Method {
 		return methodDeclaration;
 	}
 
+	/**
+	 * Attempt to build a visual representation of the function tree Intended as
+	 * basis of understanding of requirements for the control graph tree
+	 */
+	public void printVisualRepresentation() {
+		System.out.println(originalDecl.getNameAsString());
+		List<Node> children = originalDecl.getChildNodes();
+		recVisualRepresentation(children);
+
+	}
+
+	/**
+	 * Recursive builder for visual representation
+	 * 
+	 * @param children
+	 */
+	private void recVisualRepresentation(List<Node> children) {
+		if (children == null) {
+			return;
+		}
+		for (int i = 0; i < children.size(); i++) {
+			System.out.print(children.get(i).toString() + " ");
+			if (children.get(i).getChildNodes() != null) {
+				recVisualRepresentation(children.get(i).getChildNodes());
+			}
+		}
+		System.out.println();
+	}
+
 	/*
 	 * Do a traversal of the nodes of the method body without comments and
 	 * return the list
@@ -84,7 +114,8 @@ public class Method {
 		queueNodes.add(this.getFilteredMethod());
 		while (!queueNodes.isEmpty()) {
 			Node current = queueNodes.remove(0);
-			//System.out.println("current: "+current+", class: "+current.getClass());
+			// System.out.println("current: "+current+", class:
+			// "+current.getClass());
 			if (!(current instanceof Comment)) {
 				methodNodes.add(current);
 			}
@@ -104,15 +135,15 @@ public class Method {
 	 */
 	private NodeFeature getMethodFeature(Node current) {
 		NodeFeature nodeFeature = new NodeFeature();
-		// If a node is of Primitive type then we want to store its value(whether it
-		// is an int or double) rather than the fact that it is a Primitive type 
+		// If a node is of Primitive type then we want to store its
+		// value(whether it
+		// is an int or double) rather than the fact that it is a Primitive type
 		// because that information is more useful.
-		//Do the same for MethodCallExpression.
-		if(current.getClass().toString().equals("class com.github.javaparser.ast.type.PrimitiveType") || 
-				current.getClass().toString().equals("class com.github.javaparser.ast.expr.MethodCallExpr")	){
+		// Do the same for MethodCallExpression.
+		if (current.getClass().toString().equals("class com.github.javaparser.ast.type.PrimitiveType")
+				|| current.getClass().toString().equals("class com.github.javaparser.ast.expr.MethodCallExpr")) {
 			nodeFeature.addClasses(current.toString());
-		}
-		else{
+		} else {
 			nodeFeature.addClasses(current.getClass().toString());
 		}
 		if (current.getChildNodes().size() == 0) {

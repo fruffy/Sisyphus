@@ -122,5 +122,10 @@ public class SyntaxParser {
 		}
 		return returnTypes;
 	}
-
+	
+	public Type test() {
+		Type returnTypes = this.getMethods().get(0).getReturnType();
+	
+		return returnTypes;
+	}
 }
