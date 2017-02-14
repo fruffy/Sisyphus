@@ -87,521 +87,522 @@ import com.github.javaparser.ast.type.WildcardType;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 
 /**
- * A visitor that returns the same value for each node.
- * The purpose of this is to provide a "default" value which
- * can be extended to return a specific value for some nodes, and the default in others.
+ * A visitor that returns the same value for each node. The purpose of this is
+ * to provide a "default" value which can be extended to return a specific value
+ * for some nodes, and the default in others.
  *
- * @param <Ret> The type returned by the visitor
+ * @param <Ret>
+ *            The type returned by the visitor
  */
 public class DefaultValueVisitor<Ret> implements GenericVisitor<Ret, Object> {
 
 	public final Ret defaultValue;
-	
-	public DefaultValueVisitor(Ret defaultValue){
+
+	public DefaultValueVisitor(Ret defaultValue) {
 		this.defaultValue = defaultValue;
 	}
-	
+
 	@Override
 	public Ret visit(CompilationUnit n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(PackageDeclaration n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(TypeParameter n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(LineComment n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(BlockComment n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ClassOrInterfaceDeclaration n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(EnumDeclaration n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(EnumConstantDeclaration n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(AnnotationDeclaration n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(AnnotationMemberDeclaration n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(FieldDeclaration n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(VariableDeclarator n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ConstructorDeclaration n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(MethodDeclaration n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(Parameter n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(EmptyMemberDeclaration n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(InitializerDeclaration n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(JavadocComment n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ClassOrInterfaceType n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(PrimitiveType n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ArrayType n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ArrayCreationLevel n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(IntersectionType n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(UnionType n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(VoidType n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(WildcardType n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(UnknownType n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ArrayAccessExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ArrayCreationExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ArrayInitializerExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(AssignExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(BinaryExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(CastExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ClassExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ConditionalExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(EnclosedExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(FieldAccessExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(InstanceOfExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(StringLiteralExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(IntegerLiteralExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(LongLiteralExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(CharLiteralExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(DoubleLiteralExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(BooleanLiteralExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(NullLiteralExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(MethodCallExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(NameExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ObjectCreationExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ThisExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(SuperExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(UnaryExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(VariableDeclarationExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(MarkerAnnotationExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(SingleMemberAnnotationExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(NormalAnnotationExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(MemberValuePair n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ExplicitConstructorInvocationStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(LocalClassDeclarationStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(AssertStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(BlockStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(LabeledStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(EmptyStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ExpressionStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(SwitchStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(SwitchEntryStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(BreakStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ReturnStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(IfStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(WhileStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ContinueStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(DoStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ForeachStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ForStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ThrowStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(SynchronizedStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(TryStmt n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(CatchClause n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(LambdaExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(MethodReferenceExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(TypeExpr n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(NodeList n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(Name n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(SimpleName n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
 	@Override
 	public Ret visit(ImportDeclaration n, Object arg) {
-		
+
 		return defaultValue;
 	}
 
