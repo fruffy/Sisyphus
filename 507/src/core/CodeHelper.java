@@ -8,6 +8,7 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.type.Type;
 
+import parsers.ControlFlowParser;
 import parsers.SyntaxParser;
 
 public class CodeHelper {
@@ -47,11 +48,13 @@ public class CodeHelper {
 		}
 
 		// testing(srcparser, libparser);
-
 		srcMethods = srcparser.getMethods();
+		
+		ControlFlowParser cfg = new ControlFlowParser(srcMethods.get(0));
+		cfg.parse();
 		CloneDetector cloneDetect = new CloneDetector(libparser.getMethods());
-
-		cloneDetect.findSimiliarMethods(srcMethods);
+		
+		//cloneDetect.findSimiliarMethods(srcMethods);
 
 	}
 
@@ -63,7 +66,7 @@ public class CodeHelper {
 	 * Method to test individual features of the CloneDetector class if needed
 	 * Purpose is to keep the main code flow clean and readable
 	 */
-
+	@SuppressWarnings("unused")
 	public static void testing(SyntaxParser srcparser, SyntaxParser libparser) {
 		// srcparser.getMethods().get(0).printVisualRepresentation();
 

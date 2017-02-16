@@ -1,7 +1,6 @@
 package core;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.github.javaparser.ast.Node;
@@ -73,35 +72,6 @@ public class Method {
 		}
 
 		return methodDeclaration;
-	}
-
-	/**
-	 * Attempt to build a visual representation of the function tree Intended as
-	 * basis of understanding of requirements for the control graph tree
-	 */
-	public void printVisualRepresentation() {
-		System.out.println(originalDecl.getNameAsString());
-		List<Node> children = originalDecl.getChildNodes();
-		recVisualRepresentation(children);
-
-	}
-
-	/**
-	 * Recursive builder for visual representation
-	 * 
-	 * @param children
-	 */
-	private void recVisualRepresentation(List<Node> children) {
-		if (children == null) {
-			return;
-		}
-		for (int i = 0; i < children.size(); i++) {
-			System.out.print(children.get(i).toString() + " ");
-			if (children.get(i).getChildNodes() != null) {
-				recVisualRepresentation(children.get(i).getChildNodes());
-			}
-		}
-		System.out.println();
 	}
 
 	/*

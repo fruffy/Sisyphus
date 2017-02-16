@@ -27,7 +27,8 @@ public class SyntaxParser {
 	//private CombinedTypeSolver t;
 
 	public SyntaxParser(File inputFile) throws FileNotFoundException {
-		//this.t = new CombinedTypeSolver(new ReflectionTypeSolver(), new JavaParserTypeSolver(inputFile));
+		// this.t = new CombinedTypeSolver(new ReflectionTypeSolver(), new
+		// JavaParserTypeSolver(inputFile));
 		this.cu = JavaParser.parse(inputFile);
 		this.methodDeclarationList = this.getMethodDeclaration();
 	}
@@ -71,7 +72,6 @@ public class SyntaxParser {
 				System.out.println(" [L " + n.getBegin() + "] " + n);
 			}
 		}.visit(this.cu, null);
-
 	}
 
 	/*
@@ -90,7 +90,6 @@ public class SyntaxParser {
 		}.visit(this.cu, null);
 		return methodDecList;
 	}
-	
 
 	/*
 	 * Returns an arraylist of Method objects from parsing information
@@ -120,12 +119,6 @@ public class SyntaxParser {
 		for (Method call : methodList) {
 			returnTypes.add(call.getReturnType());
 		}
-		return returnTypes;
-	}
-	
-	public Type test() {
-		Type returnTypes = this.getMethods().get(0).getReturnType();
-	
 		return returnTypes;
 	}
 }

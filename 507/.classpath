@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="target/classes" path="src">
+	<classpathentry excluding="parsers/EclipseParser.java|parsers/MethodVisitor.java" kind="src" output="target/classes" path="src">
 		<attributes>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
@@ -17,13 +17,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/javaparser"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.core.contenttype_3.5.100.v20160418-1621.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.core.jobs_3.8.0.v20160509-0411.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.core.resources_3.11.1.v20161107-2032.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.core.runtime_3.12.0.v20160606-1342.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.equinox.common_3.8.0.v20160509-1230.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.equinox.preferences_3.6.1.v20160815-1406.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.jdt.core_3.12.2.v20161117-1814.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.osgi_3.11.2.v20161107-1947.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
