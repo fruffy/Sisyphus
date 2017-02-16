@@ -50,8 +50,7 @@ public class CodeHelper {
 		// testing(srcparser, libparser);
 		srcMethods = srcparser.getMethods();
 		
-		ControlFlowParser cfg = new ControlFlowParser(srcMethods.get(0));
-		cfg.parse();
+		ControlFlowParser cfg = new ControlFlowParser(srcMethods);
 		CloneDetector cloneDetect = new CloneDetector(libparser.getMethods());
 		
 		//cloneDetect.findSimiliarMethods(srcMethods);
