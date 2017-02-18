@@ -1,5 +1,14 @@
 package examples;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import core.CloneDetector;
+import core.Method;
+import parsers.ControlFlowParser;
+import parsers.SyntaxParser;
+
 public class TestCode {
 
 	public int absoluteVal(int number) {
@@ -8,7 +17,13 @@ public class TestCode {
 		/*testing comments
 		Mogambo
 		*/
-		int temp = 4;
+		try {
+			int temp =3 ;
+		} catch (IOException e) {
+			int temp = 4;
+			return;
+		}
+		
 		if (number < 0) {
 			return 0 - number; //Check1
 		} else {
@@ -16,7 +31,7 @@ public class TestCode {
 		}	/*
 		Check2
 		*/
-
+		
 	}
 	
 	public int absolute(int num) {
@@ -58,5 +73,6 @@ public class TestCode {
 	//Exact copy of version from math, with different variable names
 	public static int abs(int x){
 		return (x < 0) ? -x : x;
-	}
+	}	
+
 }
