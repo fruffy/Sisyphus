@@ -8,7 +8,7 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.type.Type;
 
-import normalizers.VariableNameNormalizer;
+import parsers.ControlFlowParser;
 import parsers.SyntaxParser;
 
 public class CodeHelper {
@@ -47,20 +47,28 @@ public class CodeHelper {
 			return;
 		}
 
-		//testing(srcparser, libparser);
-
+		// testing(srcparser, libparser);
 		srcMethods = srcparser.getMethods();
+		
+		ControlFlowParser cfg = new ControlFlowParser(srcMethods);
 		CloneDetector cloneDetect = new CloneDetector(libparser.getMethods());
-		cloneDetect.findSimiliarMethods(srcMethods);
+		
+		//cloneDetect.findSimiliarMethods(srcMethods);
 
 	}
 
+	/**
+	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * * * * * * * * * * * * * * * * * *
+	 **/
 	/*
 	 * Method to test individual features of the CloneDetector class if needed
 	 * Purpose is to keep the main code flow clean and readable
 	 */
-
+	@SuppressWarnings("unused")
 	public static void testing(SyntaxParser srcparser, SyntaxParser libparser) {
+		// srcparser.getMethods().get(0).printVisualRepresentation();
+
 		ArrayList<String> libMethodNames = new ArrayList<String>();
 		ArrayList<String> srcMethodNames = new ArrayList<String>();
 		ArrayList<Type> libMethodReturnTypes = new ArrayList<Type>();
@@ -71,69 +79,76 @@ public class CodeHelper {
 		ArrayList<Node> libMethodNodes = new ArrayList<Node>();
 		ArrayList<Node> srcMethodNodes = new ArrayList<Node>();
 		// Test the results of javaparser functions
-		
-		  /*System.out.println("library method names");
-		  System.out.println(libMethodNames);
-		  System.out.println("library method return types");
-		  System.out.println(libMethodReturnTypes);
-		  System.out.println("source code method names");
-		  System.out.println(srcMethodNames);
-		  System.out.println("source method return types");
-		  System.out.println(srcMethodReturnTypes);
-		  System.out.println("Parameter type of main method");
-		  System.out.println(srcMethodParameter.get(0).getType());
-		  System.out.println("Body of method with comments");
-		  System.out.println(srcMethods.get(0).getBody());
-		  System.out.println("Body of method without comments");
-		  System.out.println(srcMethods.get(0).getFilteredBody());
-		 
-		System.out.println("Body of method after renaming");
-		System.out.println(srcMethods.get(0).normalize(new VariableNameNormalizer()).getFilteredBody());
-		System.out.println("Nodes of method"); for(Node node:
-		srcMethodNodes){ System.out.println(node.getClass().toString()); }*/
-		 
-		System.out.println("Testing Source NodeFeature of method: "+srcMethods.get(4).getMethodName());
+
+		/*
+		 * System.out.println("library method names");
+		 * System.out.println(libMethodNames);
+		 * System.out.println("library method return types");
+		 * System.out.println(libMethodReturnTypes);
+		 * System.out.println("source code method names");
+		 * System.out.println(srcMethodNames);
+		 * System.out.println("source method return types");
+		 * System.out.println(srcMethodReturnTypes);
+		 * System.out.println("Parameter type of main method");
+		 * System.out.println(srcMethodParameter.get(0).getType());
+		 * System.out.println("Body of method with comments");
+		 * System.out.println(srcMethods.get(0).getBody());
+		 * System.out.println("Body of method without comments");
+		 * System.out.println(srcMethods.get(0).getFilteredBody());
+		 * 
+		 * System.out.println("Body of method after renaming");
+		 * System.out.println(srcMethods.get(0).normalize(new
+		 * VariableNameNormalizer()).getFilteredBody());
+		 * System.out.println("Nodes of method"); for(Node node:
+		 * srcMethodNodes){ System.out.println(node.getClass().toString()); }
+		 */
+
+		System.out.println("Testing Source NodeFeature of method: " + srcMethods.get(4).getMethodName());
 		NodeFeature nodeFeature = srcMethods.get(4).getMethodFeature();
 		System.out.println(nodeFeature.getFeatureMap());
-		
-		System.out.println("Testing Lib NodeFeature of method: "+libMethods.get(3).getMethodName());
+
+		System.out.println("Testing Lib NodeFeature of method: " + libMethods.get(3).getMethodName());
 		NodeFeature nodeFeature2 = libMethods.get(3).getMethodFeature();
 		System.out.println(nodeFeature2.getFeatureMap());
-		
+
 		CloneDetector cloneDetect = new CloneDetector();
 		System.out.println(cloneDetect.matchMethodNodeFeatures(srcMethods.get(4), libMethods.get(3), 1.0));
 
 		// ugly stuff
-		/*CloneDetector cloneDetect = new CloneDetector();
-		
-		  System.out.println("Testing match method"); Method libMethod =
-		  libMethods.get(0); Method srcMethod = srcMethods.get(0);
-		  System.out.println("Method1: "+libMethod.getMethodName()+" Method2: "
-		  +srcMethod.getMethodName());
-		  System.out.println(cloneDetect.matchMethods(libMethod, srcMethod));
-		  libMethod = libMethods.get(1); srcMethod = srcMethods.get(1);
-		  System.out.println("Method1: "+libMethod.getMethodName()+" Method2: "
-		  +srcMethod.getMethodName());
-		  System.out.println(cloneDetect.matchMethods(libMethod, srcMethod));
-		  
-		  for (Method match : cloneDetect.findSimiliarMethods(srcMethods,
-		  libMethods)) {
-		  System.out.println("Matched Method is: "+match.getMethodName()); }
-		 
-
-		Method srcMethod1 = srcMethods.get(0);
-		Method srcMethod2 = srcMethods.get(1);
-		System.out.println("Testing matchMethodNodes");
-		System.out.println("Method1: " + srcMethod1.getMethodName() + " Method2: " + srcMethod2.getMethodName());
-		System.out.println(cloneDetect.matchMethodNodes(srcMethod1, srcMethod2));
-		System.out.println("Testing matchMethodNodeFeatures");
-		srcMethod2 = srcMethods.get(2);
-		System.out.println("Method1: " + srcMethod1.getMethodName() + " Method2: " + srcMethod2.getMethodName());
-		System.out.println(cloneDetect.matchMethodNodeFeatures(srcMethod1, srcMethod2, 0.0));
-		srcMethod2 = srcMethods.get(3);
-		System.out.println("Method1: " + srcMethod1.getMethodName() + " Method2: " + srcMethod2.getMethodName());
-		System.out.println(cloneDetect.matchMethodNodeFeatures(srcMethod1, srcMethod2, 0.0));
-	*/
+		/*
+		 * CloneDetector cloneDetect = new CloneDetector();
+		 * 
+		 * System.out.println("Testing match method"); Method libMethod =
+		 * libMethods.get(0); Method srcMethod = srcMethods.get(0);
+		 * System.out.println("Method1: "+libMethod.getMethodName()+" Method2: "
+		 * +srcMethod.getMethodName());
+		 * System.out.println(cloneDetect.matchMethods(libMethod, srcMethod));
+		 * libMethod = libMethods.get(1); srcMethod = srcMethods.get(1);
+		 * System.out.println("Method1: "+libMethod.getMethodName()+" Method2: "
+		 * +srcMethod.getMethodName());
+		 * System.out.println(cloneDetect.matchMethods(libMethod, srcMethod));
+		 * 
+		 * for (Method match : cloneDetect.findSimiliarMethods(srcMethods,
+		 * libMethods)) {
+		 * System.out.println("Matched Method is: "+match.getMethodName()); }
+		 * 
+		 * 
+		 * Method srcMethod1 = srcMethods.get(0); Method srcMethod2 =
+		 * srcMethods.get(1); System.out.println("Testing matchMethodNodes");
+		 * System.out.println("Method1: " + srcMethod1.getMethodName() +
+		 * " Method2: " + srcMethod2.getMethodName());
+		 * System.out.println(cloneDetect.matchMethodNodes(srcMethod1,
+		 * srcMethod2)); System.out.println("Testing matchMethodNodeFeatures");
+		 * srcMethod2 = srcMethods.get(2); System.out.println("Method1: " +
+		 * srcMethod1.getMethodName() + " Method2: " +
+		 * srcMethod2.getMethodName());
+		 * System.out.println(cloneDetect.matchMethodNodeFeatures(srcMethod1,
+		 * srcMethod2, 0.0)); srcMethod2 = srcMethods.get(3);
+		 * System.out.println("Method1: " + srcMethod1.getMethodName() +
+		 * " Method2: " + srcMethod2.getMethodName());
+		 * System.out.println(cloneDetect.matchMethodNodeFeatures(srcMethod1,
+		 * srcMethod2, 0.0));
+		 */
 	}
 
 }
