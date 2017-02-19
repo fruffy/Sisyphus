@@ -1901,14 +1901,6 @@ public class Library {
         DualPivotQuicksort.sort(a, fromIndex, toIndex - 1, null, 0, 0);
     }
     
-    /**
-     * Swaps x[a] with x[b].
-     */
-    private static void swap(Object[] x, int a, int b) {
-        Object t = x[a];
-        x[a] = x[b];
-        x[b] = t;
-    }
 
 
 }
