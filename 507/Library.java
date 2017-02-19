@@ -8,6 +8,243 @@ import java.util.Arrays.ArrayList;
 
 public class Library {
 	
+	/*java.lang.Math Methods */
+	
+	/**
+     * Returns the absolute value of an {@code int} value.
+     * If the argument is not negative, the argument is returned.
+     * If the argument is negative, the negation of the argument is returned.
+     *
+     * <p>Note that if the argument is equal to the value of
+     * {@link Integer#MIN_VALUE}, the most negative representable
+     * {@code int} value, the result is that same value, which is
+     * negative.
+     *
+     * @param   a   the argument whose absolute value is to be determined
+     * @return  the absolute value of the argument.
+     */
+    public static int abs(int a) {
+        return (a < 0) ? -a : a;
+    }
+
+    /**
+     * Returns the absolute value of a {@code long} value.
+     * If the argument is not negative, the argument is returned.
+     * If the argument is negative, the negation of the argument is returned.
+     *
+     * <p>Note that if the argument is equal to the value of
+     * {@link Long#MIN_VALUE}, the most negative representable
+     * {@code long} value, the result is that same value, which
+     * is negative.
+     *
+     * @param   a   the argument whose absolute value is to be determined
+     * @return  the absolute value of the argument.
+     */
+    public static long abs(long a) {
+        return (a < 0) ? -a : a;
+    }
+
+    /**
+     * Returns the absolute value of a {@code float} value.
+     * If the argument is not negative, the argument is returned.
+     * If the argument is negative, the negation of the argument is returned.
+     * Special cases:
+     * <ul><li>If the argument is positive zero or negative zero, the
+     * result is positive zero.
+     * <li>If the argument is infinite, the result is positive infinity.
+     * <li>If the argument is NaN, the result is NaN.</ul>
+     * In other words, the result is the same as the value of the expression:
+     * <p>{@code Float.intBitsToFloat(0x7fffffff & Float.floatToIntBits(a))}
+     *
+     * @param   a   the argument whose absolute value is to be determined
+     * @return  the absolute value of the argument.
+     */
+    public static float abs(float a) {
+        return (a <= 0.0F) ? 0.0F - a : a;
+    }
+
+    /**
+     * Returns the absolute value of a {@code double} value.
+     * If the argument is not negative, the argument is returned.
+     * If the argument is negative, the negation of the argument is returned.
+     * Special cases:
+     * <ul><li>If the argument is positive zero or negative zero, the result
+     * is positive zero.
+     * <li>If the argument is infinite, the result is positive infinity.
+     * <li>If the argument is NaN, the result is NaN.</ul>
+     * In other words, the result is the same as the value of the expression:
+     * <p>{@code Double.longBitsToDouble((Double.doubleToLongBits(a)<<1)>>>1)}
+     *
+     * @param   a   the argument whose absolute value is to be determined
+     * @return  the absolute value of the argument.
+     */
+    public static double abs(double a) {
+        return (a <= 0.0D) ? 0.0D - a : a;
+    }
+
+    /**
+     * Returns the greater of two {@code int} values. That is, the
+     * result is the argument closer to the value of
+     * {@link Integer#MAX_VALUE}. If the arguments have the same value,
+     * the result is that same value.
+     *
+     * @param   a   an argument.
+     * @param   b   another argument.
+     * @return  the larger of {@code a} and {@code b}.
+     */
+    public static int max(int a, int b) {
+        return (a >= b) ? a : b;
+    }
+
+    /**
+     * Returns the greater of two {@code long} values. That is, the
+     * result is the argument closer to the value of
+     * {@link Long#MAX_VALUE}. If the arguments have the same value,
+     * the result is that same value.
+     *
+     * @param   a   an argument.
+     * @param   b   another argument.
+     * @return  the larger of {@code a} and {@code b}.
+     */
+    public static long max(long a, long b) {
+        return (a >= b) ? a : b;
+    }
+	
+    
+    /**
+     * Returns the greater of two {@code float} values.  That is,
+     * the result is the argument closer to positive infinity. If the
+     * arguments have the same value, the result is that same
+     * value. If either value is NaN, then the result is NaN.  Unlike
+     * the numerical comparison operators, this method considers
+     * negative zero to be strictly smaller than positive zero. If one
+     * argument is positive zero and the other negative zero, the
+     * result is positive zero.
+     *
+     * @param   a   an argument.
+     * @param   b   another argument.
+     * @return  the larger of {@code a} and {@code b}.
+     */
+    public static float max(float a, float b) {
+        if (a != a)
+            return a;   // a is NaN
+        if ((a == 0.0f) &&
+            (b == 0.0f) &&
+            (Float.floatToRawIntBits(a) == negativeZeroFloatBits)) {
+            // Raw conversion ok since NaN can't map to -0.0.
+            return b;
+        }
+        return (a >= b) ? a : b;
+    }
+
+    /**
+     * Returns the greater of two {@code double} values.  That
+     * is, the result is the argument closer to positive infinity. If
+     * the arguments have the same value, the result is that same
+     * value. If either value is NaN, then the result is NaN.  Unlike
+     * the numerical comparison operators, this method considers
+     * negative zero to be strictly smaller than positive zero. If one
+     * argument is positive zero and the other negative zero, the
+     * result is positive zero.
+     *
+     * @param   a   an argument.
+     * @param   b   another argument.
+     * @return  the larger of {@code a} and {@code b}.
+     */
+    public static double max(double a, double b) {
+        if (a != a)
+            return a;   // a is NaN
+        if ((a == 0.0d) &&
+            (b == 0.0d) &&
+            (Double.doubleToRawLongBits(a) == negativeZeroDoubleBits)) {
+            // Raw conversion ok since NaN can't map to -0.0.
+            return b;
+        }
+        return (a >= b) ? a : b;
+    }
+
+    /**
+     * Returns the smaller of two {@code int} values. That is,
+     * the result the argument closer to the value of
+     * {@link Integer#MIN_VALUE}.  If the arguments have the same
+     * value, the result is that same value.
+     *
+     * @param   a   an argument.
+     * @param   b   another argument.
+     * @return  the smaller of {@code a} and {@code b}.
+     */
+    public static int min(int a, int b) {
+        return (a <= b) ? a : b;
+    }
+
+    /**
+     * Returns the smaller of two {@code long} values. That is,
+     * the result is the argument closer to the value of
+     * {@link Long#MIN_VALUE}. If the arguments have the same
+     * value, the result is that same value.
+     *
+     * @param   a   an argument.
+     * @param   b   another argument.
+     * @return  the smaller of {@code a} and {@code b}.
+     */
+    public static long min(long a, long b) {
+        return (a <= b) ? a : b;
+    }
+
+    /**
+     * Returns the smaller of two {@code float} values.  That is,
+     * the result is the value closer to negative infinity. If the
+     * arguments have the same value, the result is that same
+     * value. If either value is NaN, then the result is NaN.  Unlike
+     * the numerical comparison operators, this method considers
+     * negative zero to be strictly smaller than positive zero.  If
+     * one argument is positive zero and the other is negative zero,
+     * the result is negative zero.
+     *
+     * @param   a   an argument.
+     * @param   b   another argument.
+     * @return  the smaller of {@code a} and {@code b}.
+     */
+    public static float min(float a, float b) {
+        if (a != a)
+            return a;   // a is NaN
+        if ((a == 0.0f) &&
+            (b == 0.0f) &&
+            (Float.floatToRawIntBits(b) == negativeZeroFloatBits)) {
+            // Raw conversion ok since NaN can't map to -0.0.
+            return b;
+        }
+        return (a <= b) ? a : b;
+    }
+
+    /**
+     * Returns the smaller of two {@code double} values.  That
+     * is, the result is the value closer to negative infinity. If the
+     * arguments have the same value, the result is that same
+     * value. If either value is NaN, then the result is NaN.  Unlike
+     * the numerical comparison operators, this method considers
+     * negative zero to be strictly smaller than positive zero. If one
+     * argument is positive zero and the other is negative zero, the
+     * result is negative zero.
+     *
+     * @param   a   an argument.
+     * @param   b   another argument.
+     * @return  the smaller of {@code a} and {@code b}.
+     */
+    public static double min(double a, double b) {
+        if (a != a)
+            return a;   // a is NaN
+        if ((a == 0.0d) &&
+            (b == 0.0d) &&
+            (Double.doubleToRawLongBits(b) == negativeZeroDoubleBits)) {
+            // Raw conversion ok since NaN can't map to -0.0.
+            return b;
+        }
+        return (a <= b) ? a : b;
+    }
+    
+    
+	
 	/*java.util.Arrays METHODS*/
 	
 	// Equality Testing
