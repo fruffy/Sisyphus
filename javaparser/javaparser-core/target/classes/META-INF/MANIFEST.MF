@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1487542145115
+Bnd-LastModified: 1487713601582
 Bundle-ManifestVersion: 2
 Bundle-Name: javaparser-core
 Bundle-SymbolicName: com.github.javaparser.javaparser-core
-Bundle-Version: 3.0.2.201702192209
+Bundle-Version: 3.0.2.201702212146
 Created-By: 1.8.0_65 (Oracle Corporation)
 Export-Package: com.github.javaparser;uses:="com.github.javaparser.ast
  ,com.github.javaparser.ast.body,com.github.javaparser.ast.comments,co

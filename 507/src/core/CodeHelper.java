@@ -14,9 +14,9 @@ import parsers.SyntaxParser;
 public class CodeHelper {
 	public static void main(String[] args) {
 
-		String srcName = "src/examples/Testcode.java";
+		String srcName = "src/examples/TestcodeV2.java";
 
-		File libFile = new File("Math_full.class");
+		File libFile = new File("Library.java");
 		File srcfile = new File(srcName);
 
 		SyntaxParser libparser;
@@ -50,10 +50,10 @@ public class CodeHelper {
 		// testing(srcparser, libparser);
 		srcMethods = srcparser.getMethods();
 		
-		ControlFlowParser cfg = new ControlFlowParser(srcMethods);
+		//ControlFlowParser cfg = new ControlFlowParser(srcMethods);
 		CloneDetector cloneDetect = new CloneDetector(libparser.getMethods());
 		
-		//cloneDetect.findSimiliarMethods(srcMethods);
+		cloneDetect.findSimiliarMethods(srcMethods);
 
 	}
 
