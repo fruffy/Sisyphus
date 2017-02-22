@@ -1,5 +1,7 @@
 package cfg;
 
+import java.util.Set;
+
 /**
  * Represents a basic block in a control flow graph.
  *
@@ -28,4 +30,7 @@ public interface CFGNode {
 
     /** @return the unique identifier of this block */
     long getId();
+    
+    /** We need the predecessors of nodes for data-flow analysis */
+    Set<CFGNodeImpl> getPredecessors();
 }
