@@ -1,8 +1,10 @@
 package parsers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.BreakStmt;
 import com.github.javaparser.ast.stmt.CatchClause;
@@ -18,86 +20,95 @@ import jgrapht.graph.DefaultEdge;
 
 public class ControlFlowMethodParser {
 	public Method meth;
-	private Node previousNode;
 
 	public ControlFlowMethodParser() {
 	}
 
-	private void parseRec(DirectedAcyclicGraph<Node, DefaultEdge> cfg, Node srcNode) {
+	private Node parseRec(DirectedAcyclicGraph<Node, DefaultEdge> cfg, Node currentNode, List<Node> previousNodes) {
 
-		List<Node> children = srcNode.getChildNodes();
-
+		List<Node> children = currentNode.getChildNodes();
 		for (int i = 0; i < children.size(); i++) {
 
-			Node currentNode = children.get(i);
+			currentNode = children.get(i);
 
 			if (currentNode instanceof IfStmt) {
+				previousNodes = parseConditional(cfg, previousNodes, (IfStmt) currentNode);
 				currentNode = ((IfStmt) currentNode).getCondition();
-				cfg.addVertex(currentNode);
-				cfg.addEdge(this.previousNode, currentNode);
-				this.previousNode = currentNode;
-				parseConditional(cfg, (IfStmt) currentNode.getParentNode().get());
+				
 			} else if (currentNode instanceof TryStmt) {
-				TryStmt chTry = (TryStmt) currentNode;
-				parseTryCatch(cfg, chTry);
-			} else if (currentNode instanceof ReturnStmt || currentNode instanceof BreakStmt || currentNode instanceof ContinueStmt) {
-				cfg.addVertex(currentNode);
-				cfg.addEdge(this.previousNode, currentNode);
-				break;
+				previousNodes = parseTryCatch(cfg, previousNodes, currentNode);
 			} else {
+				
 				cfg.addVertex(currentNode);
-				cfg.addEdge(this.previousNode, currentNode);
-				this.previousNode = currentNode;
+				addGraphEdges(cfg, currentNode, previousNodes);
+				if (currentNode instanceof ReturnStmt || currentNode instanceof BreakStmt
+						|| currentNode instanceof ContinueStmt) {
+					return null;
+
+				}
+				previousNodes.clear();
+				previousNodes.add(currentNode);
+			}
+		}
+		return currentNode;
+	}
+
+	private void addGraphEdges(DirectedAcyclicGraph<Node, DefaultEdge> cfg, Node currentNode,
+			List<Node> previousNodes) {
+		for (Node n : previousNodes) {
+			if (n != null) {
+				cfg.addEdge(n, currentNode);
 			}
 		}
 	}
 
-	private void parseTryCatch(DirectedAcyclicGraph<Node, DefaultEdge> cfg, TryStmt currentNode) {
+	private List<Node> parseTryCatch(DirectedAcyclicGraph<Node, DefaultEdge> cfg, List<Node> previousNodes,
+			Node currentNode) {
+		TryStmt chTry = (TryStmt) currentNode;
+		List<Node> tempNodes = new ArrayList<Node>();
 
-		parseRec(cfg, currentNode.getTryBlock().get());
-		for (CatchClause clause : currentNode.getCatchClauses()) {
-			parseRec(cfg, clause.getBody());
+		tempNodes.add(parseRec(cfg, chTry.getTryBlock().get(), previousNodes));
+		for (CatchClause clause : chTry.getCatchClauses()) {
+			tempNodes.add(parseRec(cfg, clause.getBody(), previousNodes));
 		}
-		if (currentNode.getFinallyBlock().isPresent()) {
-			parseRec(cfg, currentNode.getTryBlock().get());
+		if (chTry.getFinallyBlock().isPresent()) {
+			tempNodes.add(parseRec(cfg, chTry.getTryBlock().get(), previousNodes));
 		}
+	return tempNodes;	
+		
 	}
 
-	private void parseConditional(DirectedAcyclicGraph<Node, DefaultEdge> cfg, IfStmt currentNode) {
-		parseRec(cfg, currentNode.getThenStmt());
-		if (currentNode.getElseStmt().isPresent()) {
-			this.previousNode = currentNode.getCondition();
-			parseRec(cfg, currentNode.getElseStmt().get());
-		}
+	private List<Node> parseConditional(DirectedAcyclicGraph<Node, DefaultEdge> cfg, List<Node> previousNodes,
+			IfStmt ifNode) {
+		List<Node> tempNodes = new ArrayList<Node>();
+		Expression ifCondition = ifNode.getCondition();
+		cfg.addVertex(ifCondition);
+		addGraphEdges(cfg, ifCondition, previousNodes);		
+		previousNodes.clear();
+		previousNodes.add(ifCondition);
 
+		if (ifNode.getElseStmt().isPresent()) {
+
+			tempNodes.add(parseRec(cfg, ifNode.getThenStmt(), previousNodes));
+			previousNodes.clear();
+			previousNodes.add(ifCondition);
+			tempNodes.add(parseRec(cfg, ifNode.getElseStmt().get(), previousNodes));
+
+		} else {
+			tempNodes.add(ifCondition);
+			tempNodes.add(parseRec(cfg, ifNode.getThenStmt(), previousNodes));
+		}
+		return tempNodes;
 	}
 
 	public DirectedAcyclicGraph<Node, DefaultEdge> parse(BlockStmt methBody) {
 		DirectedAcyclicGraph<Node, DefaultEdge> cfg = new DirectedAcyclicGraph<>(DefaultEdge.class);
 		System.out.println(methBody.toString());
-
+		List<Node> previousNode = new ArrayList<Node>();
 		EmptyStmt init = new EmptyStmt();
 		cfg.addVertex(init);
-		this.previousNode = init;
-		parseRec(cfg, methBody);
+		previousNode.add(init);
+		parseRec(cfg, methBody, previousNode);
 		return cfg;
-	}
-
-	public class FalseEdge extends DefaultEdge {
-		private static final long serialVersionUID = 1L;
-
-		public FalseEdge() {
-			super();
-		}
-
-	}
-
-	public class TrueEdge extends DefaultEdge {
-		private static final long serialVersionUID = 1L;
-
-		public TrueEdge() {
-			super();
-		}
-
 	}
 }

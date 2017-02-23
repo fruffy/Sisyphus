@@ -59,7 +59,29 @@ public class SyntaxParser {
 	 * 
 	 * }
 	 */
-
+	//TODO: Convert to Java Code
+	/*	fun processJavaFile(file: File, javaParserFacade: JavaParserFacade) {
+		    println(file)
+		    JavaParser.parse(file).descendantsOfType(MethodCallExpr::class.java).forEach {
+		        print(" * L${it.begin.line} $it ")
+		        try {
+		            val methodRef = javaParserFacade.solve(it)
+		            if (methodRef.isSolved) {
+		                solved++
+		                val methodDecl = methodRef.correspondingDeclaration
+		                println("  -> ${methodDecl.qualifiedSignature}")
+		            } else {
+		                unsolved++
+		                println(" ???")
+		            }
+		        } catch (e: Exception) {
+		            println(" ERR ${e.message}")
+		            errors++
+		        } catch (t: Throwable) {
+		            t.printStackTrace()
+		        }
+		    }
+		}*/
 	/********************************************************************************************/
 	/*
 	 * Functions imported from the javaparser lib

@@ -10,7 +10,20 @@ import parsers.ControlFlowParser;
 import parsers.SyntaxParser;
 
 public class TestCode {
+	
+	public int ifStmt(int num) {
+		if (number < 0) {
+			num++; //Check1
+		} else{
+			num--;
+			return num;
+		}
+		if (number < 0) {
+			num= num+2; //Check2
+		} 
+		return Math.abs(num);
 
+	}
 	public int absoluteVal(int number) {
 		//hello?
 		//System.out.println("functionCall");
