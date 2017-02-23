@@ -5,23 +5,29 @@ import java.util.List;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.Expression;
-import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.stmt.BreakStmt;
-import com.github.javaparser.ast.stmt.CatchClause;
-import com.github.javaparser.ast.stmt.ContinueStmt;
-import com.github.javaparser.ast.stmt.EmptyStmt;
-import com.github.javaparser.ast.stmt.IfStmt;
-import com.github.javaparser.ast.stmt.ReturnStmt;
-import com.github.javaparser.ast.stmt.TryStmt;
+import com.github.javaparser.ast.stmt.*;
 
-import core.Method;
 import jgrapht.experimental.dag.DirectedAcyclicGraph;
 import jgrapht.graph.DefaultEdge;
 
 public class ControlFlowMethodParser {
-	public Method meth;
+	private DirectedAcyclicGraph<Node, DefaultEdge> cfg;
+	private List<Node> previousNodes;
 
+	/**
+	 * Construct a new control flow graph.
+	 * 
+	 * @param cfg
+	 *            The cfg we want to build over recursive iterations, it will be
+	 *            passed along the individual functions.
+	 * @param previousNodes
+	 *            A list of the predecessor nodes of the current iteration. A
+	 *            list is necessary as we might have multiple entry edges for
+	 *            one single node.
+	 */
 	public ControlFlowMethodParser() {
+		this.cfg = new DirectedAcyclicGraph<>(DefaultEdge.class);
+		this.previousNodes = new ArrayList<Node>();
 	}
 
 	/**
@@ -30,25 +36,23 @@ public class ControlFlowMethodParser {
 	 * DefaultEdge>, Node, List<Node>)}
 	 *
 	 * @param methBody
-	 *            The AST of the method we want to infer a CFG from.
+	 *            The AST of the method we want to infer a cfg from.
 	 * 
 	 * @return The newly created control flow graph.
 	 */
-	// TODO: Fix the CFG initialisation so that an empty statement is not
+	// TODO: Fix the cfg initialisation so that an empty statement is not
 	// necessary as first node.
 	public DirectedAcyclicGraph<Node, DefaultEdge> parse(BlockStmt methBody) {
-		DirectedAcyclicGraph<Node, DefaultEdge> cfg = new DirectedAcyclicGraph<>(DefaultEdge.class);
 		// Debug:
 		System.out.println(methBody.toString());
 
 		// Initialise the graph with an empty statement and list
 		// TODO: Remove
-		List<Node> previousNode = new ArrayList<Node>();
 		EmptyStmt init = new EmptyStmt();
-		cfg.addVertex(init);
-		previousNode.add(init);
-		parseRec(cfg, methBody, previousNode);
-		return cfg;
+		this.cfg.addVertex(init);
+		this.previousNodes.add(init);
+		parseRec(methBody);
+		return this.cfg;
 	}
 
 	/**
@@ -61,17 +65,10 @@ public class ControlFlowMethodParser {
 	 * The returned node of parseRec may be added to a list which forms a
 	 * collection of entry nodes for the subsequent element. *
 	 * 
-	 * @param cfg
-	 *            The cfg we want to build over recursive iterations, it will be
-	 *            passed along the individual functions.
 	 * @param currentNode
 	 *            The current Node we want to examine and handle. In general
 	 *            this is a block statement which will be decomposed in a for
 	 *            loop.
-	 * @param previousNodes
-	 *            A list of the predecessor nodes of the current iteration. A
-	 *            list is necessary as we might have multiple entry edges for
-	 *            one single node.
 	 * @return The last node of the iteration. It represents a list of exit
 	 *         statements of the current block.
 	 */
@@ -80,7 +77,7 @@ public class ControlFlowMethodParser {
 	// - Switch Case
 	// - Do Statements
 	// - maybe parallel programming primitives?
-	private Node parseRec(DirectedAcyclicGraph<Node, DefaultEdge> cfg, Node currentNode, List<Node> previousNodes) {
+	private Node parseRec(Node currentNode) {
 
 		// Get a list of children contained in the block
 		List<Node> children = currentNode.getChildNodes();
@@ -90,20 +87,21 @@ public class ControlFlowMethodParser {
 
 			// Handle if statement
 			if (currentNode instanceof IfStmt) {
-				previousNodes = parseConditional(cfg, previousNodes, (IfStmt) currentNode);
+				this.previousNodes = parseConditional((IfStmt) currentNode);
 				currentNode = ((IfStmt) currentNode).getCondition();
 
 			}
 			// Handle try catch
 			else if (currentNode instanceof TryStmt) {
-				previousNodes = parseTryCatch(cfg, previousNodes, (TryStmt) currentNode);
+				this.previousNodes = parseTryCatch((TryStmt) currentNode);
 			}
 			// Handle default case
 			else {
-				//Add the node as vertex and add all vertices of List previousNodes as predecessor
-				cfg.addVertex(currentNode);				
-				addGraphEdges(cfg, currentNode, previousNodes);
-				
+				// Add the node as vertex and add all vertices of List
+				// this.previousNodes as predecessor
+				this.cfg.addVertex(currentNode);
+				addGraphEdges(currentNode);
+
 				// Might be a return statement
 				// Everything after is dead code so we do not need to proceed
 				if (currentNode instanceof ReturnStmt || currentNode instanceof BreakStmt
@@ -111,9 +109,10 @@ public class ControlFlowMethodParser {
 					return null;
 
 				}
-				//Clear the current list and add the latest node as next predecessor
-				previousNodes.clear();
-				previousNodes.add(currentNode);
+				// Clear the current list and add the latest node as next
+				// predecessor
+				this.previousNodes.clear();
+				this.previousNodes.add(currentNode);
 			}
 		}
 		return currentNode;
@@ -125,30 +124,26 @@ public class ControlFlowMethodParser {
 	 * in a tempNodes List. The returned node of parseTryCatch may be added to a
 	 * list which forms a collection of entry nodes for the subsequent element.
 	 * 
-	 * @param cfg
-	 *            The cfg we want to build over recursive iterations, it will be
-	 *            passed along the individual functions.
 	 * @param currentNode
 	 *            The current Node we want to examine and handle. In general
 	 *            this is a block statement which will be decomposed in a for
 	 *            loop.
-	 * @param previousNodes
-	 *            A list of the predecessor nodes of the current iteration. A
-	 *            list is necessary as we might have multiple entry edges for
-	 *            one single node.
 	 * @return The last node of the iteration. It represents a list of exit
 	 *         statements of the current block.
 	 */
-	private List<Node> parseTryCatch(DirectedAcyclicGraph<Node, DefaultEdge> cfg, List<Node> previousNodes,
-			TryStmt currentNode) {
+	private List<Node> parseTryCatch(TryStmt currentNode) {
+		// Initialise an empty arrayList which collects possible exit nodes
 		List<Node> tempNodes = new ArrayList<Node>();
-
-		tempNodes.add(parseRec(cfg, currentNode.getTryBlock().get(), previousNodes));
+		
+		// Parse and add the last node of the try, catch and finally blocks
+		tempNodes.add(parseRec(currentNode.getTryBlock().get()));
+		
+		//We can have multiple catch blocks
 		for (CatchClause clause : currentNode.getCatchClauses()) {
-			tempNodes.add(parseRec(cfg, clause.getBody(), previousNodes));
+			tempNodes.add(parseRec(clause.getBody()));
 		}
 		if (currentNode.getFinallyBlock().isPresent()) {
-			tempNodes.add(parseRec(cfg, currentNode.getTryBlock().get(), previousNodes));
+			tempNodes.add(parseRec(currentNode.getTryBlock().get()));
 		}
 		return tempNodes;
 
@@ -160,39 +155,40 @@ public class ControlFlowMethodParser {
 	 * tempNodes List. The returned node of parseConditional may be added to a
 	 * list which forms a collection of entry nodes for the subsequent element.
 	 * 
-	 * @param cfg
-	 *            The cfg we want to build over recursive iterations, it will be
-	 *            passed along the individual functions.
 	 * @param currentNode
 	 *            The current Node we want to examine and handle. In general
 	 *            this is a block statement which will be decomposed in a for
 	 *            loop.
-	 * @param previousNodes
-	 *            A list of the predecessor nodes of the current iteration. A
-	 *            list is necessary as we might have multiple entry edges for
-	 *            one single node.
 	 * @return The last node of the iteration. It represents a list of exit
 	 *         statements of the current block.
 	 */
-	private List<Node> parseConditional(DirectedAcyclicGraph<Node, DefaultEdge> cfg, List<Node> previousNodes,
-			IfStmt ifNode) {
+	private List<Node> parseConditional(IfStmt ifNode) {
+		// Initialise an empty arrayList which collects possible exit nodes
 		List<Node> tempNodes = new ArrayList<Node>();
+
+		// We do not want to add the if statement as vertex
+		// Instead, use the condition expression
 		Expression ifCondition = ifNode.getCondition();
-		cfg.addVertex(ifCondition);
-		addGraphEdges(cfg, ifCondition, previousNodes);
-		previousNodes.clear();
-		previousNodes.add(ifCondition);
+		this.cfg.addVertex(ifCondition);
+		addGraphEdges(ifCondition);
 
+		this.previousNodes.clear();
+		this.previousNodes.add(ifCondition);
+
+		// Check if there is an else statement
 		if (ifNode.getElseStmt().isPresent()) {
+			// Parse and add the last node of the then block
+			tempNodes.add(parseRec(ifNode.getThenStmt()));
+			this.previousNodes.clear();
+			this.previousNodes.add(ifCondition);
 
-			tempNodes.add(parseRec(cfg, ifNode.getThenStmt(), previousNodes));
-			previousNodes.clear();
-			previousNodes.add(ifCondition);
-			tempNodes.add(parseRec(cfg, ifNode.getElseStmt().get(), previousNodes));
+			// Parse and add the last node of the else block
+			tempNodes.add(parseRec(ifNode.getElseStmt().get()));
 
 		} else {
+			// If there is no else statement, we still have two possible paths
 			tempNodes.add(ifCondition);
-			tempNodes.add(parseRec(cfg, ifNode.getThenStmt(), previousNodes));
+			tempNodes.add(parseRec(ifNode.getThenStmt()));
 		}
 		return tempNodes;
 	}
@@ -201,25 +197,19 @@ public class ControlFlowMethodParser {
 	 * This is a simple auxiliary function which adds the graph edge between two
 	 * vertices. It handles null values which may be added due to a return
 	 * statement in the control flow. As this can generally be considered a dead
-	 * end, a null element is ignored
+	 * end, a null element is ignored.
 	 * 
-	 * @param cfg
-	 *            The cfg we want to build over recursive iterations, it will be
-	 *            passed along the individual functions.
 	 * @param currentNode
 	 *            The current Node we want to examine and handle. In general
 	 *            this is a block statement which will be decomposed in a for
 	 *            loop.
-	 * @param previousNodes
-	 *            A list of the predecessor nodes of the current iteration. A
-	 *            list is necessary as we might have multiple entry edges for
-	 *            one single node.
+	 * @return The last node of the iteration. It represents a list of exit
+	 *         statements of the current block.
 	 */
-	private void addGraphEdges(DirectedAcyclicGraph<Node, DefaultEdge> cfg, Node currentNode,
-			List<Node> previousNodes) {
-		for (Node n : previousNodes) {
+	private void addGraphEdges(Node currentNode) {
+		for (Node n : this.previousNodes) {
 			if (n != null) {
-				cfg.addEdge(n, currentNode);
+				this.cfg.addEdge(n, currentNode);
 			}
 		}
 	}
