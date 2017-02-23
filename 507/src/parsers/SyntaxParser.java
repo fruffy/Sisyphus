@@ -27,7 +27,8 @@ public class SyntaxParser {
 	//private CombinedTypeSolver t;
 
 	public SyntaxParser(File inputFile) throws FileNotFoundException {
-		//this.t = new CombinedTypeSolver(new ReflectionTypeSolver(), new JavaParserTypeSolver(inputFile));
+		// this.t = new CombinedTypeSolver(new ReflectionTypeSolver(), new
+		// JavaParserTypeSolver(inputFile));
 		this.cu = JavaParser.parse(inputFile);
 		this.methodDeclarationList = this.getMethodDeclaration();
 	}
@@ -58,7 +59,29 @@ public class SyntaxParser {
 	 * 
 	 * }
 	 */
-
+	//TODO: Convert to Java Code
+	/*	fun processJavaFile(file: File, javaParserFacade: JavaParserFacade) {
+		    println(file)
+		    JavaParser.parse(file).descendantsOfType(MethodCallExpr::class.java).forEach {
+		        print(" * L${it.begin.line} $it ")
+		        try {
+		            val methodRef = javaParserFacade.solve(it)
+		            if (methodRef.isSolved) {
+		                solved++
+		                val methodDecl = methodRef.correspondingDeclaration
+		                println("  -> ${methodDecl.qualifiedSignature}")
+		            } else {
+		                unsolved++
+		                println(" ???")
+		            }
+		        } catch (e: Exception) {
+		            println(" ERR ${e.message}")
+		            errors++
+		        } catch (t: Throwable) {
+		            t.printStackTrace()
+		        }
+		    }
+		}*/
 	/********************************************************************************************/
 	/*
 	 * Functions imported from the javaparser lib
@@ -71,7 +94,6 @@ public class SyntaxParser {
 				System.out.println(" [L " + n.getBegin() + "] " + n);
 			}
 		}.visit(this.cu, null);
-
 	}
 
 	/*
@@ -90,7 +112,6 @@ public class SyntaxParser {
 		}.visit(this.cu, null);
 		return methodDecList;
 	}
-	
 
 	/*
 	 * Returns an arraylist of Method objects from parsing information
@@ -120,12 +141,6 @@ public class SyntaxParser {
 		for (Method call : methodList) {
 			returnTypes.add(call.getReturnType());
 		}
-		return returnTypes;
-	}
-	
-	public Type test() {
-		Type returnTypes = this.getMethods().get(0).getReturnType();
-	
 		return returnTypes;
 	}
 }

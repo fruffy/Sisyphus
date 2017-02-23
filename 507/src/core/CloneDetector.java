@@ -40,7 +40,7 @@ public class CloneDetector {
 		}
 		for (Method src : srcMethods) {
 			for (Method ref : methodLibrary) {
-				if (matchMethodNodeFeatures(src, ref,1)) {
+				if (matchMethodNodeFeatures(src, ref,4)) {
 					System.out.println("Match! " + src.getMethodName() + " with return type " + src.getReturnType() + 
 							" can be replaced by " + ref.getMethodName()+ " with return type " + ref.getReturnType());
 					matchedMethods.add(src);

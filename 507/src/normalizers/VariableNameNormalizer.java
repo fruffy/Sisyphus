@@ -191,6 +191,11 @@ public class VariableNameNormalizer extends Normalizer {
 			}
 			return n;
 		}
+		
+		public Visitable visit(final Node n, final VisitInfo info) {
+			return null;
+		}
+		
 
 		//Helpers copied from ModifyVisitor, they should really be protected
 		private <N extends Node> NodeList<N> modifyList(NodeList<N> list, VisitInfo arg) {
