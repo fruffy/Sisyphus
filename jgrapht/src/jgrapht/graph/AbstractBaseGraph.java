@@ -215,9 +215,9 @@ public abstract class AbstractBaseGraph<V, E>
     {
         if (v == null) {
             throw new NullPointerException();
-        } else if (containsVertex(v)) {
+        } /*else if (containsVertex(v)) {
             return false;
-        } else {
+        }*/ else {
             specifics.addVertex(v);
 
             return true;
