@@ -17,15 +17,17 @@ public class ControlFlowParser {
 	}
 
 	private void buildCFG() {
+
 		for (Method m : methList) {
-			ControlFlowMethodParser cfgParse = new ControlFlowMethodParser();
-			DirectedAcyclicGraph<Node, DefaultEdge> dag = cfgParse.parse(m.getFilteredBody());
-			
+
+			ControlFlowMethodParser cfgParse = new ControlFlowMethodParser(m);
+			DirectedAcyclicGraph<Node, DefaultEdge> dag = cfgParse.getCFG();
+
 			System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-			for(DefaultEdge e : dag.edgeSet()){
-			    System.out.println(dag.getEdgeSource(e) + " --> " + dag.getEdgeTarget(e));
+			for (DefaultEdge e : dag.edgeSet()) {
+				System.out.println(dag.getEdgeSource(e) + " --> " + dag.getEdgeTarget(e));
 			}
-			//System.out.println("Control Flow Raw Content " + s);
+			// System.out.println("Control Flow Raw Content " + s);
 			System.out.println("\n***************");
 		}
 	}
