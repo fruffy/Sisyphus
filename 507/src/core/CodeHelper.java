@@ -8,8 +8,12 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.type.Type;
 
+import jgrapht.experimental.dag.DirectedAcyclicGraph;
+import jgrapht.graph.DefaultEdge;
+import parsers.ControlFlowMethodParser;
 import parsers.ControlFlowParser;
 import parsers.SyntaxParser;
+import normalizers.VariableNameNormalizer;
 
 public class CodeHelper {
 	public static void main(String[] args) {
@@ -53,7 +57,18 @@ public class CodeHelper {
 		//ControlFlowParser cfg = new ControlFlowParser(srcMethods);
 		CloneDetector cloneDetect = new CloneDetector(libparser.getMethods());
 		
-		cloneDetect.findSimiliarMethods(srcMethods);
+		//cloneDetect.findSimiliarMethods(srcMethods);
+		
+		//testing graph similarity algorithm
+		Method method1 = srcMethods.get(21);
+		Method method2 = srcMethods.get(23);
+		ControlFlowMethodParser cfgParse = new ControlFlowMethodParser(method1);
+		DirectedAcyclicGraph<Node, DefaultEdge> pdg1 = cfgParse.getCFG();
+		ControlFlowMethodParser cfgParse2 = new ControlFlowMethodParser(method2);
+		DirectedAcyclicGraph<Node, DefaultEdge> pdg2 = cfgParse2.getCFG();
+		System.out.println("Match between "+ method1.getMethodName()+ " and "+method2.getMethodName() + "?");
+		System.out.println(cloneDetect.matchMethodPDGs(method1, method2));
+
 
 	}
 

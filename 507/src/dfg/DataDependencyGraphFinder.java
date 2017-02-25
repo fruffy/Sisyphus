@@ -27,7 +27,7 @@ import visitors.ASTUtil;
  * pp 43-44
  *
  */
-public class ReachingDefsFinder {
+public class DataDependencyGraphFinder {
 
 	private class Worklist{
 
@@ -102,7 +102,7 @@ public class ReachingDefsFinder {
 	}
 
 
-	public ReachingDefsFinder(DirectedAcyclicGraph<Node, DefaultEdge> cfg){
+	public DataDependencyGraphFinder(DirectedAcyclicGraph<Node, DefaultEdge> cfg){
 		this.cfg = cfg;
 		this.allNodes = cfg.vertexSet();
 		this.worklist = new Worklist();
