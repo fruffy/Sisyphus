@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.BreakStmt;
 import com.github.javaparser.ast.stmt.CatchClause;
@@ -16,6 +15,7 @@ import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.stmt.TryStmt;
 
 import core.Method;
+import datastructures.NodeWrapper;
 import jgrapht.experimental.dag.DirectedAcyclicGraph;
 import jgrapht.graph.DefaultEdge;
 
@@ -31,8 +31,8 @@ import jgrapht.graph.DefaultEdge;
  *            node.
  */
 public class ControlFlowParser {
-	private DirectedAcyclicGraph<Node, DefaultEdge> cfg;
-	private List<Node> previousNodes;
+	private DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cfg;
+	private List<NodeWrapper> previousNodes;
 
 	/**
 	 * Build a new control flow graph.
@@ -43,7 +43,7 @@ public class ControlFlowParser {
 	 */
 	public ControlFlowParser(Method m) {
 		this.cfg = new DirectedAcyclicGraph<>(DefaultEdge.class);
-		this.previousNodes = new LinkedList<Node>();
+		this.previousNodes = new LinkedList<NodeWrapper>();
 		parse(m.getFilteredBody());
 
 	}
@@ -51,7 +51,7 @@ public class ControlFlowParser {
 	/**
 	 * @return the control flow graph associated with this node.
 	 */
-	public DirectedAcyclicGraph<Node, DefaultEdge> getCFG() {
+	public DirectedAcyclicGraph<NodeWrapper, DefaultEdge> getCFG() {
 		return cfg;
 	}
 
@@ -67,10 +67,10 @@ public class ControlFlowParser {
 	// TODO: Fix the cfg initialisation so that an empty statement is not
 	// necessary as first node.
 	public void parse(BlockStmt methodBody) {
-		
+
 		// Initialise the graph with an empty statement and list
 		// TODO: Remove
-		EmptyStmt init = new EmptyStmt();
+		NodeWrapper init = new NodeWrapper(new EmptyStmt());
 		this.cfg.addVertex(init);
 		this.previousNodes.add(init);
 		parseRec(methodBody);
@@ -98,45 +98,44 @@ public class ControlFlowParser {
 	// - Switch Case
 	// - Do Statements
 	// - maybe parallel programming primitives?
-	private Node parseRec(Node currentNode) {
-
+	private NodeWrapper parseRec(Node currentStmt) {
+		NodeWrapper currentNode = new NodeWrapper (currentStmt);
 		// Get a list of children contained in the block
-		List<Node> children = currentNode.getChildNodes();
-		for (int i = 0; i < children.size(); i++) {
-
-			currentNode = children.get(i);
-
+		List<Node> children = currentNode.NODE.getChildNodes();
+		for (Node child : children) {
+			currentNode = new NodeWrapper(child);
 			// Handle if statement
-			if (currentNode instanceof IfStmt) {
-				this.previousNodes = parseConditional((IfStmt) currentNode);
-				currentNode = ((IfStmt) currentNode).getCondition();
-
+			if (currentNode.NODE instanceof IfStmt) {
+				currentNode = parseConditional((IfStmt) currentNode.NODE);
 			}
 			// Handle try catch
-			else if (currentNode instanceof TryStmt) {
-				this.previousNodes = parseTryCatch((TryStmt) currentNode);
+			else if (currentNode.NODE instanceof TryStmt) {
+				parseTryCatch((TryStmt) currentNode.NODE);
 			}
 			// Handle default case
 			else {
 				// Add the node as vertex and add all vertices of List
 				// this.previousNodes as predecessor
-				this.cfg.addVertex(currentNode);
-				addGraphEdges(currentNode);
+				addGraphElements(currentNode);
 
 				// Might be a return statement
 				// Everything after is dead code so we do not need to proceed
-				if (currentNode instanceof ReturnStmt || currentNode instanceof BreakStmt
-						|| currentNode instanceof ContinueStmt) {
+				if (currentNode.NODE instanceof ReturnStmt || currentNode.NODE instanceof BreakStmt
+						|| currentNode.NODE instanceof ContinueStmt) {
 					return null;
 
 				}
 				// Clear the current list and add the latest node as next
 				// predecessor
-				this.previousNodes.clear();
-				this.previousNodes.add(currentNode);
+				refreshPreviousNodes(currentNode);
 			}
 		}
 		return currentNode;
+	}
+
+	private void refreshPreviousNodes(NodeWrapper currentNode) {
+		this.previousNodes.clear();
+		this.previousNodes.add(currentNode);
 	}
 
 	/*
@@ -145,9 +144,9 @@ public class ControlFlowParser {
 	 * in a tempNodes List. The returned node of parseTryCatch may be added to a
 	 * list which forms a collection of entry nodes for the subsequent element.
 	 */
-	private List<Node> parseTryCatch(TryStmt currentNode) {
+	private void parseTryCatch(TryStmt currentNode) {
 		// Initialise an empty arrayList which collects possible exit nodes
-		List<Node> tempNodes = new ArrayList<Node>();
+		List<NodeWrapper> tempNodes = new ArrayList<NodeWrapper>();
 
 		// Parse and add the last node of the try, catch and finally blocks
 		tempNodes.add(parseRec(currentNode.getTryBlock().get()));
@@ -159,7 +158,7 @@ public class ControlFlowParser {
 		if (currentNode.getFinallyBlock().isPresent()) {
 			tempNodes.add(parseRec(currentNode.getTryBlock().get()));
 		}
-		return tempNodes;
+		this.previousNodes = tempNodes;
 
 	}
 
@@ -169,25 +168,22 @@ public class ControlFlowParser {
 	 * tempNodes List. The returned node of parseConditional may be added to a
 	 * list which forms a collection of entry nodes for the subsequent element.
 	 */
-	private List<Node> parseConditional(IfStmt ifNode) {
+	private NodeWrapper parseConditional(IfStmt ifNode) {
 		// Initialise an empty arrayList which collects possible exit nodes
-		List<Node> tempNodes = new ArrayList<Node>();
+		List<NodeWrapper> tempNodes = new ArrayList<NodeWrapper>();
 
 		// We do not want to add the if statement as vertex
 		// Instead, use the condition expression
-		Expression ifCondition = ifNode.getCondition();
-		this.cfg.addVertex(ifCondition);
-		addGraphEdges(ifCondition);
+		NodeWrapper ifCondition = new NodeWrapper(ifNode.getCondition());
+		addGraphElements(ifCondition);
 
-		this.previousNodes.clear();
-		this.previousNodes.add(ifCondition);
+		refreshPreviousNodes(ifCondition);
 
 		// Check if there is an else statement
 		if (ifNode.getElseStmt().isPresent()) {
 			// Parse and add the last node of the then block
 			tempNodes.add(parseRec(ifNode.getThenStmt()));
-			this.previousNodes.clear();
-			this.previousNodes.add(ifCondition);
+			refreshPreviousNodes(ifCondition);
 
 			// Parse and add the last node of the else block
 			tempNodes.add(parseRec(ifNode.getElseStmt().get()));
@@ -197,7 +193,8 @@ public class ControlFlowParser {
 			tempNodes.add(ifCondition);
 			tempNodes.add(parseRec(ifNode.getThenStmt()));
 		}
-		return tempNodes;
+		this.previousNodes = tempNodes;
+		return ifCondition;
 	}
 
 	/**
@@ -209,8 +206,9 @@ public class ControlFlowParser {
 	 * @param targetNode
 	 *            The node the newly created edge will point to.
 	 */
-	private void addGraphEdges(Node targetNode) {
-		for (Node srcNode : this.previousNodes) {
+	private void addGraphElements(NodeWrapper targetNode) {
+		this.cfg.addVertex(targetNode);
+		for (NodeWrapper srcNode : this.previousNodes) {
 			if (srcNode != null) {
 				this.cfg.addEdge(srcNode, targetNode);
 			}

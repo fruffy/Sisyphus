@@ -8,11 +8,11 @@ import java.util.Set;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.Parameter;
-import com.github.javaparser.ast.stmt.EmptyStmt;
 
+import datastructures.NodeWrapper;
 import jgrapht.experimental.dag.DirectedAcyclicGraph;
 import jgrapht.graph.DefaultEdge;
-import parsers.ControlFlowMethodParser;
+import parsers.ControlFlowParser;
 
 /*
  * The detector class
@@ -81,8 +81,8 @@ public class CloneDetector {
 
 	}
 	
-	private boolean compareEdgeAttributes(DirectedAcyclicGraph<Node, DefaultEdge> g1, 
-										DirectedAcyclicGraph<Node, DefaultEdge> g2,
+	private boolean compareEdgeAttributes(DirectedAcyclicGraph<NodeWrapper, DefaultEdge> g1, 
+										DirectedAcyclicGraph<NodeWrapper, DefaultEdge> g2,
 										DefaultEdge edge1, DefaultEdge edge2){
 		if(g1.getEdgeSource(edge1).equals(g2.getEdgeSource(edge2)) &&
 		   g1.getEdgeTarget(edge1).equals(g2.getEdgeTarget(edge2))){
@@ -103,22 +103,22 @@ public class CloneDetector {
 	 * http://www.eecs.yorku.ca/course_archive/2004-05/F/6431/ResearchPapers/Krinke.pdf
 	 * @param v1
 	 * @param v2
-	 * @param g1
-	 * @param g2
-	 * @param maximalg1
-	 * @param maximalg2
+	 * @param method1pdg
+	 * @param method2pdg
+	 * @param method1maxGraph
+	 * @param method2maxGraph
 	 * @param l
 	 * @param k
 	 * @return
 	 */
-	private boolean maximalPathSimilar(Node v1, Node v2,
-						DirectedAcyclicGraph<Node, DefaultEdge> g1, 
-						DirectedAcyclicGraph<Node, DefaultEdge> g2,
-						DirectedAcyclicGraph<Node, DefaultEdge> maximalg1, 
-						DirectedAcyclicGraph<Node, DefaultEdge> maximalg2,int l,int k){
+	private boolean maximalPathSimilar(NodeWrapper v1, NodeWrapper v2,
+						DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method1pdg, 
+						DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method2pdg,
+						DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method1maxGraph, 
+						DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method2maxGraph,int l,int k){
 		
-		Set<DefaultEdge> edges1Set = g1.outgoingEdgesOf(v1);
-		Set<DefaultEdge> edges2Set = g2.outgoingEdgesOf(v2);
+		Set<DefaultEdge> edges1Set = method1pdg.outgoingEdgesOf(v1);
+		Set<DefaultEdge> edges2Set = method2pdg.outgoingEdgesOf(v2);
 		DefaultEdge[] edges1 = new DefaultEdge[edges1Set.size()];
 		DefaultEdge[] edges2 = new DefaultEdge[edges2Set.size()];
 		edges1Set.toArray(edges1);
@@ -134,16 +134,16 @@ public class CloneDetector {
 		boolean mapSuccess = false;
 		for(int i = 0; i<edges1.length; i++){
 			for(int j = 0; j<edges2.length; j++){
-				if(compareEdgeAttributes(g1,g2,edges1[i],edges2[j]) &&
+				if(compareEdgeAttributes(method1pdg,method2pdg,edges1[i],edges2[j]) &&
 						!edges2Added[j]){
 					edges2Added[j] = true;
-					maximalg1.addVertex(g1.getEdgeTarget(edges1[i]),false);
-					DefaultEdge newEdge1 = maximalg1.addEdge(v1, g1.getEdgeTarget(edges1[i]));
-					maximalg2.addVertex(g2.getEdgeTarget(edges2[j]),false);
-					DefaultEdge newEdge2 = maximalg2.addEdge(v2, g2.getEdgeTarget(edges2[j]));
+					method1maxGraph.addVertex(method1pdg.getEdgeTarget(edges1[i]),false);
+					DefaultEdge newEdge1 = method1maxGraph.addEdge(v1, method1pdg.getEdgeTarget(edges1[i]));
+					method2maxGraph.addVertex(method2pdg.getEdgeTarget(edges2[j]),false);
+					DefaultEdge newEdge2 = method2maxGraph.addEdge(v2, method2pdg.getEdgeTarget(edges2[j]));
 					if(!(newEdge1 == null && newEdge2 == null)){
-						mapSuccess = mapSuccess || maximalPathSimilar(g1.getEdgeTarget(edges1[i]),g2.getEdgeTarget(edges2[j]),
-											g1,g2,maximalg1,maximalg2,l+1,k);
+						mapSuccess = mapSuccess || maximalPathSimilar(method1pdg.getEdgeTarget(edges1[i]),method2pdg.getEdgeTarget(edges2[j]),
+											method1pdg,method2pdg,method1maxGraph,method2maxGraph,l+1,k);
 					}
 				}
 			}
@@ -153,21 +153,21 @@ public class CloneDetector {
 	}
 	
 	public boolean matchMethodPDGs(Method method1, Method method2){
-		ControlFlowMethodParser cfgParse1 = new ControlFlowMethodParser(method1);
-		ControlFlowMethodParser cfgParse2 = new ControlFlowMethodParser(method2);
+		ControlFlowParser cfgParse1 = new ControlFlowParser(method1);
+		ControlFlowParser cfgParse2 = new ControlFlowParser(method2);
 		//Need to change it so that we get the method's pdg instead of cdg
-		DirectedAcyclicGraph<Node, DefaultEdge> method1pdg = cfgParse1.getCFG();
-		DirectedAcyclicGraph<Node, DefaultEdge> method2pdg = cfgParse2.getCFG();
+		DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method1pdg = cfgParse1.getCFG();
+		DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method2pdg = cfgParse2.getCFG();
 		
 		//Get the root nodes of the method pdg's
-		Iterator<Node> iter1 = method1pdg.iterator();
-		Iterator<Node> iter2 = method1pdg.iterator();
-		Node v1 = iter1.next();
-		Node v2 = iter2.next();
+		Iterator<NodeWrapper> iter1 = method1pdg.iterator();
+		Iterator<NodeWrapper> iter2 = method1pdg.iterator();
+		NodeWrapper v1 = iter1.next();
+		NodeWrapper v2 = iter2.next();
 		
 		//Initialize maximal graphs
-		DirectedAcyclicGraph<Node, DefaultEdge> method1maxGraph = new DirectedAcyclicGraph<>(DefaultEdge.class);
-		DirectedAcyclicGraph<Node, DefaultEdge> method2maxGraph = new DirectedAcyclicGraph<>(DefaultEdge.class);
+		DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method1maxGraph = new DirectedAcyclicGraph<>(DefaultEdge.class);
+		DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method2maxGraph = new DirectedAcyclicGraph<>(DefaultEdge.class);
         method1maxGraph.addVertex(v1);
         method2maxGraph.addVertex(v2);
         

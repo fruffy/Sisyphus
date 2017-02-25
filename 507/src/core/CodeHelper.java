@@ -10,15 +10,15 @@ import com.github.javaparser.ast.type.Type;
 
 import jgrapht.experimental.dag.DirectedAcyclicGraph;
 import jgrapht.graph.DefaultEdge;
-import parsers.ControlFlowMethodParser;
 import parsers.ControlFlowParser;
+import parsers.ControlListParser;
 import parsers.SyntaxParser;
 import normalizers.VariableNameNormalizer;
 
 public class CodeHelper {
 	public static void main(String[] args) {
 
-		String srcName = "src/examples/TestcodeV2.java";
+		String srcName = "src/examples/Testcode.java";
 
 		File libFile = new File("Library.java");
 		File srcfile = new File(srcName);
@@ -53,22 +53,23 @@ public class CodeHelper {
 
 		// testing(srcparser, libparser);
 		srcMethods = srcparser.getMethods();
-		
-		//ControlFlowParser cfg = new ControlFlowParser(srcMethods);
-		CloneDetector cloneDetect = new CloneDetector(libparser.getMethods());
-		
-		//cloneDetect.findSimiliarMethods(srcMethods);
-		
-		//testing graph similarity algorithm
-		Method method1 = srcMethods.get(21);
-		Method method2 = srcMethods.get(23);
-		ControlFlowMethodParser cfgParse = new ControlFlowMethodParser(method1);
-		DirectedAcyclicGraph<Node, DefaultEdge> pdg1 = cfgParse.getCFG();
-		ControlFlowMethodParser cfgParse2 = new ControlFlowMethodParser(method2);
-		DirectedAcyclicGraph<Node, DefaultEdge> pdg2 = cfgParse2.getCFG();
-		System.out.println("Match between "+ method1.getMethodName()+ " and "+method2.getMethodName() + "?");
-		System.out.println(cloneDetect.matchMethodPDGs(method1, method2));
 
+		ControlListParser cfg = new ControlListParser(srcMethods);
+		CloneDetector cloneDetect = new CloneDetector(libparser.getMethods());
+
+		// cloneDetect.findSimiliarMethods(srcMethods);
+
+		/*
+		 * //testing graph similarity algorithm Method method1 =
+		 * srcMethods.get(21); Method method2 = srcMethods.get(23);
+		 * ControlFlowParser cfgParse = new ControlFlowParser(method1);
+		 * DirectedAcyclicGraph<Node, DefaultEdge> pdg1 = cfgParse.getCFG();
+		 * ControlFlowParser cfgParse2 = new ControlFlowParser(method2);
+		 * DirectedAcyclicGraph<Node, DefaultEdge> pdg2 = cfgParse2.getCFG();
+		 * System.out.println("Match between "+ method1.getMethodName()+
+		 * " and "+method2.getMethodName() + "?");
+		 * System.out.println(cloneDetect.matchMethodPDGs(method1, method2));
+		 */
 
 	}
 
