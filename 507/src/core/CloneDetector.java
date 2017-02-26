@@ -120,30 +120,23 @@ public class CloneDetector {
 		
 		Set<DefaultEdge> edges1Set = method1pdg.outgoingEdgesOf(v1);
 		Set<DefaultEdge> edges2Set = method2pdg.outgoingEdgesOf(v2);
-		DefaultEdge[] edges1 = new DefaultEdge[edges1Set.size()];
-		DefaultEdge[] edges2 = new DefaultEdge[edges2Set.size()];
-		edges1Set.toArray(edges1);
-		edges2Set.toArray(edges2);
 		
-		if((edges1.length == 0 && edges2.length == 0) || (l >=k)){
+		if((edges1Set.size() == 0 && edges2Set.size() == 0) || (l >=k)){
 			return true;
 		}
-		else if(edges1.length == 0 || edges2.length == 0){
+		else if(edges1Set.size() == 0 || edges2Set.size() == 0){
 			return false;
 		}
-		boolean[] edges2Added = new boolean[edges2.length];
 		boolean mapSuccess = false;
-		for(int i = 0; i<edges1.length; i++){
-			for(int j = 0; j<edges2.length; j++){
-				if(compareEdgeAttributes(method1pdg,method2pdg,edges1[i],edges2[j]) &&
-						!edges2Added[j]){
-					edges2Added[j] = true;
-					method1maxGraph.addVertex(method1pdg.getEdgeTarget(edges1[i]),false);
-					DefaultEdge newEdge1 = method1maxGraph.addEdge(v1, method1pdg.getEdgeTarget(edges1[i]));
-					method2maxGraph.addVertex(method2pdg.getEdgeTarget(edges2[j]),false);
-					DefaultEdge newEdge2 = method2maxGraph.addEdge(v2, method2pdg.getEdgeTarget(edges2[j]));
+		for(DefaultEdge edge1: edges1Set){
+			for(DefaultEdge edge2: edges2Set){
+				if(compareEdgeAttributes(method1pdg,method2pdg,edge1,edge2)){
+					method1maxGraph.addVertex(method1pdg.getEdgeTarget(edge1),false);
+					DefaultEdge newEdge1 = method1maxGraph.addEdge(v1, method1pdg.getEdgeTarget(edge1));
+					method2maxGraph.addVertex(method2pdg.getEdgeTarget(edge2),false);
+					DefaultEdge newEdge2 = method2maxGraph.addEdge(v2, method2pdg.getEdgeTarget(edge2));
 					if(!(newEdge1 == null && newEdge2 == null)){
-						mapSuccess = mapSuccess || maximalPathSimilar(method1pdg.getEdgeTarget(edges1[i]),method2pdg.getEdgeTarget(edges2[j]),
+						mapSuccess = mapSuccess || maximalPathSimilar(method1pdg.getEdgeTarget(edge1),method2pdg.getEdgeTarget(edge2),
 											method1pdg,method2pdg,method1maxGraph,method2maxGraph,l+1,k);
 					}
 				}
