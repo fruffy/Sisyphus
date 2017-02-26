@@ -12,6 +12,7 @@ import com.github.javaparser.ast.body.Parameter;
 import datastructures.NodeWrapper;
 import jgrapht.experimental.dag.DirectedAcyclicGraph;
 import jgrapht.graph.DefaultEdge;
+import jgrapht.DirectedGraph;
 import parsers.ControlFlowParser;
 
 /*
@@ -81,11 +82,11 @@ public class CloneDetector {
 
 	}
 	
-	private boolean compareEdgeAttributes(DirectedAcyclicGraph<NodeWrapper, DefaultEdge> g1, 
-										DirectedAcyclicGraph<NodeWrapper, DefaultEdge> g2,
+	private boolean compareEdgeAttributes(DirectedGraph<NodeWrapper, DefaultEdge> method1pdg, 
+										DirectedGraph<NodeWrapper, DefaultEdge> method2pdg,
 										DefaultEdge edge1, DefaultEdge edge2){
-		if(g1.getEdgeSource(edge1).equals(g2.getEdgeSource(edge2)) &&
-		   g1.getEdgeTarget(edge1).equals(g2.getEdgeTarget(edge2))){
+		if(method1pdg.getEdgeSource(edge1).equals(method2pdg.getEdgeSource(edge2)) &&
+		   method1pdg.getEdgeTarget(edge1).equals(method2pdg.getEdgeTarget(edge2))){
 			return true;
 		}
 		return false;
@@ -112,8 +113,8 @@ public class CloneDetector {
 	 * @return
 	 */
 	private boolean maximalPathSimilar(NodeWrapper v1, NodeWrapper v2,
-						DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method1pdg, 
-						DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method2pdg,
+						DirectedGraph<NodeWrapper, DefaultEdge> method1pdg, 
+						DirectedGraph<NodeWrapper, DefaultEdge> method2pdg,
 						DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method1maxGraph, 
 						DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method2maxGraph,int l,int k){
 		
@@ -159,12 +160,12 @@ public class CloneDetector {
 		//DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method1pdg = cfgParse1.getCFG();
 		//DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method2pdg = cfgParse2.getCFG();
 		
-		DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method1pdg = cfgParse1.getCFG();
-		DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method2pdg = cfgParse2.getCFG();
+		DirectedGraph<NodeWrapper, DefaultEdge> method1pdg = cfgParse1.getCFG();
+		DirectedGraph<NodeWrapper, DefaultEdge> method2pdg = cfgParse2.getCFG();
 		
 		//Get the root nodes of the method pdg's
-		Iterator<NodeWrapper> iter1 = method1pdg.iterator();
-		Iterator<NodeWrapper> iter2 = method1pdg.iterator();
+		Iterator<NodeWrapper> iter1 = method1pdg.vertexSet().iterator();
+		Iterator<NodeWrapper> iter2 = method1pdg.vertexSet().iterator();
 		NodeWrapper v1 = iter1.next();
 		NodeWrapper v2 = iter2.next();
 		
