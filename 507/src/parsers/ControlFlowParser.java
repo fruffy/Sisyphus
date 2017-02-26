@@ -12,6 +12,7 @@ import com.github.javaparser.ast.stmt.ContinueStmt;
 import com.github.javaparser.ast.stmt.EmptyStmt;
 import com.github.javaparser.ast.stmt.IfStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
+import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.stmt.TryStmt;
 
 import core.Method;
@@ -67,13 +68,33 @@ public class ControlFlowParser {
 	// TODO: Fix the cfg initialisation so that an empty statement is not
 	// necessary as first node.
 	public void parse(BlockStmt methodBody) {
-
 		// Initialise the graph with an empty statement and list
-		// TODO: Remove
-		NodeWrapper init = new NodeWrapper(new EmptyStmt());
-		this.cfg.addVertex(init);
-		this.previousNodes.add(init);
+		// Remove them after initialising the graph
+		// TODO: Figure out a better way...
+
+		NodeWrapper initNode = new NodeWrapper(new EmptyStmt());
+		this.cfg.addVertex(initNode);
+		this.previousNodes.add(initNode);
 		parseRec(methodBody);
+		this.cfg.removeVertex(initNode);
+	}
+
+	/**
+	 * An initialiser for the control flow graph which adds the first atomic
+	 * node type. Intended to remove the node once it is attached, but
+	 * unfortunately this does not work...
+	 * 
+	 * @param entryNode
+	 *            The first node in the AST of the body.
+	 */
+	private void init(Node entryNode) {
+		if (entryNode instanceof Statement) {
+			init(entryNode.getChildNodes().get(0));
+		} else {
+			NodeWrapper initNode = new NodeWrapper(entryNode);
+			this.cfg.addVertex(initNode);
+			this.previousNodes.add(initNode);
+		}
 	}
 
 	/**
@@ -98,8 +119,8 @@ public class ControlFlowParser {
 	// - Switch Case
 	// - Do Statements
 	// - maybe parallel programming primitives?
-	private NodeWrapper parseRec(Node currentStmt) {
-		NodeWrapper currentNode = new NodeWrapper (currentStmt);
+	private NodeWrapper parseRec(Statement statement) {
+		NodeWrapper currentNode = new NodeWrapper(statement);
 		// Get a list of children contained in the block
 		List<Node> children = currentNode.NODE.getChildNodes();
 		for (Node child : children) {
@@ -131,11 +152,6 @@ public class ControlFlowParser {
 			}
 		}
 		return currentNode;
-	}
-
-	private void refreshPreviousNodes(NodeWrapper currentNode) {
-		this.previousNodes.clear();
-		this.previousNodes.add(currentNode);
 	}
 
 	/*
@@ -195,6 +211,17 @@ public class ControlFlowParser {
 		}
 		this.previousNodes = tempNodes;
 		return ifCondition;
+	}
+
+	/**
+	 * Clear the old list of preceding nodes and add the current node to it.
+	 * 
+	 * @param targetNode
+	 *            The node the newly created edge will point to.
+	 */
+	private void refreshPreviousNodes(NodeWrapper currentNode) {
+		this.previousNodes.clear();
+		this.previousNodes.add(currentNode);
 	}
 
 	/**
