@@ -9,7 +9,6 @@ import jgrapht.DirectedGraph;
 import jgrapht.experimental.dag.DirectedAcyclicGraph;
 import jgrapht.graph.DefaultEdge;
 import jgrapht.graph.DirectedPseudograph;
-import jgrapht.graph.SimpleDirectedGraph;
 
 public class ControlListParser {
 	List<DirectedPseudograph<NodeWrapper, DefaultEdge>> cfgList;

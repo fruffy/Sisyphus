@@ -9,8 +9,19 @@ public class NodeWrapper {
 		this.NODE = n;
 	}
 
-	public boolean equals(NodeWrapper n) {
-		return this.NODE == n.NODE;
+	@Override
+	public boolean equals(Object n) {
+		if (n instanceof NodeWrapper) {
+			return this.NODE == ((NodeWrapper) n).NODE;
+		} else if (n instanceof Node) {
+			return this.NODE == (Node) n;
+		} else {
+			return false;
+		}
+	}
+	@Override
+    public int hashCode() {
+		return this.NODE.hashCode();
 	}
 
 }
