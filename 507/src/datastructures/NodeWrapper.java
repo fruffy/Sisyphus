@@ -8,6 +8,10 @@ public class NodeWrapper {
 	public NodeWrapper(Node n) {
 		this.NODE = n;
 	}
+	
+	public Node getNode(){
+		return this.NODE;
+	}
 
 	@Override
 	public boolean equals(Object n) {

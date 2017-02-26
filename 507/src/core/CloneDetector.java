@@ -13,6 +13,7 @@ import datastructures.NodeWrapper;
 import jgrapht.experimental.dag.DirectedAcyclicGraph;
 import jgrapht.graph.DefaultEdge;
 import jgrapht.DirectedGraph;
+import jgrapht.Graphs;
 import parsers.ControlFlowParser;
 
 /*
@@ -158,7 +159,7 @@ public class CloneDetector {
 		
 		//Get the root nodes of the method pdg's
 		Iterator<NodeWrapper> iter1 = method1pdg.vertexSet().iterator();
-		Iterator<NodeWrapper> iter2 = method1pdg.vertexSet().iterator();
+		Iterator<NodeWrapper> iter2 = method2pdg.vertexSet().iterator();
 		NodeWrapper v1 = iter1.next();
 		NodeWrapper v2 = iter2.next();
 		
