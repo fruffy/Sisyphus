@@ -86,8 +86,8 @@ public class CloneDetector {
 	private boolean compareEdgeAttributes(DirectedGraph<NodeWrapper, DefaultEdge> method1pdg, 
 										DirectedGraph<NodeWrapper, DefaultEdge> method2pdg,
 										DefaultEdge edge1, DefaultEdge edge2){
-		if(method1pdg.getEdgeSource(edge1).equals(method2pdg.getEdgeSource(edge2)) &&
-		   method1pdg.getEdgeTarget(edge1).equals(method2pdg.getEdgeTarget(edge2))){
+		if(method1pdg.getEdgeSource(edge1).getNode().equals(method2pdg.getEdgeSource(edge2).getNode()) &&
+		   method1pdg.getEdgeTarget(edge1).getNode().equals(method2pdg.getEdgeTarget(edge2).getNode())){
 			return true;
 		}
 		return false;
