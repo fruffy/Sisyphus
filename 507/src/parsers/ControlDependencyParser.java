@@ -1,14 +1,17 @@
 package parsers;
 
+import java.util.Iterator;
+
+import com.github.javaparser.ast.stmt.EmptyStmt;
+
+import datastructures.DominatorTree;
 import datastructures.NodeWrapper;
+import jgrapht.DirectedGraph;
 import jgrapht.experimental.dag.DirectedAcyclicGraph;
 import jgrapht.graph.DefaultEdge;
-import jgrapht.graph.EdgeReversedGraph;
-import jgrapht.graph.SimpleDirectedGraph;
 
 public class ControlDependencyParser {
 	private DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg;
-	private DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cfg;
 
 	/**
 	 * Build a new control dependency graph.
@@ -18,8 +21,8 @@ public class ControlDependencyParser {
 	 * @return
 	 * 
 	 */
-	public ControlDependencyParser(DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cfg) {
-		this.cfg = cfg;
+	public ControlDependencyParser(DirectedGraph<NodeWrapper, DefaultEdge> cfg) {
+		// this.cfg = cfg;
 		cdg = new DirectedAcyclicGraph<NodeWrapper, DefaultEdge>(DefaultEdge.class);
 		parse(cfg);
 	}
@@ -31,27 +34,36 @@ public class ControlDependencyParser {
 		return cdg;
 	}
 
-	private void parse(DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cfg) {
-		SimpleDirectedGraph<NodeWrapper, DefaultEdge> fdt = buildForwardDominanceTree(cfg);
-		// buildControlDependenceGraph(cfg, fdt);
+	private void parse(DirectedGraph<NodeWrapper, DefaultEdge> cfg) {
+		DirectedAcyclicGraph<NodeWrapper, DefaultEdge> fdt = buildForwardDominanceTree(cfg);
+		buildControlDependenceGraph(cfg, fdt);
+
 	}
 
-	public SimpleDirectedGraph<NodeWrapper, DefaultEdge> buildForwardDominanceTree(
-			DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cfg2) {
-		Dominators<NodeWrapper, DefaultEdge> test = new Dominators<>(cfg2, cfg2.iterator().next());
-		return test.getDominatorTree();
-		// return new EdgeReversedGraph<>(cfg);
+	private DirectedAcyclicGraph<NodeWrapper, DefaultEdge> buildForwardDominanceTree(
+			DirectedGraph<NodeWrapper, DefaultEdge> cfg) {
+		DominatorTree<NodeWrapper, DefaultEdge> fdtBuilder = new DominatorTree<>(cfg, cfg.vertexSet().iterator().next());
+		return fdtBuilder.getDominatorTree();
 	}
 
-	private void buildControlDependenceGraph(DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cfg,
-			EdgeReversedGraph<NodeWrapper, DefaultEdge> fdt) {
+	private void buildControlDependenceGraph(DirectedGraph<NodeWrapper, DefaultEdge> cfg,
+			DirectedAcyclicGraph<NodeWrapper, DefaultEdge> fdt) {
+		NodeWrapper entry = new NodeWrapper(new EmptyStmt());
+		NodeWrapper previousNode = entry;
+		cdg.addVertex(entry);
+		Iterator<NodeWrapper> vertexIterator = cfg.vertexSet().iterator();
+		while (vertexIterator.hasNext()) {
+			NodeWrapper n = vertexIterator.next();
+			cdg.addVertex(n);
 
-		for (DefaultEdge flowEdge : cfg.edgeSet()) {
-			NodeWrapper srcNode = cfg.getEdgeSource(flowEdge);
-			if (fdt.outDegreeOf(srcNode) > 1) {
-
+			if (fdt.outDegreeOf(n) == 0 && vertexIterator.hasNext()) {
+				cdg.addEdge(previousNode, n);
+			} else {
+				cdg.addEdge(entry, n);
+				previousNode = n;
 			}
 
 		}
+
 	}
 }

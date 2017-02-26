@@ -9,4 +9,8 @@ public class NodeWrapper {
 		this.NODE = n;
 	}
 
+	public boolean equals(NodeWrapper n) {
+		return this.NODE == n.NODE;
+	}
+
 }
