@@ -156,6 +156,9 @@ public class CloneDetector {
 		ControlFlowParser cfgParse1 = new ControlFlowParser(method1);
 		ControlFlowParser cfgParse2 = new ControlFlowParser(method2);
 		//Need to change it so that we get the method's pdg instead of cdg
+		//DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method1pdg = cfgParse1.getCFG();
+		//DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method2pdg = cfgParse2.getCFG();
+		
 		DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method1pdg = cfgParse1.getCFG();
 		DirectedAcyclicGraph<NodeWrapper, DefaultEdge> method2pdg = cfgParse2.getCFG();
 		

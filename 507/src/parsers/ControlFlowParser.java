@@ -16,8 +16,8 @@ import com.github.javaparser.ast.stmt.TryStmt;
 
 import core.Method;
 import datastructures.NodeWrapper;
-import jgrapht.experimental.dag.DirectedAcyclicGraph;
 import jgrapht.graph.DefaultEdge;
+import jgrapht.graph.DirectedPseudograph;
 
 /**
  * Construct a new control flow graph.
@@ -31,7 +31,7 @@ import jgrapht.graph.DefaultEdge;
  *            node.
  */
 public class ControlFlowParser {
-	private DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cfg;
+	private DirectedPseudograph<NodeWrapper, DefaultEdge> cfg;
 	private List<NodeWrapper> previousNodes;
 
 	/**
@@ -42,7 +42,7 @@ public class ControlFlowParser {
 	 * 
 	 */
 	public ControlFlowParser(Method m) {
-		this.cfg = new DirectedAcyclicGraph<>(DefaultEdge.class);
+		this.cfg = new DirectedPseudograph<>(DefaultEdge.class);
 		this.previousNodes = new LinkedList<NodeWrapper>();
 		parse(m.getFilteredBody());
 
@@ -51,13 +51,13 @@ public class ControlFlowParser {
 	/**
 	 * @return the control flow graph associated with this node.
 	 */
-	public DirectedAcyclicGraph<NodeWrapper, DefaultEdge> getCFG() {
+	public DirectedPseudograph<NodeWrapper, DefaultEdge> getCFG() {
 		return cfg;
 	}
 
 	/**
 	 * Initialises an empty control flow graph which will be filled by the
-	 * {@link ControlFlowMethodParser#parseRec(DirectedAcyclicGraph<Node,
+	 * {@link ControlFlowMethodParser#parseRec(DirectedPseudograph<Node,
 	 * DefaultEdge>, Node, List<Node>)}
 	 *
 	 * @param methBody
