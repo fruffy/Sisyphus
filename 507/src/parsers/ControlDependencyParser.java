@@ -42,7 +42,10 @@ public class ControlDependencyParser {
 
 	private DirectedAcyclicGraph<NodeWrapper, DefaultEdge> buildForwardDominanceTree(
 			DirectedGraph<NodeWrapper, DefaultEdge> cfg) {
-		DominatorTree<NodeWrapper, DefaultEdge> fdtBuilder = new DominatorTree<>(cfg, cfg.vertexSet().iterator().next());
+		DominatorTree<NodeWrapper, DefaultEdge> fdtBuilder = new DominatorTree<>(cfg,
+				cfg.vertexSet().iterator().next());
+		//DominatorTree2<NodeWrapper, DefaultEdge> fdtBuilder = new DominatorTree2<NodeWrapper, DefaultEdge>(cfg, cfg.vertexSet().iterator().next());
+		//return fdtBuilder.getDominationTree();
 		return fdtBuilder.getDominatorTree();
 	}
 

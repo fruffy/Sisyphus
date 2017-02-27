@@ -5,10 +5,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
 import com.github.javaparser.ast.Node;
@@ -18,7 +14,6 @@ import com.github.javaparser.utils.Pair;
 import jgrapht.DirectedGraph;
 import jgrapht.experimental.dag.DirectedAcyclicGraph;
 import jgrapht.graph.DefaultEdge;
-
 import visitors.ASTUtil;
 
 /**

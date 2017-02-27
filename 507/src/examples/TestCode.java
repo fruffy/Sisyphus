@@ -3,13 +3,38 @@ package examples;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import core.CloneDetector;
 import core.Method;
+import datastructures.NodeWrapper;
+import jgrapht.experimental.dag.DirectedAcyclicGraph;
+import jgrapht.graph.DefaultEdge;
+import jgrapht.graph.DirectedPseudograph;
+import parsers.ControlDependencyParser;
 import parsers.ControlFlowParser;
 import parsers.SyntaxParser;
 
 public class TestCode {
+
+	private int buildCFG(List<Method> methList) {
+
+		for (int i = 0, j = 2; i < methList.length(); i++) {
+			j = 3;
+			j++;
+		}
+		System.out.print("exit");
+		return num;
+	}
+	private int buildCFG(int numbers) {
+
+		while ( numbers < 3 ) {
+			j = 3;
+			numbers++;
+		}
+		System.out.print("exit");
+		return numbers;
+	}
 
 	public int cdgStmt(int num) {
 		if (number < 0) {
@@ -17,7 +42,7 @@ public class TestCode {
 		} else {
 			num = num - 1;
 		}
-		num++;
+		System.out.print("exit");
 		return num;
 	}
 

@@ -10,12 +10,15 @@ import com.github.javaparser.ast.stmt.BreakStmt;
 import com.github.javaparser.ast.stmt.CatchClause;
 import com.github.javaparser.ast.stmt.ContinueStmt;
 import com.github.javaparser.ast.stmt.EmptyStmt;
+import com.github.javaparser.ast.stmt.ForStmt;
 import com.github.javaparser.ast.stmt.IfStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.stmt.TryStmt;
+import com.github.javaparser.ast.stmt.WhileStmt;
 
 import core.Method;
+import datastructures.BackEdge;
 import datastructures.NodeWrapper;
 import jgrapht.graph.DefaultEdge;
 import jgrapht.graph.DirectedPseudograph;
@@ -115,7 +118,6 @@ public class ControlFlowParser {
 	 *         statements of the current block.
 	 */
 	// TODO: Add capability to handle:
-	// - while and for (each) loops
 	// - Switch Case
 	// - Do Statements
 	// - maybe parallel programming primitives?
@@ -127,7 +129,11 @@ public class ControlFlowParser {
 			currentNode = new NodeWrapper(child);
 			// Handle if statement
 			if (currentNode.NODE instanceof IfStmt) {
-				currentNode = parseConditional((IfStmt) currentNode.NODE);
+				currentNode = parseIfStmt((IfStmt) currentNode.NODE);
+			} else if (currentNode.NODE instanceof ForStmt) {
+				currentNode = parseForLoop((ForStmt) currentNode.NODE);
+			} else if (currentNode.NODE instanceof WhileStmt) {
+				currentNode = parseWhileLoop((WhileStmt) currentNode.NODE);
 			}
 			// Handle try catch
 			else if (currentNode.NODE instanceof TryStmt) {
@@ -152,6 +158,67 @@ public class ControlFlowParser {
 			}
 		}
 		return currentNode;
+
+	}
+
+	private NodeWrapper parseWhileLoop(WhileStmt currentNode) {
+		// Initialise an empty arrayList which collects possible exit nodes
+		List<NodeWrapper> tempNodes = new ArrayList<NodeWrapper>();
+		NodeWrapper exitNode = null;
+
+		// We do not want to add the if statement as vertex
+		// Instead, use the condition expression
+		NodeWrapper entryNode = new NodeWrapper(currentNode.getCondition());
+		addGraphElements(entryNode);
+		refreshPreviousNodes(entryNode);
+
+		tempNodes.add(entryNode);
+		exitNode = parseRec(currentNode.getBody());
+		tempNodes.add(exitNode);
+		
+		refreshPreviousNodes(entryNode);
+		addGraphElements(exitNode, new BackEdge());
+		
+		this.previousNodes = tempNodes;
+		return entryNode;
+	}
+
+	private NodeWrapper parseForLoop(ForStmt currentNode) {
+		// Initialise an empty arrayList which collects possible exit nodes
+		List<NodeWrapper> tempNodes = new ArrayList<NodeWrapper>();
+		NodeWrapper entryNode = null;
+		NodeWrapper exitNode = null;
+		// We do not want to add the if statement as vertex
+		// Instead, use the condition expression
+		for (Node n : currentNode.getInitialization()) {
+			entryNode = new NodeWrapper(n);
+			addGraphElements(entryNode);
+			refreshPreviousNodes(entryNode);
+		}
+		if (currentNode.getCompare().isPresent()) {
+			exitNode = new NodeWrapper(currentNode.getCompare().get());
+			entryNode = exitNode;
+			addGraphElements(exitNode);
+			tempNodes.add(exitNode);
+			refreshPreviousNodes(exitNode);
+		}
+
+		exitNode = parseRec(currentNode.getBody());
+		refreshPreviousNodes(exitNode);
+
+		for (Node n : currentNode.getUpdate()) {
+			exitNode = new NodeWrapper(n);
+			addGraphElements(exitNode);
+			refreshPreviousNodes(exitNode);
+		}
+		tempNodes.add(exitNode);
+
+		refreshPreviousNodes(entryNode);
+		addGraphElements(exitNode, new BackEdge());
+
+		this.previousNodes = tempNodes;
+
+		return entryNode;
 	}
 
 	/*
@@ -184,30 +251,29 @@ public class ControlFlowParser {
 	 * tempNodes List. The returned node of parseConditional may be added to a
 	 * list which forms a collection of entry nodes for the subsequent element.
 	 */
-	private NodeWrapper parseConditional(IfStmt ifNode) {
+	private NodeWrapper parseIfStmt(IfStmt currentNode) {
 		// Initialise an empty arrayList which collects possible exit nodes
 		List<NodeWrapper> tempNodes = new ArrayList<NodeWrapper>();
 
 		// We do not want to add the if statement as vertex
 		// Instead, use the condition expression
-		NodeWrapper ifCondition = new NodeWrapper(ifNode.getCondition());
+		NodeWrapper ifCondition = new NodeWrapper(currentNode.getCondition());
 		addGraphElements(ifCondition);
-
 		refreshPreviousNodes(ifCondition);
 
 		// Check if there is an else statement
-		if (ifNode.getElseStmt().isPresent()) {
+		if (currentNode.getElseStmt().isPresent()) {
 			// Parse and add the last node of the then block
-			tempNodes.add(parseRec(ifNode.getThenStmt()));
+			tempNodes.add(parseRec(currentNode.getThenStmt()));
 			refreshPreviousNodes(ifCondition);
 
 			// Parse and add the last node of the else block
-			tempNodes.add(parseRec(ifNode.getElseStmt().get()));
+			tempNodes.add(parseRec(currentNode.getElseStmt().get()));
 
 		} else {
 			// If there is no else statement, we still have two possible paths
 			tempNodes.add(ifCondition);
-			tempNodes.add(parseRec(ifNode.getThenStmt()));
+			tempNodes.add(parseRec(currentNode.getThenStmt()));
 		}
 		this.previousNodes = tempNodes;
 		return ifCondition;
@@ -238,6 +304,15 @@ public class ControlFlowParser {
 		for (NodeWrapper srcNode : this.previousNodes) {
 			if (srcNode != null) {
 				this.cfg.addEdge(srcNode, targetNode);
+			}
+		}
+	}
+
+	private void addGraphElements(NodeWrapper targetNode, BackEdge back) {
+		this.cfg.addVertex(targetNode);
+		for (NodeWrapper srcNode : this.previousNodes) {
+			if (srcNode != null) {
+				this.cfg.addEdge(targetNode, srcNode, back);
 			}
 		}
 	}

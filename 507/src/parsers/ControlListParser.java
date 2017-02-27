@@ -26,14 +26,12 @@ public class ControlListParser {
 		for (Method m : methList) {
 
 			ControlFlowParser cfgParse = new ControlFlowParser(m);
-
 			DirectedPseudograph<NodeWrapper, DefaultEdge> cfg = cfgParse.getCFG();
 			ControlDependencyParser cdgParse = new ControlDependencyParser(cfg);
-
 			DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg = cdgParse.getCDG();
 			this.cfgList.add(cfg);
-			this.cdgList.add(cdg);
-			
+			//this.cdgList.add(cdg);
+
 			// Debug
 			System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 			System.out.println(m.getFilteredBody().toString());
@@ -47,11 +45,19 @@ public class ControlListParser {
 
 	private void printGraph(Method m, DirectedGraph<NodeWrapper, DefaultEdge> cdg) {
 
-
-		for (DefaultEdge e : cdg.edgeSet()) {
-			System.out.println(cdg.getEdgeSource(e).NODE + " --> " + cdg.getEdgeTarget(e).NODE);
+		/*
+		 * for (DefaultEdge e : cdg.edgeSet()) {
+		 * System.out.println(cdg.getEdgeSource(e).NODE + " --> " +
+		 * cdg.getEdgeTarget(e).NODE); }
+		 */
+		for (NodeWrapper n : cdg.vertexSet()) {
+			System.out.println(n.NODE);
+			for (DefaultEdge e : cdg.outgoingEdgesOf(n)) {
+				System.out.println("\t --> " + cdg.getEdgeTarget(e).NODE);
+			}
 		}
 		System.out.println("\n***************");
+
 	}
 
 	/**
