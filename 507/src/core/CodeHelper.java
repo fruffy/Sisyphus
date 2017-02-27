@@ -60,8 +60,8 @@ public class CodeHelper {
 		// cloneDetect.findSimiliarMethods(srcMethods);
 
 		// testing graph similarity algorithm
-		Method method1 = srcMethods.get(0);
-		Method method2 = srcMethods.get(0);
+		Method method1 = srcMethods.get(1);
+		Method method2 = srcMethods.get(1);
 		ControlFlowParser cfgParse = new ControlFlowParser(method1);
 		DirectedGraph<NodeWrapper, DefaultEdge> pdg1 = cfgParse.getCFG();
 		ControlFlowParser cfgParse2 = new ControlFlowParser(method2);
