@@ -103,8 +103,8 @@ public class DominatorTree<V, E> {
 		this.idom = new HashMap<V, V>();
 		V firstElement = vertexPreOrder.get(0);
 		idom.put(firstElement, firstElement);
-		if (!graph.incomingEdgesOf(vertexPreOrder.get(0)).isEmpty())
-			throw new AssertionError("The entry of the flow graph is not allowed to have incoming edges");
+/*		if (!graph.incomingEdgesOf(vertexPreOrder.get(0)).isEmpty())
+			throw new AssertionError("The entry of the flow graph is not allowed to have incoming edges");*/
 
 		boolean changed;
 		do {
