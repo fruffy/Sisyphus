@@ -10,10 +10,9 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.Parameter;
 
 import datastructures.NodeWrapper;
+import jgrapht.DirectedGraph;
 import jgrapht.experimental.dag.DirectedAcyclicGraph;
 import jgrapht.graph.DefaultEdge;
-import jgrapht.DirectedGraph;
-import jgrapht.Graphs;
 import parsers.ControlFlowParser;
 
 /*
@@ -86,8 +85,8 @@ public class CloneDetector {
 	private boolean compareEdgeAttributes(DirectedGraph<NodeWrapper, DefaultEdge> method1pdg, 
 										DirectedGraph<NodeWrapper, DefaultEdge> method2pdg,
 										DefaultEdge edge1, DefaultEdge edge2){
-		if(method1pdg.getEdgeSource(edge1).getNode().equals(method2pdg.getEdgeSource(edge2).getNode()) &&
-		   method1pdg.getEdgeTarget(edge1).getNode().equals(method2pdg.getEdgeTarget(edge2).getNode())){
+		if(method1pdg.getEdgeSource(edge1).NODE.equals(method2pdg.getEdgeSource(edge2).NODE) &&
+		   method1pdg.getEdgeTarget(edge1).NODE.equals(method2pdg.getEdgeTarget(edge2).NODE)){
 			return true;
 		}
 		return false;

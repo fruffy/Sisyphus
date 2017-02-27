@@ -9,10 +9,6 @@ public class NodeWrapper {
 		this.NODE = n;
 	}
 	
-	public Node getNode(){
-		return this.NODE;
-	}
-
 	@Override
 	public boolean equals(Object n) {
 		if (n instanceof NodeWrapper) {
