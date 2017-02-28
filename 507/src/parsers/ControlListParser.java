@@ -13,10 +13,12 @@ import jgrapht.graph.DirectedPseudograph;
 public class ControlListParser {
 	List<DirectedPseudograph<NodeWrapper, DefaultEdge>> cfgList;
 	List<DirectedAcyclicGraph<NodeWrapper, DefaultEdge>> cdgList;
+	List<DirectedAcyclicGraph<NodeWrapper, DefaultEdge>> fdtList;
 
 	public ControlListParser(List<Method> methList) {
 		cfgList = new LinkedList<DirectedPseudograph<NodeWrapper, DefaultEdge>>();
 		cdgList = new LinkedList<DirectedAcyclicGraph<NodeWrapper, DefaultEdge>>();
+		fdtList = new LinkedList<DirectedAcyclicGraph<NodeWrapper, DefaultEdge>>();
 
 		buildCFG(methList);
 	}
@@ -29,14 +31,20 @@ public class ControlListParser {
 			DirectedPseudograph<NodeWrapper, DefaultEdge> cfg = cfgParse.getCFG();
 			ControlDependencyParser cdgParse = new ControlDependencyParser(cfg);
 			DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg = cdgParse.getCDG();
-			this.cfgList.add(cfg);
-			//this.cdgList.add(cdg);
+			DirectedAcyclicGraph<NodeWrapper, DefaultEdge> fdt = cdgParse.buildForwardDominanceTree(cfg);
 
+			this.cfgList.add(cfg);
+			this.cdgList.add(cdg);
+			this.cdgList.add(fdt);
 			// Debug
 			System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 			System.out.println(m.getFilteredBody().toString());
 			System.out.println("Control Flow Raw Content ");
 			printGraph(m, cfg);
+			
+			//System.out.println("Forward Dominator Raw Content ");
+			//printGraph(m, fdt);
+			
 			System.out.println("Control Dependence Raw Content ");
 			printGraph(m, cdg);
 

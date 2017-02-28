@@ -2,9 +2,8 @@ package parsers;
 
 import java.util.Iterator;
 
-import com.github.javaparser.ast.stmt.EmptyStmt;
-
 import datastructures.DominatorTree;
+import datastructures.EntryStmt;
 import datastructures.NodeWrapper;
 import jgrapht.DirectedGraph;
 import jgrapht.experimental.dag.DirectedAcyclicGraph;
@@ -40,18 +39,18 @@ public class ControlDependencyParser {
 
 	}
 
-	private DirectedAcyclicGraph<NodeWrapper, DefaultEdge> buildForwardDominanceTree(
+	public DirectedAcyclicGraph<NodeWrapper, DefaultEdge> buildForwardDominanceTree(
 			DirectedGraph<NodeWrapper, DefaultEdge> cfg) {
 		DominatorTree<NodeWrapper, DefaultEdge> fdtBuilder = new DominatorTree<>(cfg,
 				cfg.vertexSet().iterator().next());
+		return fdtBuilder.getDominatorTree();
 		//DominatorTree2<NodeWrapper, DefaultEdge> fdtBuilder = new DominatorTree2<NodeWrapper, DefaultEdge>(cfg, cfg.vertexSet().iterator().next());
 		//return fdtBuilder.getDominationTree();
-		return fdtBuilder.getDominatorTree();
 	}
 
 	private void buildControlDependenceGraph(DirectedGraph<NodeWrapper, DefaultEdge> cfg,
 			DirectedAcyclicGraph<NodeWrapper, DefaultEdge> fdt) {
-		NodeWrapper entry = new NodeWrapper(new EmptyStmt());
+		NodeWrapper entry = new NodeWrapper(new EntryStmt());
 		NodeWrapper previousNode = entry;
 		cdg.addVertex(entry);
 		Iterator<NodeWrapper> vertexIterator = cfg.vertexSet().iterator();

@@ -1,40 +1,34 @@
+/*
+  This file is part of JOP, the Java Optimized Processor
+    see <http://www.jopdesign.com/>
+  Copyright (C) 2008, Benedikt Huber (benedikt.huber@gmail.com)
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package datastructures;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-/*
- * This file is part of JOP, the Java Optimized Processor 
- *   see <http://www.jopdesign.com/> 
- * 
- * Copyright (C) 2008, Benedikt Huber (benedikt.huber@gmail.com) 
- * 
- * This program is free software: you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
- * GNU General Public License for more details. 
- * 
- * You should have received a copy of the GNU General Public License 
- * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
- */
 
 import jgrapht.DirectedGraph;
 import jgrapht.experimental.dag.DirectedAcyclicGraph;
 import jgrapht.graph.DefaultEdge;
 import jgrapht.traverse.DepthFirstIterator;
 
+
 /**
  * Compute Dominators of a graph, following: A Simple, Fast Dominance Algorithm
  * (Cooper, Keith D. and Harvey, Timothy J. and Kennedy, Ken).
+ * http://dx.doi.org/10.1145/357062.357071
  */
 public class DominatorTree<V, E> {
 
@@ -103,9 +97,9 @@ public class DominatorTree<V, E> {
 		this.idom = new HashMap<V, V>();
 		V firstElement = vertexPreOrder.get(0);
 		idom.put(firstElement, firstElement);
-/*		if (!graph.incomingEdgesOf(vertexPreOrder.get(0)).isEmpty())
-			throw new AssertionError("The entry of the flow graph is not allowed to have incoming edges");*/
-
+		/*if (!graph.incomingEdgesOf(vertexPreOrder.get(0)).isEmpty())
+			throw new AssertionError("The entry of the flow graph is not allowed to have incoming edges");
+*/
 		boolean changed;
 		do {
 			changed = false;
@@ -157,10 +151,10 @@ public class DominatorTree<V, E> {
 		computeDominators();
 		DirectedAcyclicGraph<V, DefaultEdge> domTree = new DirectedAcyclicGraph<V, DefaultEdge>(DefaultEdge.class);
 		
-		List<V> reversedSet = new ArrayList<V>(graph.vertexSet());
-		Collections.reverse(reversedSet);
+		//List<V> reversedSet = new ArrayList<V>(graph.vertexSet());
+		//Collections.reverse(reversedSet);
 
-		for (V node : reversedSet) {
+		for (V node : graph.vertexSet()) {
 			domTree.addVertex(node);
 			V idom = getIDom(node);
 			if (idom != null && !node.equals(idom)) {
