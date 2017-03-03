@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.stmt;
 
 import com.github.javaparser.Range;
@@ -28,13 +29,8 @@ import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-import java.util.Arrays;
-import java.util.List;
+
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.SwitchStmtMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * A switch statement.
@@ -55,11 +51,13 @@ public final class SwitchStmt extends Statement {
     }
 
     @AllFieldsConstructor
-    public SwitchStmt(final Expression selector, final NodeList<SwitchEntryStmt> entries) {
+    public SwitchStmt(final Expression selector,
+                      final NodeList<SwitchEntryStmt> entries) {
         this(null, selector, entries);
     }
 
-    public SwitchStmt(Range range, final Expression selector, final NodeList<SwitchEntryStmt> entries) {
+    public SwitchStmt(Range range, final Expression selector,
+                      final NodeList<SwitchEntryStmt> entries) {
         super(range);
         setSelector(selector);
         setEntries(entries);
@@ -88,12 +86,9 @@ public final class SwitchStmt extends Statement {
     }
 
     public SwitchStmt setEntries(final NodeList<SwitchEntryStmt> entries) {
-        assertNotNull(entries);
         notifyPropertyChange(ObservableProperty.ENTRIES, this.entries, entries);
-        if (this.entries != null)
-            this.entries.setParentNode(null);
-        this.entries = entries;
-        setAsParentNodeOf(entries);
+        this.entries = assertNotNull(entries);
+        setAsParentNodeOf(this.entries);
         return this;
     }
 
@@ -108,41 +103,9 @@ public final class SwitchStmt extends Statement {
     }
 
     public SwitchStmt setSelector(final Expression selector) {
-        assertNotNull(selector);
         notifyPropertyChange(ObservableProperty.SELECTOR, this.selector, selector);
-        if (this.selector != null)
-            this.selector.setParentNode(null);
         this.selector = selector;
-        setAsParentNodeOf(selector);
+        setAsParentNodeOf(this.selector);
         return this;
     }
-
-    @Override
-    public List<NodeList<?>> getNodeLists() {
-        return Arrays.asList(getEntries());
-    }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        for (int i = 0; i < entries.size(); i++) {
-            if (entries.get(i) == node) {
-                entries.remove(i);
-                return true;
-            }
-        }
-        return super.remove(node);
-    }
-
-    @Override
-    public SwitchStmt clone() {
-        return (SwitchStmt) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public SwitchStmtMetaModel getMetaModel() {
-        return JavaParserMetaModel.switchStmtMetaModel;
-    }
 }
-

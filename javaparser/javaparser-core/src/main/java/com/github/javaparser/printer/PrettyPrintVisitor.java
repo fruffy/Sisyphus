@@ -28,12 +28,10 @@ import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.ast.comments.LineComment;
 import com.github.javaparser.ast.expr.*;
-import com.github.javaparser.ast.modules.*;
 import com.github.javaparser.ast.nodeTypes.NodeWithTypeArguments;
 import com.github.javaparser.ast.nodeTypes.NodeWithVariables;
 import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.type.*;
-import com.github.javaparser.ast.visitor.Visitable;
 import com.github.javaparser.ast.visitor.VoidVisitor;
 
 import java.util.*;
@@ -61,9 +59,8 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
     }
 
     private void printModifiers(final EnumSet<Modifier> modifiers) {
-        if (modifiers.size() > 0) {
+        if (modifiers.size() > 0)
             printer.print(modifiers.stream().map(Modifier::asString).collect(Collectors.joining(" ")) + " ");
-        }
     }
 
     private void printMembers(final NodeList<BodyDeclaration<?>> members, final Void arg) {
@@ -141,34 +138,6 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
         printer.print(")");
     }
 
-    private void printPrePostFixOptionalList(final NodeList<? extends Visitable> args, final Void arg, String prefix, String separator, String postfix) {
-        if (!args.isEmpty()) {
-            printer.print(prefix);
-            for (final Iterator<? extends Visitable> i = args.iterator(); i.hasNext(); ) {
-                final Visitable v = i.next();
-                v.accept(this, arg);
-                if (i.hasNext()) {
-                    printer.print(separator);
-                }
-            }
-            printer.print(postfix);
-        }
-    }
-
-    private void printPrePostFixRequiredList(final NodeList<? extends Visitable> args, final Void arg, String prefix, String separator, String postfix) {
-        printer.print(prefix);
-        if (!args.isEmpty()) {
-            for (final Iterator<? extends Visitable> i = args.iterator(); i.hasNext(); ) {
-                final Visitable v = i.next();
-                v.accept(this, arg);
-                if (i.hasNext()) {
-                    printer.print(separator);
-                }
-            }
-        }
-        printer.print(postfix);
-    }
-
     private void printJavaComment(final Optional<Comment> javacomment, final Void arg) {
         javacomment.ifPresent(c -> c.accept(this, arg));
     }
@@ -193,8 +162,6 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
                 printer.println();
             }
         }
-
-        n.getModule().ifPresent(m -> m.accept(this, arg));
 
         printOrphanCommentsEnding(n);
     }
@@ -404,13 +371,13 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
         printJavaComment(n.getComment(), arg);
         printAnnotations(n.getAnnotations(), false, arg);
         printer.print("?");
-        if (n.getExtendedType().isPresent()) {
+        if (n.getExtendedTypes().isPresent()) {
             printer.print(" extends ");
-            n.getExtendedType().get().accept(this, arg);
+            n.getExtendedTypes().get().accept(this, arg);
         }
-        if (n.getSuperType().isPresent()) {
+        if (n.getSuperTypes().isPresent()) {
             printer.print(" super ");
-            n.getSuperType().get().accept(this, arg);
+            n.getSuperTypes().get().accept(this, arg);
         }
     }
 
@@ -427,7 +394,7 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
         printMemberAnnotations(n.getAnnotations(), arg);
         printModifiers(n.getModifiers());
         if (!n.getVariables().isEmpty()) {
-            n.getMaximumCommonType().accept(this, arg);
+            getMaximumCommonType(n).accept(this, arg);
         }
 
         printer.print(" ");
@@ -447,7 +414,7 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
         printJavaComment(n.getComment(), arg);
         n.getName().accept(this, arg);
 
-        Type commonType = n.getAncestorOfType(NodeWithVariables.class).get().getMaximumCommonType();
+        Type commonType = getMaximumCommonType(n.getAncestorOfType(NodeWithVariables.class).get());
 
         Type type = n.getType();
 
@@ -837,7 +804,7 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
         printModifiers(n.getModifiers());
 
         if (!n.getVariables().isEmpty()) {
-            n.getMaximumCommonType().accept(this, arg);
+            getMaximumCommonType(n).accept(this, arg);
         }
         printer.print(" ");
 
@@ -883,6 +850,7 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
         }
         printOrphanCommentsEnding(n);
         printer.print("}");
+
     }
 
     @Override
@@ -921,6 +889,7 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
             printer.unindent();
         }
         printer.print("}");
+
     }
 
     @Override
@@ -1205,6 +1174,7 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
         n.getParameter().accept(this, arg);
         printer.print(") ");
         n.getBody().accept(this, arg);
+
     }
 
     @Override
@@ -1349,6 +1319,7 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
         if (identifier != null) {
             printer.print(identifier);
         }
+
     }
 
     @Override
@@ -1380,60 +1351,6 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
         printer.println(";");
 
         printOrphanCommentsEnding(n);
-    }
-
-
-    @Override
-    public void visit(ModuleDeclaration n, Void arg) {
-        printAnnotations(n.getAnnotations(), false, arg);
-        printer.println();
-        if (n.isOpen()) {
-            printer.print("open ");
-        }
-        printer.print("module ");
-        n.getName().accept(this, arg);
-        printer.println(" {").indent();
-        n.getModuleStmts().accept(this, arg);
-        printer.unindent().println("}");
-    }
-
-    @Override
-    public void visit(ModuleRequiresStmt n, Void arg) {
-        printer.print("requires ");
-        printModifiers(n.getModifiers());
-        n.getName().accept(this, arg);
-        printer.println(";");
-    }
-
-    @Override
-    public void visit(ModuleExportsStmt n, Void arg) {
-        printer.print("exports ");
-        n.getName().accept(this, arg);
-        printPrePostFixOptionalList(n.getModuleNames(), arg, " to ", ", ", "");
-        printer.println(";");
-    }
-
-    @Override
-    public void visit(ModuleProvidesStmt n, Void arg) {
-        printer.print("provides ");
-        n.getType().accept(this, arg);
-        printPrePostFixRequiredList(n.getWithTypes(), arg, " with ", ", ", "");
-        printer.println(";");
-    }
-
-    @Override
-    public void visit(ModuleUsesStmt n, Void arg) {
-        printer.print("uses ");
-        n.getType().accept(this, arg);
-        printer.println(";");
-    }
-
-    @Override
-    public void visit(ModuleOpensStmt n, Void arg) {
-        printer.print("opens ");
-        n.getName().accept(this, arg);
-        printPrePostFixOptionalList(n.getModuleNames(), arg, " to ", ", ", "");
-        printer.println(";");
     }
 
     private void printOrphanCommentsBeforeThisChildNode(final Node node) {
@@ -1485,6 +1402,58 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
         for (int i = 0; i < commentsAtEnd; i++) {
             everything.get(everything.size() - commentsAtEnd + i).accept(this, null);
         }
+    }
+
+    /**
+     * Returns the type that maximum shared type between all variables.
+     * The minimum common type does never include annotations on the array level.
+     * <p>
+     * <br/>For <code>int a;</code> this is int.
+     * <br/>For <code>int a,b,c,d;</code> this is also int.
+     * <br/>For <code>int a,b[],c;</code> this is also int.
+     * * <br/>For <code>int[] a[][],b[],c[][];</code> this is int[][].
+     * <p>
+     * Visible for testing.
+     */
+    static Type getMaximumCommonType(NodeWithVariables<?> nodeWithVariables) {
+        // we use a local class because we cannot use an helper static method in an interface
+        class Helper {
+            // Conceptually: given a type we start from the Element Type and get as many array levels as indicated
+            // From the implementation point of view we start from the actual type and we remove how many array
+            // levels as needed to get the target level of arrays
+            // It returns null if the type has less array levels then the desired target
+            private Type toArrayLevel(Type type, int level) {
+                if (level > type.getArrayLevel()) {
+                    return null;
+                }
+                for (int i = type.getArrayLevel(); i > level; i--) {
+                    type = ((ArrayType) type).getComponentType();
+                }
+                return type;
+            }
+        }
+
+        Helper helper = new Helper();
+        int level = 0;
+        boolean keepGoing = true;
+        // In practice we want to check for how many levels of arrays all the variables have the same type,
+        // including also the annotations
+        while (keepGoing) {
+            final int currentLevel = level;
+            // Now, given that equality on nodes consider the position the simplest way is to compare
+            // the pretty-printed string got for a node. We just check all them are the same and if they
+            // are we just just is not null
+            Object[] values = nodeWithVariables.getVariables().stream().map(v -> {
+                Type t = helper.toArrayLevel(v.getType(), currentLevel);
+                return t == null ? null : t.toString();
+            }).distinct().toArray();
+            if (values.length == 1 && values[0] != null) {
+                level++;
+            } else {
+                keepGoing = false;
+            }
+        }
+        return helper.toArrayLevel(nodeWithVariables.getVariables().get(0).getType(), --level);
     }
 
 }

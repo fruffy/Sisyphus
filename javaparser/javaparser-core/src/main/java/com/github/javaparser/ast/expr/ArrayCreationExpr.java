@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
@@ -31,14 +32,10 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-import java.util.Arrays;
-import java.util.List;
+
 import java.util.Optional;
+
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.ArrayCreationExprMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * <code>new int[5][4][][]</code> or <code>new int[][]{{1},{2,3}}</code>.
@@ -57,20 +54,32 @@ public final class ArrayCreationExpr extends Expression {
     private ArrayInitializerExpr initializer;
 
     public ArrayCreationExpr() {
-        this(null, new ClassOrInterfaceType(), new NodeList<>(), new ArrayInitializerExpr());
+        this(null,
+                new ClassOrInterfaceType(),
+                new NodeList<>(),
+                new ArrayInitializerExpr());
     }
 
     @AllFieldsConstructor
     public ArrayCreationExpr(Type elementType, NodeList<ArrayCreationLevel> levels, ArrayInitializerExpr initializer) {
-        this(null, elementType, levels, initializer);
+        this(null,
+                elementType,
+                levels,
+                initializer);
     }
 
     public ArrayCreationExpr(Type elementType) {
-        this(null, elementType, new NodeList<>(), new ArrayInitializerExpr());
+        this(null,
+                elementType,
+                new NodeList<>(),
+                new ArrayInitializerExpr());
     }
 
     public ArrayCreationExpr(Range range, Type elementType) {
-        this(range, elementType, new NodeList<>(), new ArrayInitializerExpr());
+        this(range,
+                elementType,
+                new NodeList<>(),
+                new ArrayInitializerExpr());
     }
 
     public ArrayCreationExpr(Range range, Type elementType, NodeList<ArrayCreationLevel> levels, ArrayInitializerExpr initializer) {
@@ -104,22 +113,17 @@ public final class ArrayCreationExpr extends Expression {
      * @param initializer the initializer, can be null
      * @return this, the ArrayCreationExpr
      */
-    public ArrayCreationExpr setInitializer(final ArrayInitializerExpr initializer) {
+    public ArrayCreationExpr setInitializer(ArrayInitializerExpr initializer) {
         notifyPropertyChange(ObservableProperty.INITIALIZER, this.initializer, initializer);
-        if (this.initializer != null)
-            this.initializer.setParentNode(null);
         this.initializer = initializer;
-        setAsParentNodeOf(initializer);
+        setAsParentNodeOf(this.initializer);
         return this;
     }
 
-    public ArrayCreationExpr setElementType(final Type elementType) {
-        assertNotNull(elementType);
+    public ArrayCreationExpr setElementType(Type elementType) {
         notifyPropertyChange(ObservableProperty.ELEMENT_TYPE, this.elementType, elementType);
-        if (this.elementType != null)
-            this.elementType.setParentNode(null);
-        this.elementType = elementType;
-        setAsParentNodeOf(elementType);
+        this.elementType = assertNotNull(elementType);
+        setAsParentNodeOf(this.elementType);
         return this;
     }
 
@@ -127,12 +131,9 @@ public final class ArrayCreationExpr extends Expression {
         return levels;
     }
 
-    public ArrayCreationExpr setLevels(final NodeList<ArrayCreationLevel> levels) {
-        assertNotNull(levels);
+    public ArrayCreationExpr setLevels(NodeList<ArrayCreationLevel> levels) {
         notifyPropertyChange(ObservableProperty.LEVELS, this.levels, levels);
-        if (this.levels != null)
-            this.levels.setParentNode(null);
-        this.levels = levels;
+        this.levels = assertNotNull(levels);
         setAsParentNodeOf(levels);
         return this;
     }
@@ -163,43 +164,4 @@ public final class ArrayCreationExpr extends Expression {
         ClassOrInterfaceType classOrInterfaceType = new ClassOrInterfaceType(type);
         return setElementType(classOrInterfaceType);
     }
-
-    @Override
-    public List<NodeList<?>> getNodeLists() {
-        return Arrays.asList(getLevels());
-    }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        if (initializer != null) {
-            if (node == initializer) {
-                removeInitializer();
-                return true;
-            }
-        }
-        for (int i = 0; i < levels.size(); i++) {
-            if (levels.get(i) == node) {
-                levels.remove(i);
-                return true;
-            }
-        }
-        return super.remove(node);
-    }
-
-    public ArrayCreationExpr removeInitializer() {
-        return setInitializer((ArrayInitializerExpr) null);
-    }
-
-    @Override
-    public ArrayCreationExpr clone() {
-        return (ArrayCreationExpr) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public ArrayCreationExprMetaModel getMetaModel() {
-        return JavaParserMetaModel.arrayCreationExprMetaModel;
-    }
 }
-

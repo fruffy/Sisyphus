@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
@@ -27,10 +28,8 @@ import com.github.javaparser.ast.nodeTypes.NodeWithIdentifier;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+
 import static com.github.javaparser.utils.Utils.assertNonEmpty;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.SimpleNameMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * A name that consists of a single identifier.
@@ -39,7 +38,6 @@ import com.github.javaparser.metamodel.JavaParserMetaModel;
  * @see Name
  */
 public class SimpleName extends Node implements NodeWithIdentifier<SimpleName> {
-
     private String identifier;
 
     public SimpleName() {
@@ -78,22 +76,4 @@ public class SimpleName extends Node implements NodeWithIdentifier<SimpleName> {
         this.identifier = identifier;
         return this;
     }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        return super.remove(node);
-    }
-
-    @Override
-    public SimpleName clone() {
-        return (SimpleName) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public SimpleNameMetaModel getMetaModel() {
-        return JavaParserMetaModel.simpleNameMetaModel;
-    }
 }
-

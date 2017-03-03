@@ -29,8 +29,6 @@ import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.Statement;
 
-import static com.github.javaparser.JavaParser.*;
-
 /**
  * A node that contains a list of statements.
  */
@@ -52,43 +50,51 @@ public interface NodeWithStatements<N extends Node> {
     @SuppressWarnings("unchecked")
     default N addStatement(Statement statement) {
         getStatements().add(statement);
+        statement.setParentNode((Node) this);
         return (N) this;
     }
 
     @SuppressWarnings("unchecked")
     default N addStatement(int index, final Statement statement) {
         getStatements().add(index, statement);
+        statement.setParentNode((Node) this);
         return (N) this;
     }
 
     default N addStatement(Expression expr) {
-        return addStatement(new ExpressionStmt(expr));
+        ExpressionStmt statement = new ExpressionStmt(expr);
+        expr.setParentNode(statement);
+        return addStatement(statement);
     }
 
     /**
      * It will use {@link JavaParser#parseStatement(String)} inside, so it should end with a semi column
      */
     default N addStatement(String statement) {
-        return addStatement(parseStatement(statement));
+        return addStatement(JavaParser.parseStatement(statement));
     }
 
     default N addStatement(int index, final Expression expr) {
         Statement stmt = new ExpressionStmt(expr);
+        expr.setParentNode(stmt);
         return addStatement(index, stmt);
     }
 
     default <A extends Statement> A addAndGetStatement(A statement) {
         getStatements().add(statement);
+        statement.setParentNode((Node) this);
         return statement;
     }
 
     default Statement addAndGetStatement(int index, final Statement statement) {
         getStatements().add(index, statement);
+        statement.setParentNode((Node) this);
         return statement;
     }
 
     default ExpressionStmt addAndGetStatement(Expression expr) {
         ExpressionStmt statement = new ExpressionStmt(expr);
+        expr.setParentNode(statement);
         return addAndGetStatement(statement);
     }
 
@@ -103,7 +109,7 @@ public interface NodeWithStatements<N extends Node> {
     @SuppressWarnings("unchecked")
     default N copyStatements(NodeList<Statement> nodeList) {
         for (Statement n : nodeList) {
-            addStatement(n.clone());
+            addStatement((Statement) n.clone());
         }
         return (N) this;
     }

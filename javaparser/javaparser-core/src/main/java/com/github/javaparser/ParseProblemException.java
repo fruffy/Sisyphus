@@ -36,12 +36,12 @@ public class ParseProblemException extends RuntimeException {
      */
     private final List<Problem> problems;
 
-    public ParseProblemException(List<Problem> problems) {
+    ParseProblemException(List<Problem> problems) {
         super(createMessage(assertNotNull(problems)));
         this.problems = problems;
     }
 
-    public ParseProblemException(Throwable throwable) {
+    ParseProblemException(Throwable throwable) {
         this(singletonList(new Problem(throwable.getMessage(), null, throwable)));
     }
 

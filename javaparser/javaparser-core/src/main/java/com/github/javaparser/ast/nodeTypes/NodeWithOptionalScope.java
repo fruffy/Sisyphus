@@ -34,7 +34,7 @@ public interface NodeWithOptionalScope<N extends Node> {
 
     Optional<Expression> getScope();
 
-    N setScope(Expression scope);
+    N setScope(final Expression scope);
 
     /**
      * Removes the scope by calling {@link #setScope} with null.

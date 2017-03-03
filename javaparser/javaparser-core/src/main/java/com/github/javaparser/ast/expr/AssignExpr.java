@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
@@ -25,12 +26,6 @@ import com.github.javaparser.ast.AllFieldsConstructor;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.AssignExprMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
-import com.github.javaparser.printer.Printable;
 
 /**
  * An assignment expression. It supports the operators that are found the the AssignExpr.Operator enum.
@@ -41,9 +36,19 @@ import com.github.javaparser.printer.Printable;
  */
 public final class AssignExpr extends Expression {
 
-    public enum Operator implements Printable {
-
-        ASSIGN("="), PLUS("+="), MINUS("-="), MULTIPLY("*="), DIVIDE("/="), AND("&="), OR("|="), XOR("^="), REMAINDER("%="), LEFT_SHIFT("<<="), SIGNED_RIGHT_SHIFT(">>="), UNSIGNED_RIGHT_SHIFT(">>>=");
+    public enum Operator {
+        ASSIGN("="),
+        PLUS("+="),
+        MINUS("-="),
+        MULTIPLY("*="),
+        DIVIDE("/="),
+        AND("&="),
+        OR("|="),
+        XOR("^="),
+        REMAINDER("%="),
+        LEFT_SHIFT("<<="),
+        SIGNED_RIGHT_SHIFT(">>="),
+        UNSIGNED_RIGHT_SHIFT(">>>=");
 
         private final String codeRepresentation;
 
@@ -100,48 +105,22 @@ public final class AssignExpr extends Expression {
         return value;
     }
 
-    public AssignExpr setOperator(final Operator operator) {
-        assertNotNull(operator);
-        notifyPropertyChange(ObservableProperty.OPERATOR, this.operator, operator);
-        this.operator = operator;
+    public AssignExpr setOperator(Operator op) {
+        this.operator = op;
         return this;
     }
 
-    public AssignExpr setTarget(final Expression target) {
-        assertNotNull(target);
+    public AssignExpr setTarget(Expression target) {
         notifyPropertyChange(ObservableProperty.TARGET, this.target, target);
-        if (this.target != null)
-            this.target.setParentNode(null);
         this.target = target;
-        setAsParentNodeOf(target);
+        setAsParentNodeOf(this.target);
         return this;
     }
 
-    public AssignExpr setValue(final Expression value) {
-        assertNotNull(value);
+    public AssignExpr setValue(Expression value) {
         notifyPropertyChange(ObservableProperty.VALUE, this.value, value);
-        if (this.value != null)
-            this.value.setParentNode(null);
         this.value = value;
-        setAsParentNodeOf(value);
+        setAsParentNodeOf(this.value);
         return this;
-    }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        return super.remove(node);
-    }
-
-    @Override
-    public AssignExpr clone() {
-        return (AssignExpr) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public AssignExprMetaModel getMetaModel() {
-        return JavaParserMetaModel.assignExprMetaModel;
     }
 }
-

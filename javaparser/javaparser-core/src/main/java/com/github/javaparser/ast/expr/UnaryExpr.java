@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
@@ -26,13 +27,6 @@ import com.github.javaparser.ast.nodeTypes.NodeWithExpression;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.DerivedProperty;
-import com.github.javaparser.metamodel.UnaryExprMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
-import com.github.javaparser.printer.Printable;
 
 /**
  * An expression where an operator is applied to a single expression.
@@ -44,14 +38,20 @@ import com.github.javaparser.printer.Printable;
  *
  * @author Julio Vilmar Gesser
  */
-public final class UnaryExpr extends Expression implements NodeWithExpression<UnaryExpr> {
+public final class UnaryExpr extends Expression implements
+        NodeWithExpression<UnaryExpr> {
 
-    public enum Operator implements Printable {
-
-        PLUS("+", false), MINUS("-", false), PREFIX_INCREMENT("++", false), PREFIX_DECREMENT("--", false), LOGICAL_COMPLEMENT("!", false), BITWISE_COMPLEMENT("~", false), POSTFIX_INCREMENT("++", true), POSTFIX_DECREMENT("--", true);
+    public enum Operator {
+        PLUS("+", false),
+        MINUS("-", false),
+        PREFIX_INCREMENT("++", false),
+        PREFIX_DECREMENT("--", false),
+        LOGICAL_COMPLEMENT("!", false),
+        BITWISE_COMPLEMENT("~", false),
+        POSTFIX_INCREMENT("++", true),
+        POSTFIX_DECREMENT("--", true);
 
         private final String codeRepresentation;
-
         private final boolean isPostfix;
 
         Operator(String codeRepresentation, boolean isPostfix) {
@@ -111,48 +111,16 @@ public final class UnaryExpr extends Expression implements NodeWithExpression<Un
     }
 
     @Override
-    public UnaryExpr setExpression(final Expression expression) {
-        assertNotNull(expression);
-        notifyPropertyChange(ObservableProperty.EXPRESSION, this.expression, expression);
-        if (this.expression != null)
-            this.expression.setParentNode(null);
-        this.expression = expression;
-        setAsParentNodeOf(expression);
+    public UnaryExpr setExpression(final Expression expr) {
+        notifyPropertyChange(ObservableProperty.EXPRESSION, this.expression, expr);
+        this.expression = expr;
+        setAsParentNodeOf(this.expression);
         return this;
     }
 
-    public UnaryExpr setOperator(final Operator operator) {
-        assertNotNull(operator);
-        notifyPropertyChange(ObservableProperty.OPERATOR, this.operator, operator);
-        this.operator = operator;
+    public UnaryExpr setOperator(final Operator op) {
+        notifyPropertyChange(ObservableProperty.OPERATOR, this.operator, op);
+        this.operator = op;
         return this;
-    }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        return super.remove(node);
-    }
-
-    @DerivedProperty
-    public boolean isPostfix() {
-        return operator.isPostfix();
-    }
-
-    @DerivedProperty
-    public boolean isPrefix() {
-        return !isPostfix();
-    }
-
-    @Override
-    public UnaryExpr clone() {
-        return (UnaryExpr) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public UnaryExprMetaModel getMetaModel() {
-        return JavaParserMetaModel.unaryExprMetaModel;
     }
 }
-

@@ -18,16 +18,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.comments;
 
 import com.github.javaparser.Range;
 import com.github.javaparser.ast.AllFieldsConstructor;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.BlockCommentMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * <p>
@@ -62,22 +59,4 @@ public final class BlockComment extends Comment {
     public <A> void accept(VoidVisitor<A> v, A arg) {
         v.visit(this, arg);
     }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        return super.remove(node);
-    }
-
-    @Override
-    public BlockComment clone() {
-        return (BlockComment) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public BlockCommentMetaModel getMetaModel() {
-        return JavaParserMetaModel.blockCommentMetaModel;
-    }
 }
-

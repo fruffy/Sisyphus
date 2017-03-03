@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
@@ -25,12 +26,6 @@ import com.github.javaparser.ast.AllFieldsConstructor;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.BinaryExprMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
-import com.github.javaparser.printer.Printable;
 
 /**
  * An expression with an expression on the left, an expression on the right, and an operator in the middle.
@@ -42,9 +37,26 @@ import com.github.javaparser.printer.Printable;
  */
 public final class BinaryExpr extends Expression {
 
-    public enum Operator implements Printable {
-
-        OR("||"), AND("&&"), BINARY_OR("|"), BINARY_AND("&"), XOR("^"), EQUALS("=="), NOT_EQUALS("!="), LESS("<"), GREATER(">"), LESS_EQUALS("<="), GREATER_EQUALS(">="), LEFT_SHIFT("<<"), SIGNED_RIGHT_SHIFT(">>"), UNSIGNED_RIGHT_SHIFT(">>>"), PLUS("+"), MINUS("-"), MULTIPLY("*"), DIVIDE("/"), REMAINDER("%");
+    public enum Operator {
+        OR("||"),
+        AND("&&"),
+        BINARY_OR("|"),
+        BINARY_AND("&"),
+        XOR("^"),
+        EQUALS("=="),
+        NOT_EQUALS("!="),
+        LESS("<"),
+        GREATER(">"),
+        LESS_EQUALS("<="),
+        GREATER_EQUALS(">="),
+        LEFT_SHIFT("<<"),
+        SIGNED_RIGHT_SHIFT(">>"),
+        UNSIGNED_RIGHT_SHIFT(">>>"),
+        PLUS("+"),
+        MINUS("-"),
+        MULTIPLY("*"),
+        DIVIDE("/"),
+        REMAINDER("%");
 
         private final String codeRepresentation;
 
@@ -101,48 +113,23 @@ public final class BinaryExpr extends Expression {
         return right;
     }
 
-    public BinaryExpr setLeft(final Expression left) {
-        assertNotNull(left);
+    public BinaryExpr setLeft(Expression left) {
         notifyPropertyChange(ObservableProperty.LEFT, this.left, left);
-        if (this.left != null)
-            this.left.setParentNode(null);
         this.left = left;
-        setAsParentNodeOf(left);
+        setAsParentNodeOf(this.left);
         return this;
     }
 
-    public BinaryExpr setOperator(final Operator operator) {
-        assertNotNull(operator);
-        notifyPropertyChange(ObservableProperty.OPERATOR, this.operator, operator);
-        this.operator = operator;
+    public BinaryExpr setOperator(Operator op) {
+        notifyPropertyChange(ObservableProperty.OPERATOR, this.operator, op);
+        this.operator = op;
         return this;
     }
 
-    public BinaryExpr setRight(final Expression right) {
-        assertNotNull(right);
+    public BinaryExpr setRight(Expression right) {
         notifyPropertyChange(ObservableProperty.RIGHT, this.right, right);
-        if (this.right != null)
-            this.right.setParentNode(null);
         this.right = right;
-        setAsParentNodeOf(right);
+        setAsParentNodeOf(this.right);
         return this;
-    }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        return super.remove(node);
-    }
-
-    @Override
-    public BinaryExpr clone() {
-        return (BinaryExpr) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public BinaryExprMetaModel getMetaModel() {
-        return JavaParserMetaModel.binaryExprMetaModel;
     }
 }
-

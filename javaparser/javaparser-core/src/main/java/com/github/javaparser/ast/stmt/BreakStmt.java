@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.stmt;
 
 import com.github.javaparser.Range;
@@ -26,11 +27,10 @@ import com.github.javaparser.ast.expr.SimpleName;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+
 import java.util.Optional;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.BreakStmtMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
+
+import static com.github.javaparser.utils.Utils.assertNotNull;
 
 /**
  * A usage of the break keyword.
@@ -82,38 +82,7 @@ public final class BreakStmt extends Statement {
      */
     public BreakStmt setLabel(final SimpleName label) {
         notifyPropertyChange(ObservableProperty.LABEL, this.label, label);
-        if (this.label != null)
-            this.label.setParentNode(null);
-        this.label = label;
-        setAsParentNodeOf(label);
+        this.label = assertNotNull(label);
         return this;
     }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        if (label != null) {
-            if (node == label) {
-                removeLabel();
-                return true;
-            }
-        }
-        return super.remove(node);
-    }
-
-    public BreakStmt removeLabel() {
-        return setLabel((SimpleName) null);
-    }
-
-    @Override
-    public BreakStmt clone() {
-        return (BreakStmt) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public BreakStmtMetaModel getMetaModel() {
-        return JavaParserMetaModel.breakStmtMetaModel;
-    }
 }
-

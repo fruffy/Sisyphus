@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.body;
 
 import com.github.javaparser.Range;
@@ -26,12 +27,11 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.nodeTypes.NodeWithAnnotations;
 import com.github.javaparser.ast.observer.ObservableProperty;
+
 import java.util.Arrays;
 import java.util.List;
+
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.BodyDeclarationMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * Any declaration that can appear between the { and } of a class, interface, or enum.
@@ -66,13 +66,10 @@ public abstract class BodyDeclaration<T extends Node> extends Node implements No
      */
     @SuppressWarnings("unchecked")
     @Override
-    public final T setAnnotations(final NodeList<AnnotationExpr> annotations) {
-        assertNotNull(annotations);
+    public final T setAnnotations(NodeList<AnnotationExpr> annotations) {
         notifyPropertyChange(ObservableProperty.ANNOTATIONS, this.annotations, annotations);
-        if (this.annotations != null)
-            this.annotations.setParentNode(null);
-        this.annotations = annotations;
-        setAsParentNodeOf(annotations);
+        this.annotations = assertNotNull(annotations);
+        setAsParentNodeOf(this.annotations);
         return (T) this;
     }
 
@@ -80,28 +77,4 @@ public abstract class BodyDeclaration<T extends Node> extends Node implements No
     public List<NodeList<?>> getNodeLists() {
         return Arrays.asList(annotations);
     }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        for (int i = 0; i < annotations.size(); i++) {
-            if (annotations.get(i) == node) {
-                annotations.remove(i);
-                return true;
-            }
-        }
-        return super.remove(node);
-    }
-
-    @Override
-    public BodyDeclaration<?> clone() {
-        return (BodyDeclaration<?>) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public BodyDeclarationMetaModel getMetaModel() {
-        return JavaParserMetaModel.bodyDeclarationMetaModel;
-    }
 }
-

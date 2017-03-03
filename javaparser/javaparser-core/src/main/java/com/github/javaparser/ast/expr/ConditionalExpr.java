@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
@@ -25,11 +26,8 @@ import com.github.javaparser.ast.AllFieldsConstructor;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.ConditionalExprMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * An if-then or if-then-else construct.
@@ -83,51 +81,24 @@ public final class ConditionalExpr extends Expression {
         return thenExpr;
     }
 
-    public ConditionalExpr setCondition(final Expression condition) {
-        assertNotNull(condition);
+    public ConditionalExpr setCondition(Expression condition) {
         notifyPropertyChange(ObservableProperty.CONDITION, this.condition, condition);
-        if (this.condition != null)
-            this.condition.setParentNode(null);
-        this.condition = condition;
-        setAsParentNodeOf(condition);
+        this.condition = assertNotNull(condition);
+        setAsParentNodeOf(this.condition);
         return this;
     }
 
-    public ConditionalExpr setElseExpr(final Expression elseExpr) {
-        assertNotNull(elseExpr);
+    public ConditionalExpr setElseExpr(Expression elseExpr) {
         notifyPropertyChange(ObservableProperty.ELSE_EXPR, this.elseExpr, elseExpr);
-        if (this.elseExpr != null)
-            this.elseExpr.setParentNode(null);
-        this.elseExpr = elseExpr;
-        setAsParentNodeOf(elseExpr);
+        this.elseExpr = assertNotNull(elseExpr);
+        setAsParentNodeOf(this.elseExpr);
         return this;
     }
 
-    public ConditionalExpr setThenExpr(final Expression thenExpr) {
-        assertNotNull(thenExpr);
+    public ConditionalExpr setThenExpr(Expression thenExpr) {
         notifyPropertyChange(ObservableProperty.THEN_EXPR, this.thenExpr, thenExpr);
-        if (this.thenExpr != null)
-            this.thenExpr.setParentNode(null);
-        this.thenExpr = thenExpr;
-        setAsParentNodeOf(thenExpr);
+        this.thenExpr = assertNotNull(thenExpr);
+        setAsParentNodeOf(this.thenExpr);
         return this;
-    }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        return super.remove(node);
-    }
-
-    @Override
-    public ConditionalExpr clone() {
-        return (ConditionalExpr) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public ConditionalExprMetaModel getMetaModel() {
-        return JavaParserMetaModel.conditionalExprMetaModel;
     }
 }
-

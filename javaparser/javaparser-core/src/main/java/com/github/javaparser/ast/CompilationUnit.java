@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast;
 
 import com.github.javaparser.JavaParser;
@@ -29,21 +30,17 @@ import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.ast.expr.Name;
-import com.github.javaparser.ast.modules.ModuleDeclaration;
 import com.github.javaparser.ast.observer.ObservableProperty;
-import com.github.javaparser.ast.visitor.CloneVisitor;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-import com.github.javaparser.metamodel.CompilationUnitMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 import com.github.javaparser.utils.ClassUtils;
+
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.github.javaparser.JavaParser.parseName;
 import static com.github.javaparser.utils.Utils.assertNotNull;
 
 /**
@@ -68,24 +65,22 @@ public final class CompilationUnit extends Node {
 
     private NodeList<TypeDeclaration<?>> types;
 
-    private ModuleDeclaration module;
-
     public CompilationUnit() {
-        this(null, null, new NodeList<>(), new NodeList<>(), null);
+        this(null, null, new NodeList<>(), new NodeList<>());
     }
 
     public CompilationUnit(String packageDeclaration) {
-        this(null, new PackageDeclaration(new Name(packageDeclaration)), new NodeList<>(), new NodeList<>(), null);
+        this(null, new PackageDeclaration(new Name(packageDeclaration)), new NodeList<>(), new NodeList<>());
     }
 
     @AllFieldsConstructor
-    public CompilationUnit(PackageDeclaration packageDeclaration, NodeList<ImportDeclaration> imports, NodeList<TypeDeclaration<?>> types, ModuleDeclaration module) {
-        this(null, packageDeclaration, imports, types, module);
+    public CompilationUnit(PackageDeclaration packageDeclaration, NodeList<ImportDeclaration> imports, NodeList<TypeDeclaration<?>> types) {
+        this(null, packageDeclaration, imports, types);
     }
 
-    public CompilationUnit(Range range, PackageDeclaration packageDeclaration, NodeList<ImportDeclaration> imports, NodeList<TypeDeclaration<?>> types, ModuleDeclaration module) {
+    public CompilationUnit(Range range, PackageDeclaration packageDeclaration, NodeList<ImportDeclaration> imports,
+                           NodeList<TypeDeclaration<?>> types) {
         super(range);
-        setModule(module);
         setPackageDeclaration(packageDeclaration);
         setImports(imports);
         setTypes(types);
@@ -170,13 +165,10 @@ public final class CompilationUnit extends Node {
      *
      * @param imports the list of imports
      */
-    public CompilationUnit setImports(final NodeList<ImportDeclaration> imports) {
-        assertNotNull(imports);
+    public CompilationUnit setImports(NodeList<ImportDeclaration> imports) {
         notifyPropertyChange(ObservableProperty.IMPORTS, this.imports, imports);
-        if (this.imports != null)
-            this.imports.setParentNode(null);
-        this.imports = imports;
-        setAsParentNodeOf(imports);
+        this.imports = assertNotNull(imports);
+        setAsParentNodeOf(this.imports);
         return this;
     }
 
@@ -193,27 +185,22 @@ public final class CompilationUnit extends Node {
     /**
      * Sets or clear the package declarations of this compilation unit.
      *
-     * @param packageDeclaration the packageDeclaration declaration to set or <code>null</code> to default package
+     * @param pakage the packageDeclaration declaration to set or <code>null</code> to default package
      */
-    public CompilationUnit setPackageDeclaration(final PackageDeclaration packageDeclaration) {
-        notifyPropertyChange(ObservableProperty.PACKAGE_DECLARATION, this.packageDeclaration, packageDeclaration);
-        if (this.packageDeclaration != null)
-            this.packageDeclaration.setParentNode(null);
-        this.packageDeclaration = packageDeclaration;
-        setAsParentNodeOf(packageDeclaration);
+    public CompilationUnit setPackageDeclaration(PackageDeclaration pakage) {
+        notifyPropertyChange(ObservableProperty.PACKAGE_DECLARATION, this.packageDeclaration, pakage);
+        this.packageDeclaration = pakage;
+        setAsParentNodeOf(this.packageDeclaration);
         return this;
     }
 
     /**
      * Sets the list of types declared in this compilation unit.
      */
-    public CompilationUnit setTypes(final NodeList<TypeDeclaration<?>> types) {
-        assertNotNull(types);
+    public CompilationUnit setTypes(NodeList<TypeDeclaration<?>> types) {
         notifyPropertyChange(ObservableProperty.TYPES, this.types, types);
-        if (this.types != null)
-            this.types.setParentNode(null);
-        this.types = types;
-        setAsParentNodeOf(types);
+        this.types = assertNotNull(types);
+        setAsParentNodeOf(this.types);
         return this;
     }
 
@@ -240,7 +227,7 @@ public final class CompilationUnit extends Node {
      * @return this, the {@link CompilationUnit}
      */
     public CompilationUnit setPackageDeclaration(String name) {
-        setPackageDeclaration(new PackageDeclaration(parseName(name)));
+        setPackageDeclaration(new PackageDeclaration(Name.parse(name)));
         return this;
     }
 
@@ -265,7 +252,8 @@ public final class CompilationUnit extends Node {
     public CompilationUnit addImport(Class<?> clazz) {
         if (ClassUtils.isPrimitiveOrWrapper(clazz) || clazz.getName().startsWith("java.lang"))
             return this;
-        else if (clazz.isArray() && !ClassUtils.isPrimitiveOrWrapper(clazz.getComponentType()) && !clazz.getComponentType().getName().startsWith("java.lang"))
+        else if (clazz.isArray() && !ClassUtils.isPrimitiveOrWrapper(clazz.getComponentType())
+                && !clazz.getComponentType().getName().startsWith("java.lang"))
             return addImport(clazz.getComponentType().getName());
         return addImport(clazz.getName());
     }
@@ -290,10 +278,11 @@ public final class CompilationUnit extends Node {
         }
         i.append(";");
         ImportDeclaration importDeclaration = JavaParser.parseImport(i.toString());
-        if (getImports().stream().anyMatch( im -> im.toString().equals(importDeclaration.toString())))
+        if (getImports().stream().anyMatch(im -> im.toString().equals(importDeclaration.toString())))
             return this;
         else {
             getImports().add(importDeclaration);
+            importDeclaration.setParentNode(this);
             return this;
         }
     }
@@ -316,8 +305,12 @@ public final class CompilationUnit extends Node {
      * @return the newly created class
      */
     public ClassOrInterfaceDeclaration addClass(String name, Modifier... modifiers) {
-        ClassOrInterfaceDeclaration classOrInterfaceDeclaration = new ClassOrInterfaceDeclaration(Arrays.stream(modifiers).collect(Collectors.toCollection(() -> EnumSet.noneOf(Modifier.class))), false, name);
+        ClassOrInterfaceDeclaration classOrInterfaceDeclaration = new ClassOrInterfaceDeclaration(
+                Arrays.stream(modifiers)
+                        .collect(Collectors.toCollection(() -> EnumSet.noneOf(Modifier.class))),
+                false, name);
         getTypes().add(classOrInterfaceDeclaration);
+        classOrInterfaceDeclaration.setParentNode(this);
         return classOrInterfaceDeclaration;
     }
 
@@ -339,8 +332,12 @@ public final class CompilationUnit extends Node {
      * @return the newly created class
      */
     public ClassOrInterfaceDeclaration addInterface(String name, Modifier... modifiers) {
-        ClassOrInterfaceDeclaration classOrInterfaceDeclaration = new ClassOrInterfaceDeclaration(Arrays.stream(modifiers).collect(Collectors.toCollection(() -> EnumSet.noneOf(Modifier.class))), true, name);
+        ClassOrInterfaceDeclaration classOrInterfaceDeclaration = new ClassOrInterfaceDeclaration(
+                Arrays.stream(modifiers)
+                        .collect(Collectors.toCollection(() -> EnumSet.noneOf(Modifier.class))),
+                true, name);
         getTypes().add(classOrInterfaceDeclaration);
+        classOrInterfaceDeclaration.setParentNode(this);
         return classOrInterfaceDeclaration;
     }
 
@@ -362,8 +359,10 @@ public final class CompilationUnit extends Node {
      * @return the newly created class
      */
     public EnumDeclaration addEnum(String name, Modifier... modifiers) {
-        EnumDeclaration enumDeclaration = new EnumDeclaration(Arrays.stream(modifiers).collect(Collectors.toCollection(() -> EnumSet.noneOf(Modifier.class))), name);
+        EnumDeclaration enumDeclaration = new EnumDeclaration(Arrays.stream(modifiers)
+                .collect(Collectors.toCollection(() -> EnumSet.noneOf(Modifier.class))), name);
         getTypes().add(enumDeclaration);
+        enumDeclaration.setParentNode(this);
         return enumDeclaration;
     }
 
@@ -385,8 +384,10 @@ public final class CompilationUnit extends Node {
      * @return the newly created class
      */
     public AnnotationDeclaration addAnnotationDeclaration(String name, Modifier... modifiers) {
-        AnnotationDeclaration annotationDeclaration = new AnnotationDeclaration(Arrays.stream(modifiers).collect(Collectors.toCollection(() -> EnumSet.noneOf(Modifier.class))), name);
+        AnnotationDeclaration annotationDeclaration = new AnnotationDeclaration(Arrays.stream(modifiers)
+                .collect(Collectors.toCollection(() -> EnumSet.noneOf(Modifier.class))), name);
         getTypes().add(annotationDeclaration);
+        annotationDeclaration.setParentNode(this);
         return annotationDeclaration;
     }
 
@@ -396,7 +397,10 @@ public final class CompilationUnit extends Node {
      * @param className the class name (case-sensitive)
      */
     public Optional<ClassOrInterfaceDeclaration> getClassByName(String className) {
-        return getTypes().stream().filter( type -> type.getNameAsString().equals(className) && type instanceof ClassOrInterfaceDeclaration && !((ClassOrInterfaceDeclaration) type).isInterface()).findFirst().map( t -> (ClassOrInterfaceDeclaration) t);
+        return getTypes().stream().filter(type -> type.getNameAsString().equals(className)
+                && type instanceof ClassOrInterfaceDeclaration && !((ClassOrInterfaceDeclaration) type).isInterface())
+                .findFirst()
+                .map(t -> (ClassOrInterfaceDeclaration) t);
     }
 
     /**
@@ -405,7 +409,10 @@ public final class CompilationUnit extends Node {
      * @param interfaceName the interface name (case-sensitive)
      */
     public Optional<ClassOrInterfaceDeclaration> getInterfaceByName(String interfaceName) {
-        return getTypes().stream().filter( type -> type.getNameAsString().equals(interfaceName) && type instanceof ClassOrInterfaceDeclaration && ((ClassOrInterfaceDeclaration) type).isInterface()).findFirst().map( t -> (ClassOrInterfaceDeclaration) t);
+        return getTypes().stream().filter(type -> type.getNameAsString().equals(interfaceName)
+                && type instanceof ClassOrInterfaceDeclaration && ((ClassOrInterfaceDeclaration) type).isInterface())
+                .findFirst()
+                .map(t -> (ClassOrInterfaceDeclaration) t);
     }
 
     /**
@@ -414,7 +421,10 @@ public final class CompilationUnit extends Node {
      * @param enumName the enum name (case-sensitive)
      */
     public Optional<EnumDeclaration> getEnumByName(String enumName) {
-        return getTypes().stream().filter( type -> type.getNameAsString().equals(enumName) && type instanceof EnumDeclaration).findFirst().map( t -> (EnumDeclaration) t);
+        return getTypes().stream().filter(type -> type.getNameAsString().equals(enumName)
+                && type instanceof EnumDeclaration)
+                .findFirst()
+                .map(t -> (EnumDeclaration) t);
     }
 
     /**
@@ -423,74 +433,14 @@ public final class CompilationUnit extends Node {
      * @param annotationName the annotation name (case-sensitive)
      */
     public Optional<AnnotationDeclaration> getAnnotationDeclarationByName(String annotationName) {
-        return getTypes().stream().filter( type -> type.getNameAsString().equals(annotationName) && type instanceof AnnotationDeclaration).findFirst().map( t -> (AnnotationDeclaration) t);
+        return getTypes().stream().filter(type -> type.getNameAsString().equals(annotationName)
+                && type instanceof AnnotationDeclaration)
+                .findFirst()
+                .map(t -> (AnnotationDeclaration) t);
     }
 
     @Override
     public List<NodeList<?>> getNodeLists() {
-        return Arrays.asList(getImports(), getTypes());
-    }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        for (int i = 0; i < imports.size(); i++) {
-            if (imports.get(i) == node) {
-                imports.remove(i);
-                return true;
-            }
-        }
-        if (module != null) {
-            if (node == module) {
-                removeModule();
-                return true;
-            }
-        }
-        if (packageDeclaration != null) {
-            if (node == packageDeclaration) {
-                removePackageDeclaration();
-                return true;
-            }
-        }
-        for (int i = 0; i < types.size(); i++) {
-            if (types.get(i) == node) {
-                types.remove(i);
-                return true;
-            }
-        }
-        return super.remove(node);
-    }
-
-    public CompilationUnit removePackageDeclaration() {
-        return setPackageDeclaration((PackageDeclaration) null);
-    }
-
-    public Optional<ModuleDeclaration> getModule() {
-        return Optional.ofNullable(module);
-    }
-
-    public CompilationUnit setModule(final ModuleDeclaration module) {
-        notifyPropertyChange(ObservableProperty.MODULE, this.module, module);
-        if (this.module != null)
-            this.module.setParentNode(null);
-        this.module = module;
-        setAsParentNodeOf(module);
-        return this;
-    }
-
-    public CompilationUnit removeModule() {
-        return setModule((ModuleDeclaration) null);
-    }
-
-    @Override
-    public CompilationUnit clone() {
-        return (CompilationUnit) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public CompilationUnitMetaModel getMetaModel() {
-        return JavaParserMetaModel.compilationUnitMetaModel;
+        return Arrays.asList(imports, types);
     }
 }
-

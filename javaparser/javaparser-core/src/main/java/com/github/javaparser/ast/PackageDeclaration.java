@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast;
 
 import com.github.javaparser.Range;
@@ -28,13 +29,11 @@ import com.github.javaparser.ast.nodeTypes.NodeWithName;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+
 import java.util.Arrays;
 import java.util.List;
+
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.PackageDeclarationMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * A package declaration.
@@ -43,7 +42,9 @@ import com.github.javaparser.metamodel.JavaParserMetaModel;
  *
  * @author Julio Vilmar Gesser
  */
-public final class PackageDeclaration extends Node implements NodeWithAnnotations<PackageDeclaration>, NodeWithName<PackageDeclaration> {
+public final class PackageDeclaration extends Node implements
+        NodeWithAnnotations<PackageDeclaration>,
+        NodeWithName<PackageDeclaration> {
 
     private NodeList<AnnotationExpr> annotations = new NodeList<>();
 
@@ -103,13 +104,10 @@ public final class PackageDeclaration extends Node implements NodeWithAnnotation
      * @param annotations the annotations to set
      */
     @Override
-    public PackageDeclaration setAnnotations(final NodeList<AnnotationExpr> annotations) {
-        assertNotNull(annotations);
+    public PackageDeclaration setAnnotations(NodeList<AnnotationExpr> annotations) {
         notifyPropertyChange(ObservableProperty.ANNOTATIONS, this.annotations, annotations);
-        if (this.annotations != null)
-            this.annotations.setParentNode(null);
-        this.annotations = annotations;
-        setAsParentNodeOf(annotations);
+        this.annotations = assertNotNull(annotations);
+        setAsParentNodeOf(this.annotations);
         return this;
     }
 
@@ -119,42 +117,16 @@ public final class PackageDeclaration extends Node implements NodeWithAnnotation
      * @param name the name to set
      */
     @Override
-    public PackageDeclaration setName(final Name name) {
-        assertNotNull(name);
+    public PackageDeclaration setName(Name name) {
         notifyPropertyChange(ObservableProperty.NAME, this.name, name);
-        if (this.name != null)
-            this.name.setParentNode(null);
-        this.name = name;
-        setAsParentNodeOf(name);
+        this.name = assertNotNull(name);
+        setAsParentNodeOf(this.name);
         return this;
     }
 
     @Override
     public List<NodeList<?>> getNodeLists() {
-        return Arrays.asList(getAnnotations());
+        return Arrays.asList(annotations);
     }
 
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        for (int i = 0; i < annotations.size(); i++) {
-            if (annotations.get(i) == node) {
-                annotations.remove(i);
-                return true;
-            }
-        }
-        return super.remove(node);
-    }
-
-    @Override
-    public PackageDeclaration clone() {
-        return (PackageDeclaration) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public PackageDeclarationMetaModel getMetaModel() {
-        return JavaParserMetaModel.packageDeclarationMetaModel;
-    }
 }
-

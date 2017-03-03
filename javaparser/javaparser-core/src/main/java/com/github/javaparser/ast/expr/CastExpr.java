@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
@@ -29,18 +30,17 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.CastExprMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * A typecast. The (long) in <code>(long)15</code>
  *
  * @author Julio Vilmar Gesser
  */
-public final class CastExpr extends Expression implements NodeWithType<CastExpr, Type>, NodeWithExpression<CastExpr> {
+public final class CastExpr extends Expression implements
+        NodeWithType<CastExpr, Type>,
+        NodeWithExpression<CastExpr> {
 
     private Type type;
 
@@ -82,42 +82,18 @@ public final class CastExpr extends Expression implements NodeWithType<CastExpr,
     }
 
     @Override
-    public CastExpr setExpression(final Expression expression) {
-        assertNotNull(expression);
-        notifyPropertyChange(ObservableProperty.EXPRESSION, this.expression, expression);
-        if (this.expression != null)
-            this.expression.setParentNode(null);
-        this.expression = expression;
-        setAsParentNodeOf(expression);
+    public CastExpr setExpression(Expression expr) {
+        notifyPropertyChange(ObservableProperty.EXPRESSION, this.expression, expr);
+        this.expression = assertNotNull(expr);
+        setAsParentNodeOf(this.expression);
         return this;
     }
 
     @Override
-    public CastExpr setType(final Type type) {
-        assertNotNull(type);
+    public CastExpr setType(Type type) {
         notifyPropertyChange(ObservableProperty.TYPE, this.type, type);
-        if (this.type != null)
-            this.type.setParentNode(null);
-        this.type = type;
-        setAsParentNodeOf(type);
+        this.type = assertNotNull(type);
+        setAsParentNodeOf(this.type);
         return this;
-    }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        return super.remove(node);
-    }
-
-    @Override
-    public CastExpr clone() {
-        return (CastExpr) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public CastExprMetaModel getMetaModel() {
-        return JavaParserMetaModel.castExprMetaModel;
     }
 }
-

@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.type;
 
 import com.github.javaparser.Range;
@@ -28,13 +29,8 @@ import com.github.javaparser.ast.nodeTypes.NodeWithAnnotations;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-import java.util.Arrays;
-import java.util.List;
+
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.IntersectionTypeMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * Represents a set of types. A given value of this type has to be assignable to at all of the element types.
@@ -76,13 +72,10 @@ public class IntersectionType extends Type implements NodeWithAnnotations<Inters
         return elements;
     }
 
-    public IntersectionType setElements(final NodeList<ReferenceType> elements) {
-        assertNotNull(elements);
+    public IntersectionType setElements(NodeList<ReferenceType> elements) {
         notifyPropertyChange(ObservableProperty.ELEMENTS, this.elements, elements);
-        if (this.elements != null)
-            this.elements.setParentNode(null);
-        this.elements = elements;
-        setAsParentNodeOf(elements);
+        this.elements = assertNotNull(elements);
+        setAsParentNodeOf(this.elements);
         return this;
     }
 
@@ -90,33 +83,4 @@ public class IntersectionType extends Type implements NodeWithAnnotations<Inters
     public IntersectionType setAnnotations(NodeList<AnnotationExpr> annotations) {
         return (IntersectionType) super.setAnnotations(annotations);
     }
-
-    @Override
-    public List<NodeList<?>> getNodeLists() {
-        return Arrays.asList(getElements(), getAnnotations());
-    }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        for (int i = 0; i < elements.size(); i++) {
-            if (elements.get(i) == node) {
-                elements.remove(i);
-                return true;
-            }
-        }
-        return super.remove(node);
-    }
-
-    @Override
-    public IntersectionType clone() {
-        return (IntersectionType) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public IntersectionTypeMetaModel getMetaModel() {
-        return JavaParserMetaModel.intersectionTypeMetaModel;
-    }
 }
-

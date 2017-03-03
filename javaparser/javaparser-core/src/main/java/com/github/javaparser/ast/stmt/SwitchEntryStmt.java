@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.stmt;
 
 import com.github.javaparser.Range;
@@ -28,14 +29,10 @@ import com.github.javaparser.ast.nodeTypes.NodeWithStatements;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-import java.util.Arrays;
-import java.util.List;
+
 import java.util.Optional;
+
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.SwitchEntryStmtMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * One case in a switch statement.
@@ -72,7 +69,8 @@ public final class SwitchEntryStmt extends Statement implements NodeWithStatemen
         this(null, label, statements);
     }
 
-    public SwitchEntryStmt(Range range, final Expression label, final NodeList<Statement> statements) {
+    public SwitchEntryStmt(Range range, final Expression label,
+                           final NodeList<Statement> statements) {
         super(range);
         setLabel(label);
         setStatements(statements);
@@ -104,59 +102,15 @@ public final class SwitchEntryStmt extends Statement implements NodeWithStatemen
      */
     public SwitchEntryStmt setLabel(final Expression label) {
         notifyPropertyChange(ObservableProperty.LABEL, this.label, label);
-        if (this.label != null)
-            this.label.setParentNode(null);
         this.label = label;
-        setAsParentNodeOf(label);
+        setAsParentNodeOf(this.label);
         return this;
     }
 
     public SwitchEntryStmt setStatements(final NodeList<Statement> statements) {
-        assertNotNull(statements);
         notifyPropertyChange(ObservableProperty.STATEMENTS, this.statements, statements);
-        if (this.statements != null)
-            this.statements.setParentNode(null);
-        this.statements = statements;
-        setAsParentNodeOf(statements);
+        this.statements = assertNotNull(statements);
+        setAsParentNodeOf(this.statements);
         return this;
     }
-
-    @Override
-    public List<NodeList<?>> getNodeLists() {
-        return Arrays.asList(getStatements());
-    }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        if (label != null) {
-            if (node == label) {
-                removeLabel();
-                return true;
-            }
-        }
-        for (int i = 0; i < statements.size(); i++) {
-            if (statements.get(i) == node) {
-                statements.remove(i);
-                return true;
-            }
-        }
-        return super.remove(node);
-    }
-
-    public SwitchEntryStmt removeLabel() {
-        return setLabel((Expression) null);
-    }
-
-    @Override
-    public SwitchEntryStmt clone() {
-        return (SwitchEntryStmt) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public SwitchEntryStmtMetaModel getMetaModel() {
-        return JavaParserMetaModel.switchEntryStmtMetaModel;
-    }
 }
-

@@ -37,6 +37,7 @@ public interface NodeWithOptionalBlockStmt<N extends Node> {
     default BlockStmt createBody() {
         BlockStmt block = new BlockStmt();
         setBody(block);
+        block.setParentNode((Node) this);
         return block;
     }
 }

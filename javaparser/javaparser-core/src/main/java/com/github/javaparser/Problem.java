@@ -25,8 +25,6 @@ import java.util.Optional;
 
 import com.github.javaparser.utils.Utils;
 
-import static com.github.javaparser.utils.Utils.assertNotNull;
-
 /**
  * A problem that was encountered during parsing.
  */
@@ -36,8 +34,6 @@ public class Problem {
     private final Throwable cause;
 
     Problem(String message, Range range, Throwable cause) {
-        assertNotNull(message);
-
         this.message = message;
         this.range = range;
         this.cause = cause;
@@ -47,7 +43,7 @@ public class Problem {
     public String toString() {
         StringBuilder str = new StringBuilder(message);
         if (range != null)
-            str.append(" at ").append(range.begin);
+            str.append(" ").append(range);
         if (cause != null) {
             str.append(Utils.EOL).append("Problem stacktrace : ").append(Utils.EOL);
             for (int i = 0; i < cause.getStackTrace().length; i++) {

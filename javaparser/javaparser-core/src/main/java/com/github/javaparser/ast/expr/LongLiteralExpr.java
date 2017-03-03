@@ -18,16 +18,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
 import com.github.javaparser.ast.AllFieldsConstructor;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.LongLiteralExprMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * All ways to specify a long literal.
@@ -39,7 +36,7 @@ import com.github.javaparser.metamodel.JavaParserMetaModel;
  *
  * @author Julio Vilmar Gesser
  */
-public class LongLiteralExpr extends LiteralStringValueExpr {
+public class LongLiteralExpr extends StringLiteralExpr {
 
     public LongLiteralExpr() {
         this(null, "0");
@@ -47,7 +44,7 @@ public class LongLiteralExpr extends LiteralStringValueExpr {
 
     @AllFieldsConstructor
     public LongLiteralExpr(final String value) {
-        this(null, value);
+        super(value);
     }
 
     public LongLiteralExpr(final Range range, final String value) {
@@ -63,22 +60,4 @@ public class LongLiteralExpr extends LiteralStringValueExpr {
     public <A> void accept(final VoidVisitor<A> v, final A arg) {
         v.visit(this, arg);
     }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        return super.remove(node);
-    }
-
-    @Override
-    public LongLiteralExpr clone() {
-        return (LongLiteralExpr) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public LongLiteralExprMetaModel getMetaModel() {
-        return JavaParserMetaModel.longLiteralExprMetaModel;
-    }
 }
-

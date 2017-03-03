@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.type;
 
 import com.github.javaparser.Range;
@@ -28,13 +29,10 @@ import com.github.javaparser.ast.nodeTypes.NodeWithAnnotations;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-import java.util.Arrays;
-import java.util.List;
+
+import java.io.IOException;
+
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.UnionTypeMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * Represents a set of types. A given value of this type has to be assignable to at least one of the element types.
@@ -48,7 +46,7 @@ public class UnionType extends Type implements NodeWithAnnotations<UnionType> {
     public UnionType() {
         this(null, new NodeList<>());
     }
-
+    
     public UnionType(Range range, NodeList<ReferenceType> elements) {
         super(range, new NodeList<>());
         setElements(elements);
@@ -63,13 +61,10 @@ public class UnionType extends Type implements NodeWithAnnotations<UnionType> {
         return elements;
     }
 
-    public UnionType setElements(final NodeList<ReferenceType> elements) {
-        assertNotNull(elements);
+    public UnionType setElements(NodeList<ReferenceType> elements) {
         notifyPropertyChange(ObservableProperty.ELEMENTS, this.elements, elements);
-        if (this.elements != null)
-            this.elements.setParentNode(null);
-        this.elements = elements;
-        setAsParentNodeOf(elements);
+        this.elements = assertNotNull(elements);
+        setAsParentNodeOf(this.elements);
         return this;
     }
 
@@ -87,33 +82,4 @@ public class UnionType extends Type implements NodeWithAnnotations<UnionType> {
     public <A> void accept(VoidVisitor<A> v, A arg) {
         v.visit(this, arg);
     }
-
-    @Override
-    public List<NodeList<?>> getNodeLists() {
-        return Arrays.asList(getElements(), getAnnotations());
-    }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        for (int i = 0; i < elements.size(); i++) {
-            if (elements.get(i) == node) {
-                elements.remove(i);
-                return true;
-            }
-        }
-        return super.remove(node);
-    }
-
-    @Override
-    public UnionType clone() {
-        return (UnionType) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public UnionTypeMetaModel getMetaModel() {
-        return JavaParserMetaModel.unionTypeMetaModel;
-    }
 }
-

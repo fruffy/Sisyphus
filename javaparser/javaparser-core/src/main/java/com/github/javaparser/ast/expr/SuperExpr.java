@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
@@ -25,11 +26,8 @@ import com.github.javaparser.ast.AllFieldsConstructor;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+
 import java.util.Optional;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.SuperExprMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * An occurrence of the "super" keyword. <br/><code>World.super.greet()</code> is a MethodCallExpr of method name greet,
@@ -80,38 +78,8 @@ public final class SuperExpr extends Expression {
      */
     public SuperExpr setClassExpr(final Expression classExpr) {
         notifyPropertyChange(ObservableProperty.CLASS_EXPR, this.classExpr, classExpr);
-        if (this.classExpr != null)
-            this.classExpr.setParentNode(null);
         this.classExpr = classExpr;
-        setAsParentNodeOf(classExpr);
+        setAsParentNodeOf(this.classExpr);
         return this;
     }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        if (classExpr != null) {
-            if (node == classExpr) {
-                removeClassExpr();
-                return true;
-            }
-        }
-        return super.remove(node);
-    }
-
-    public SuperExpr removeClassExpr() {
-        return setClassExpr((Expression) null);
-    }
-
-    @Override
-    public SuperExpr clone() {
-        return (SuperExpr) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public SuperExprMetaModel getMetaModel() {
-        return JavaParserMetaModel.superExprMetaModel;
-    }
 }
-

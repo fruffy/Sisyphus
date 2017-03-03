@@ -34,6 +34,8 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
+
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.*;
 
@@ -190,6 +192,7 @@ public interface NodeWithMembers<N extends Node> {
         methodDeclaration.setModifiers(Arrays.stream(modifiers)
                 .collect(toCollection(() -> EnumSet.noneOf(Modifier.class))));
         getMembers().add(methodDeclaration);
+        methodDeclaration.setParentNode((Node) this);
         return methodDeclaration;
     }
 
@@ -205,6 +208,7 @@ public interface NodeWithMembers<N extends Node> {
                 .collect(toCollection(() -> EnumSet.noneOf(Modifier.class))));
         constructorDeclaration.setName(((TypeDeclaration<?>) this).getName());
         getMembers().add(constructorDeclaration);
+        constructorDeclaration.setParentNode((Node) this);
         return constructorDeclaration;
     }
 
@@ -212,6 +216,7 @@ public interface NodeWithMembers<N extends Node> {
         BlockStmt block = new BlockStmt();
         InitializerDeclaration initializerDeclaration = new InitializerDeclaration(false, block);
         getMembers().add(initializerDeclaration);
+        initializerDeclaration.setParentNode((Node) this);
         return block;
     }
 
@@ -219,6 +224,7 @@ public interface NodeWithMembers<N extends Node> {
         BlockStmt block = new BlockStmt();
         InitializerDeclaration initializerDeclaration = new InitializerDeclaration(true, block);
         getMembers().add(initializerDeclaration);
+        initializerDeclaration.setParentNode((Node) this);
         return block;
     }
 
@@ -226,14 +232,14 @@ public interface NodeWithMembers<N extends Node> {
      * Try to find a {@link MethodDeclaration} by its name
      *
      * @param name the name of the method
-     * @return the methods found (multiple in case of overloading)
+     * @return the methods found (multiple in case of polymorphism)
      */
     default List<MethodDeclaration> getMethodsByName(String name) {
-        return unmodifiableList(getMethods().stream()
-                .filter(m -> m.getNameAsString().equals(name))
-                .map(m -> m).collect(toList()));
+        return getMembers().stream()
+                .filter(m -> m instanceof MethodDeclaration && ((MethodDeclaration) m).getNameAsString().equals(name))
+                .map(m -> (MethodDeclaration) m).collect(toList());
     }
-
+    
     /**
      * Find all methods in the members of this node.
      *
@@ -251,25 +257,14 @@ public interface NodeWithMembers<N extends Node> {
      *
      * @param paramTypes the types of parameters like "Map&lt;Integer,String&gt;","int" to match<br> void
      * foo(Map&lt;Integer,String&gt; myMap,int number)
-     * @return the methods found (multiple in case of overloading)
+     * @return the methods found (multiple in case of polymorphism)
      */
     default List<MethodDeclaration> getMethodsByParameterTypes(String... paramTypes) {
-        return unmodifiableList(getMethods().stream()
-                .filter(m -> m.hasParametersOfType(paramTypes))
-                .map(m -> m).collect(toList()));
-    }
-
-    /**
-     * Try to find {@link MethodDeclaration}s by their name and parameters types
-     *
-     * @param paramTypes the types of parameters like "Map&lt;Integer,String&gt;","int" to match<br> void
-     * foo(Map&lt;Integer,String&gt; myMap,int number)
-     * @return the methods found (multiple in case of overloading)
-     */
-    default List<MethodDeclaration> getMethodsBySignature(String name, String... paramTypes) {
-        return unmodifiableList(getMethodsByName(name).stream()
-                .filter(m -> m.hasParametersOfType(paramTypes))
-                .map(m -> m).collect(toList()));
+        return getMembers().stream()
+                .filter(m -> m instanceof MethodDeclaration
+                        && ((MethodDeclaration) m).getParameters().stream().map(p -> p.getType().toString())
+                        .collect(toSet()).equals(Stream.of(paramTypes).collect(toSet())))
+                .map(m -> (MethodDeclaration) m).collect(toList());
     }
 
     /**
@@ -277,12 +272,15 @@ public interface NodeWithMembers<N extends Node> {
      *
      * @param paramTypes the types of parameters like "Map&lt;Integer,String&gt;","int" to match<br> void
      * foo(Map&lt;Integer,String&gt; myMap,int number)
-     * @return the methods found (multiple in case of overloading)
+     * @return the methods found (multiple in case of polymorphism)
      */
     default List<MethodDeclaration> getMethodsByParameterTypes(Class<?>... paramTypes) {
-        return unmodifiableList(getMethods().stream()
-                .filter(m -> m.hasParametersOfType(paramTypes))
-                .collect(toList()));
+        return getMembers().stream()
+                .filter(m -> m instanceof MethodDeclaration
+                        && ((MethodDeclaration) m).getParameters().stream().map(p -> p.getType().toString())
+                        .collect(toSet())
+                        .equals(Stream.of(paramTypes).map(Class::getSimpleName).collect(toSet())))
+                .map(m -> (MethodDeclaration) m).collect(toList());
     }
 
     /**
@@ -293,12 +291,10 @@ public interface NodeWithMembers<N extends Node> {
      */
     default Optional<FieldDeclaration> getFieldByName(String name) {
         return getMembers().stream()
-                .filter(m -> m instanceof FieldDeclaration)
-                .map(f -> (FieldDeclaration) f)
-                .filter(f -> f.getVariables().stream()
+                .filter(m -> m instanceof FieldDeclaration && ((FieldDeclaration) m).getVariables().stream()
                         .anyMatch(var -> var.getNameAsString().equals(name)))
                 .findFirst()
-                .map(f -> f);
+                .map(f -> (FieldDeclaration) f);
     }
 
     /**

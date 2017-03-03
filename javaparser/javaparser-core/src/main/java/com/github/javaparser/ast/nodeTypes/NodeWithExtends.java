@@ -31,8 +31,6 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 public interface NodeWithExtends<N extends Node> {
     NodeList<ClassOrInterfaceType> getExtendedTypes();
 
-    void tryAddImportToParentCompilationUnit(Class<?> clazz);
-
     default ClassOrInterfaceType getExtendedTypes(int i) {
         return getExtendedTypes().get(i);
     }
@@ -50,42 +48,28 @@ public interface NodeWithExtends<N extends Node> {
         getExtendedTypes().add(extend);
         return (N) this;
     }
-
     /**
-     * @deprecated use addExtendedType
-     */
-    default N addExtends(Class<?> clazz) {
-        return addExtendedType(clazz);
-    }
-
-    /**
-     * @deprecated use addExtendedType
-     */
-    default N addExtends(String name) {
-        return addExtendedType(name);
-    }
-
-    /**
-     * Add an "extends" to this and automatically add the import
+     * Add an extends to this and automatically add the import
      *
      * @param clazz the class to extand from
      * @return this
      */
-    default N addExtendedType(Class<?> clazz) {
-        tryAddImportToParentCompilationUnit(clazz);
-        return addExtendedType(clazz.getSimpleName());
+    default N addExtends(Class<?> clazz) {
+        ((Node) this).tryAddImportToParentCompilationUnit(clazz);
+        return addExtends(clazz.getSimpleName());
     }
 
     /**
-     * Add an "extends" to this
+     * Add an extends to this
      *
      * @param name the name of the type to extends from
      * @return this
      */
     @SuppressWarnings("unchecked")
-    default N addExtendedType(String name) {
+    default N addExtends(String name) {
         ClassOrInterfaceType classOrInterfaceType = new ClassOrInterfaceType(name);
         getExtendedTypes().add(classOrInterfaceType);
+        classOrInterfaceType.setParentNode((Node) this);
         return (N) this;
     }
 }

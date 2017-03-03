@@ -18,9 +18,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.expr;
 
-import com.github.javaparser.JavaParser;
 import com.github.javaparser.Range;
 import com.github.javaparser.ast.AllFieldsConstructor;
 import com.github.javaparser.ast.Node;
@@ -28,11 +28,10 @@ import com.github.javaparser.ast.nodeTypes.NodeWithIdentifier;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+
 import java.util.Optional;
+
 import static com.github.javaparser.utils.Utils.assertNonEmpty;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.NameMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * A name that may consist of multiple identifiers.
@@ -47,9 +46,7 @@ import com.github.javaparser.metamodel.JavaParserMetaModel;
  * @see SimpleName
  */
 public class Name extends Node implements NodeWithIdentifier<Name> {
-
     private String identifier;
-
     private Name qualifier;
 
     public Name() {
@@ -100,12 +97,15 @@ public class Name extends Node implements NodeWithIdentifier<Name> {
      *
      * @param qualifiedName qualified name
      * @return instanceof {@link Name}
-     * @deprecated use JavaParser.parseName instead
      */
-    @Deprecated
     public static Name parse(String qualifiedName) {
         assertNonEmpty(qualifiedName);
-        return JavaParser.parseName(qualifiedName);
+        String[] split = qualifiedName.split("\\.");
+        Name ret = new Name(split[0]);
+        for (int i = 1; i < split.length; i++) {
+            ret = new Name(ret, split[i]);
+        }
+        return ret;
     }
 
     /**
@@ -124,38 +124,8 @@ public class Name extends Node implements NodeWithIdentifier<Name> {
 
     public Name setQualifier(final Name qualifier) {
         notifyPropertyChange(ObservableProperty.QUALIFIER, this.qualifier, qualifier);
-        if (this.qualifier != null)
-            this.qualifier.setParentNode(null);
         this.qualifier = qualifier;
         setAsParentNodeOf(qualifier);
         return this;
     }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        if (qualifier != null) {
-            if (node == qualifier) {
-                removeQualifier();
-                return true;
-            }
-        }
-        return super.remove(node);
-    }
-
-    public Name removeQualifier() {
-        return setQualifier((Name) null);
-    }
-
-    @Override
-    public Name clone() {
-        return (Name) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public NameMetaModel getMetaModel() {
-        return JavaParserMetaModel.nameMetaModel;
-    }
 }
-

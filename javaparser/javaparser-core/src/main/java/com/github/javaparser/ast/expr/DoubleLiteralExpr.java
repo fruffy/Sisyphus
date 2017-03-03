@@ -18,16 +18,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
 import com.github.javaparser.ast.AllFieldsConstructor;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.DoubleLiteralExprMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * A float or a double constant. This value is stored exactly as found in the source.
@@ -37,7 +34,7 @@ import com.github.javaparser.metamodel.JavaParserMetaModel;
  *
  * @author Julio Vilmar Gesser
  */
-public final class DoubleLiteralExpr extends LiteralStringValueExpr {
+public final class DoubleLiteralExpr extends StringLiteralExpr {
 
     public DoubleLiteralExpr() {
         this(null, "0");
@@ -61,22 +58,4 @@ public final class DoubleLiteralExpr extends LiteralStringValueExpr {
     public <A> void accept(final VoidVisitor<A> v, final A arg) {
         v.visit(this, arg);
     }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        return super.remove(node);
-    }
-
-    @Override
-    public DoubleLiteralExpr clone() {
-        return (DoubleLiteralExpr) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public DoubleLiteralExprMetaModel getMetaModel() {
-        return JavaParserMetaModel.doubleLiteralExprMetaModel;
-    }
 }
-

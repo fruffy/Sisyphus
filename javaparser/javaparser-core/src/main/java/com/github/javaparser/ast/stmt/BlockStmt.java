@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.stmt;
 
 import com.github.javaparser.Range;
@@ -27,13 +28,11 @@ import com.github.javaparser.ast.nodeTypes.NodeWithStatements;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+
 import java.util.Arrays;
 import java.util.List;
+
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.BlockStmtMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * Statements in between { and }.
@@ -51,6 +50,7 @@ public final class BlockStmt extends Statement implements NodeWithStatements<Blo
     @AllFieldsConstructor
     public BlockStmt(final NodeList<Statement> statements) {
         this(null, statements);
+
     }
 
     public BlockStmt(final Range range, final NodeList<Statement> statements) {
@@ -73,41 +73,15 @@ public final class BlockStmt extends Statement implements NodeWithStatements<Blo
     }
 
     public BlockStmt setStatements(final NodeList<Statement> statements) {
-        assertNotNull(statements);
         notifyPropertyChange(ObservableProperty.STATEMENTS, this.statements, statements);
-        if (this.statements != null)
-            this.statements.setParentNode(null);
-        this.statements = statements;
-        setAsParentNodeOf(statements);
+        this.statements = assertNotNull(statements);
+        setAsParentNodeOf(this.statements);
         return this;
     }
 
     @Override
     public List<NodeList<?>> getNodeLists() {
-        return Arrays.asList(getStatements());
+        return Arrays.asList(statements);
     }
 
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        for (int i = 0; i < statements.size(); i++) {
-            if (statements.get(i) == node) {
-                statements.remove(i);
-                return true;
-            }
-        }
-        return super.remove(node);
-    }
-
-    @Override
-    public BlockStmt clone() {
-        return (BlockStmt) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public BlockStmtMetaModel getMetaModel() {
-        return JavaParserMetaModel.blockStmtMetaModel;
-    }
 }
-

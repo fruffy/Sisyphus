@@ -18,16 +18,16 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.comments;
 
 import com.github.javaparser.Range;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.observer.ObservableProperty;
+
 import java.util.Optional;
+
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.CommentMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * Abstract class for all AST nodes that represent comments.
@@ -40,7 +40,6 @@ import com.github.javaparser.metamodel.JavaParserMetaModel;
 public abstract class Comment extends Node {
 
     private String content;
-
     private Node commentedNode;
 
     public Comment(Range range, String content) {
@@ -62,10 +61,9 @@ public abstract class Comment extends Node {
      *
      * @param content the text of the comment to set
      */
-    public Comment setContent(final String content) {
-        assertNotNull(content);
+    public Comment setContent(String content) {
         notifyPropertyChange(ObservableProperty.CONTENT, this.content, content);
-        this.content = content;
+        this.content = assertNotNull(content);
         return this;
     }
 
@@ -113,32 +111,15 @@ public abstract class Comment extends Node {
 
     @Override
     public boolean remove() {
+        // This is necessary only for the nodes associated to a node,
         // the other are orphan comments and remove should work with them
         if (this.commentedNode != null) {
             this.commentedNode.setComment(null);
             return true;
-        } else if (this.getParentNode().isPresent()) {
+        } else if (this.getParentNode().isPresent()){
             return this.getParentNode().get().removeOrphanComment(this);
         } else {
             return false;
         }
     }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        return super.remove(node);
-    }
-
-    @Override
-    public Comment clone() {
-        return (Comment) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public CommentMetaModel getMetaModel() {
-        return JavaParserMetaModel.commentMetaModel;
-    }
 }
-

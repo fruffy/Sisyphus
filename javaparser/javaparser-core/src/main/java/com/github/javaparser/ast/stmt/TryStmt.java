@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.stmt;
 
 import com.github.javaparser.Range;
@@ -27,14 +28,10 @@ import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-import java.util.Arrays;
-import java.util.List;
+
 import java.util.Optional;
+
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.TryStmtMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * The try statement.
@@ -65,19 +62,30 @@ public final class TryStmt extends Statement {
     private BlockStmt finallyBlock;
 
     public TryStmt() {
-        this(null, new NodeList<>(), new BlockStmt(), new NodeList<>(), null);
+        this(null,
+                new NodeList<>(),
+                new BlockStmt(),
+                new NodeList<>(),
+                null);
     }
 
-    public TryStmt(final BlockStmt tryBlock, final NodeList<CatchClause> catchClauses, final BlockStmt finallyBlock) {
-        this(null, new NodeList<>(), tryBlock, catchClauses, finallyBlock);
+    public TryStmt(final BlockStmt tryBlock, final NodeList<CatchClause> catchClauses,
+                   final BlockStmt finallyBlock) {
+        this(null,
+                new NodeList<>(),
+                tryBlock,
+                catchClauses,
+                finallyBlock);
     }
 
     @AllFieldsConstructor
-    public TryStmt(NodeList<VariableDeclarationExpr> resources, final BlockStmt tryBlock, final NodeList<CatchClause> catchClauses, final BlockStmt finallyBlock) {
+    public TryStmt(NodeList<VariableDeclarationExpr> resources,
+                   final BlockStmt tryBlock, final NodeList<CatchClause> catchClauses, final BlockStmt finallyBlock) {
         this(null, resources, tryBlock, catchClauses, finallyBlock);
     }
 
-    public TryStmt(Range range, NodeList<VariableDeclarationExpr> resources, final BlockStmt tryBlock, final NodeList<CatchClause> catchClauses, final BlockStmt finallyBlock) {
+    public TryStmt(Range range, NodeList<VariableDeclarationExpr> resources,
+                   final BlockStmt tryBlock, final NodeList<CatchClause> catchClauses, final BlockStmt finallyBlock) {
         super(range);
         setResources(resources);
         setTryBlock(tryBlock);
@@ -112,95 +120,30 @@ public final class TryStmt extends Statement {
     }
 
     public TryStmt setCatchClauses(final NodeList<CatchClause> catchClauses) {
-        assertNotNull(catchClauses);
         notifyPropertyChange(ObservableProperty.CATCH_CLAUSES, this.catchClauses, catchClauses);
-        if (this.catchClauses != null)
-            this.catchClauses.setParentNode(null);
-        this.catchClauses = catchClauses;
-        setAsParentNodeOf(catchClauses);
+        this.catchClauses = assertNotNull(catchClauses);
+        setAsParentNodeOf(this.catchClauses);
         return this;
     }
 
     public TryStmt setFinallyBlock(final BlockStmt finallyBlock) {
         notifyPropertyChange(ObservableProperty.FINALLY_BLOCK, this.finallyBlock, finallyBlock);
-        if (this.finallyBlock != null)
-            this.finallyBlock.setParentNode(null);
         this.finallyBlock = finallyBlock;
-        setAsParentNodeOf(finallyBlock);
+        setAsParentNodeOf(this.finallyBlock);
         return this;
     }
 
     public TryStmt setTryBlock(final BlockStmt tryBlock) {
         notifyPropertyChange(ObservableProperty.TRY_BLOCK, this.tryBlock, tryBlock);
-        if (this.tryBlock != null)
-            this.tryBlock.setParentNode(null);
         this.tryBlock = tryBlock;
-        setAsParentNodeOf(tryBlock);
+        setAsParentNodeOf(this.tryBlock);
         return this;
     }
 
-    public TryStmt setResources(final NodeList<VariableDeclarationExpr> resources) {
-        assertNotNull(resources);
+    public TryStmt setResources(NodeList<VariableDeclarationExpr> resources) {
         notifyPropertyChange(ObservableProperty.RESOURCES, this.resources, resources);
-        if (this.resources != null)
-            this.resources.setParentNode(null);
-        this.resources = resources;
-        setAsParentNodeOf(resources);
+        this.resources = assertNotNull(resources);
+        setAsParentNodeOf(this.resources);
         return this;
-    }
-
-    @Override
-    public List<NodeList<?>> getNodeLists() {
-        return Arrays.asList(getCatchClauses(), getResources());
-    }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        for (int i = 0; i < catchClauses.size(); i++) {
-            if (catchClauses.get(i) == node) {
-                catchClauses.remove(i);
-                return true;
-            }
-        }
-        if (finallyBlock != null) {
-            if (node == finallyBlock) {
-                removeFinallyBlock();
-                return true;
-            }
-        }
-        for (int i = 0; i < resources.size(); i++) {
-            if (resources.get(i) == node) {
-                resources.remove(i);
-                return true;
-            }
-        }
-        if (tryBlock != null) {
-            if (node == tryBlock) {
-                removeTryBlock();
-                return true;
-            }
-        }
-        return super.remove(node);
-    }
-
-    public TryStmt removeFinallyBlock() {
-        return setFinallyBlock((BlockStmt) null);
-    }
-
-    public TryStmt removeTryBlock() {
-        return setTryBlock((BlockStmt) null);
-    }
-
-    @Override
-    public TryStmt clone() {
-        return (TryStmt) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public TryStmtMetaModel getMetaModel() {
-        return JavaParserMetaModel.tryStmtMetaModel;
     }
 }
-

@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
@@ -27,10 +28,8 @@ import com.github.javaparser.ast.nodeTypes.NodeWithSimpleName;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.MemberValuePairMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * A value for a member of an annotation.
@@ -84,40 +83,16 @@ public final class MemberValuePair extends Node implements NodeWithSimpleName<Me
 
     @Override
     public MemberValuePair setName(final SimpleName name) {
-        assertNotNull(name);
         notifyPropertyChange(ObservableProperty.NAME, this.name, name);
-        if (this.name != null)
-            this.name.setParentNode(null);
-        this.name = name;
+        this.name = assertNotNull(name);
         setAsParentNodeOf(name);
         return this;
     }
 
     public MemberValuePair setValue(final Expression value) {
-        assertNotNull(value);
         notifyPropertyChange(ObservableProperty.VALUE, this.value, value);
-        if (this.value != null)
-            this.value.setParentNode(null);
-        this.value = value;
-        setAsParentNodeOf(value);
+        this.value = assertNotNull(value);
+        setAsParentNodeOf(this.value);
         return this;
     }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        return super.remove(node);
-    }
-
-    @Override
-    public MemberValuePair clone() {
-        return (MemberValuePair) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public MemberValuePairMetaModel getMetaModel() {
-        return JavaParserMetaModel.memberValuePairMetaModel;
-    }
 }
-

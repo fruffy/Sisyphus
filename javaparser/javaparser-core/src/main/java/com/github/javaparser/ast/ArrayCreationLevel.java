@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast;
 
 import com.github.javaparser.Range;
@@ -28,14 +29,12 @@ import com.github.javaparser.ast.nodeTypes.NodeWithAnnotations;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.ArrayCreationLevelMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * In <code>new int[1][2];</code> there are two ArrayCreationLevel objects,
@@ -43,9 +42,7 @@ import com.github.javaparser.metamodel.JavaParserMetaModel;
  * the second the expression "2".
  */
 public class ArrayCreationLevel extends Node implements NodeWithAnnotations<ArrayCreationLevel> {
-
     private Expression dimension;
-
     private NodeList<AnnotationExpr> annotations = new NodeList<>();
 
     public ArrayCreationLevel() {
@@ -87,10 +84,8 @@ public class ArrayCreationLevel extends Node implements NodeWithAnnotations<Arra
      * @param dimension the dimension, can be null
      * @return this, the ArrayCreationLevel
      */
-    public ArrayCreationLevel setDimension(final Expression dimension) {
+    public ArrayCreationLevel setDimension(Expression dimension) {
         notifyPropertyChange(ObservableProperty.DIMENSION, this.dimension, dimension);
-        if (this.dimension != null)
-            this.dimension.setParentNode(null);
         this.dimension = dimension;
         setAsParentNodeOf(dimension);
         return this;
@@ -106,52 +101,19 @@ public class ArrayCreationLevel extends Node implements NodeWithAnnotations<Arra
     }
 
     @Override
-    public ArrayCreationLevel setAnnotations(final NodeList<AnnotationExpr> annotations) {
-        assertNotNull(annotations);
+    public ArrayCreationLevel setAnnotations(NodeList<AnnotationExpr> annotations) {
         notifyPropertyChange(ObservableProperty.ANNOTATIONS, this.annotations, annotations);
-        if (this.annotations != null)
-            this.annotations.setParentNode(null);
-        this.annotations = annotations;
         setAsParentNodeOf(annotations);
+        this.annotations = assertNotNull(annotations);
         return this;
     }
 
     @Override
     public List<NodeList<?>> getNodeLists() {
-        return Arrays.asList(getAnnotations());
+        return Arrays.asList(annotations);
     }
 
-    public ArrayCreationLevel removeDimension() {
-        return setDimension((Expression) null);
-    }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        for (int i = 0; i < annotations.size(); i++) {
-            if (annotations.get(i) == node) {
-                annotations.remove(i);
-                return true;
-            }
-        }
-        if (dimension != null) {
-            if (node == dimension) {
-                removeDimension();
-                return true;
-            }
-        }
-        return super.remove(node);
-    }
-
-    @Override
-    public ArrayCreationLevel clone() {
-        return (ArrayCreationLevel) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public ArrayCreationLevelMetaModel getMetaModel() {
-        return JavaParserMetaModel.arrayCreationLevelMetaModel;
+    public void removeDimension() {
+        setDimension(null);
     }
 }
-

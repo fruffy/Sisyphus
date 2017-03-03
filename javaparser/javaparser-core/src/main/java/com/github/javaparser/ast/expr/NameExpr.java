@@ -18,6 +18,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
+
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
@@ -26,11 +27,8 @@ import com.github.javaparser.ast.nodeTypes.NodeWithSimpleName;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.NameExprMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * Whenever a SimpleName is used in an expression, it is wrapped in NameExpr.
@@ -77,30 +75,9 @@ public class NameExpr extends Expression implements NodeWithSimpleName<NameExpr>
 
     @Override
     public NameExpr setName(final SimpleName name) {
-        assertNotNull(name);
         notifyPropertyChange(ObservableProperty.NAME, this.name, name);
-        if (this.name != null)
-            this.name.setParentNode(null);
-        this.name = name;
+        this.name = assertNotNull(name);
         setAsParentNodeOf(name);
         return this;
     }
-
-    @Override
-    public boolean remove(Node node) {
-        if (node == null)
-            return false;
-        return super.remove(node);
-    }
-
-    @Override
-    public NameExpr clone() {
-        return (NameExpr) accept(new CloneVisitor(), null);
-    }
-
-    @Override
-    public NameExprMetaModel getMetaModel() {
-        return JavaParserMetaModel.nameExprMetaModel;
-    }
 }
-
