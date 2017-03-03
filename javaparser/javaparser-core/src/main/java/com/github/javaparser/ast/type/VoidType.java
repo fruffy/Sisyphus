@@ -18,7 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package com.github.javaparser.ast.type;
 
 import com.github.javaparser.Range;
@@ -28,6 +27,12 @@ import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.nodeTypes.NodeWithAnnotations;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+import java.util.Arrays;
+import java.util.List;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.VoidTypeMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * The return type of a {@link com.github.javaparser.ast.body.MethodDeclaration}
@@ -37,6 +42,7 @@ import com.github.javaparser.ast.visitor.VoidVisitor;
  * @author Julio Vilmar Gesser
  */
 public final class VoidType extends Type implements NodeWithAnnotations<VoidType> {
+
     @AllFieldsConstructor
     public VoidType() {
         this(null);
@@ -61,4 +67,26 @@ public final class VoidType extends Type implements NodeWithAnnotations<VoidType
         return (VoidType) super.setAnnotations(annotations);
     }
 
+    @Override
+    public List<NodeList<?>> getNodeLists() {
+        return Arrays.asList(getAnnotations());
+    }
+
+    @Override
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        return super.remove(node);
+    }
+
+    @Override
+    public VoidType clone() {
+        return (VoidType) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    public VoidTypeMetaModel getMetaModel() {
+        return JavaParserMetaModel.voidTypeMetaModel;
+    }
 }
+

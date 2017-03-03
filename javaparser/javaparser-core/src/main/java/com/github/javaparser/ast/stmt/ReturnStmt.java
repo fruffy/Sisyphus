@@ -18,7 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package com.github.javaparser.ast.stmt;
 
 import com.github.javaparser.Range;
@@ -28,8 +27,11 @@ import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-
 import java.util.Optional;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.ReturnStmtMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * The return statement, with an optional expression to return.
@@ -83,8 +85,38 @@ public final class ReturnStmt extends Statement {
      */
     public ReturnStmt setExpression(final Expression expression) {
         notifyPropertyChange(ObservableProperty.EXPRESSION, this.expression, expression);
+        if (this.expression != null)
+            this.expression.setParentNode(null);
         this.expression = expression;
-        setAsParentNodeOf(this.expression);
+        setAsParentNodeOf(expression);
         return this;
     }
+
+    @Override
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        if (expression != null) {
+            if (node == expression) {
+                removeExpression();
+                return true;
+            }
+        }
+        return super.remove(node);
+    }
+
+    public ReturnStmt removeExpression() {
+        return setExpression((Expression) null);
+    }
+
+    @Override
+    public ReturnStmt clone() {
+        return (ReturnStmt) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    public ReturnStmtMetaModel getMetaModel() {
+        return JavaParserMetaModel.returnStmtMetaModel;
+    }
 }
+

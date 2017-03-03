@@ -18,7 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
@@ -26,18 +25,22 @@ import com.github.javaparser.ast.AllFieldsConstructor;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
 import com.github.javaparser.utils.Utils;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.CharLiteralExprMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * A literal character.
  * <br/><code>'a'</code>
  * <br/><code>'\t'</code>
- * <br/><code>'\u03a9'</code>
+ * <br/><code>'Ω'</code>
  * <br/><code>'\177'</code>
  * <br/><code>'💩'</code>
  *
  * @author Julio Vilmar Gesser
  */
-public final class CharLiteralExpr extends StringLiteralExpr {
+public final class CharLiteralExpr extends LiteralStringValueExpr {
 
     public CharLiteralExpr() {
         this(null, "?");
@@ -68,4 +71,22 @@ public final class CharLiteralExpr extends StringLiteralExpr {
     public <A> void accept(VoidVisitor<A> v, A arg) {
         v.visit(this, arg);
     }
+
+    @Override
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        return super.remove(node);
+    }
+
+    @Override
+    public CharLiteralExpr clone() {
+        return (CharLiteralExpr) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    public CharLiteralExprMetaModel getMetaModel() {
+        return JavaParserMetaModel.charLiteralExprMetaModel;
+    }
 }
+

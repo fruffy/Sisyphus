@@ -18,32 +18,31 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package com.github.javaparser.ast.body;
 
 import com.github.javaparser.Range;
 import com.github.javaparser.ast.AllFieldsConstructor;
 import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.ast.nodeTypes.NodeWithBlockStmt;
 import com.github.javaparser.ast.nodeTypes.NodeWithJavadoc;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-
-import java.util.Optional;
-
+import java.util.Arrays;
+import java.util.List;
 import static com.github.javaparser.utils.Utils.assertNotNull;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.InitializerDeclarationMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * A (possibly static) initializer body. "static { a=3; }" in this example: <code>class X { static { a=3; }  } </code>
  *
  * @author Julio Vilmar Gesser
  */
-public final class InitializerDeclaration extends BodyDeclaration<InitializerDeclaration> implements
-        NodeWithJavadoc<InitializerDeclaration>,
-        NodeWithBlockStmt<InitializerDeclaration> {
+public final class InitializerDeclaration extends BodyDeclaration<InitializerDeclaration> implements NodeWithJavadoc<InitializerDeclaration>, NodeWithBlockStmt<InitializerDeclaration> {
 
     private boolean isStatic;
 
@@ -82,16 +81,42 @@ public final class InitializerDeclaration extends BodyDeclaration<InitializerDec
         return isStatic;
     }
 
-    public InitializerDeclaration setBody(BlockStmt body) {
-        notifyPropertyChange(ObservableProperty.BLOCK, this.body, body);
-        this.body = assertNotNull(body);
-        setAsParentNodeOf(this.body);
+    public InitializerDeclaration setBody(final BlockStmt body) {
+        assertNotNull(body);
+        notifyPropertyChange(ObservableProperty.BODY, this.body, body);
+        if (this.body != null)
+            this.body.setParentNode(null);
+        this.body = body;
+        setAsParentNodeOf(body);
         return this;
     }
 
-    public InitializerDeclaration setStatic(boolean isStatic) {
-        notifyPropertyChange(ObservableProperty.IS_STATIC, this.isStatic, isStatic);
+    public InitializerDeclaration setStatic(final boolean isStatic) {
+        notifyPropertyChange(ObservableProperty.STATIC, this.isStatic, isStatic);
         this.isStatic = isStatic;
         return this;
     }
+
+    @Override
+    public List<NodeList<?>> getNodeLists() {
+        return Arrays.asList(getAnnotations());
+    }
+
+    @Override
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        return super.remove(node);
+    }
+
+    @Override
+    public InitializerDeclaration clone() {
+        return (InitializerDeclaration) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    public InitializerDeclarationMetaModel getMetaModel() {
+        return JavaParserMetaModel.initializerDeclarationMetaModel;
+    }
 }
+
