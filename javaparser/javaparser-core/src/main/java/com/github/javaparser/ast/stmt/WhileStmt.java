@@ -18,7 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package com.github.javaparser.ast.stmt;
 
 import com.github.javaparser.Range;
@@ -29,6 +28,11 @@ import com.github.javaparser.ast.nodeTypes.NodeWithBody;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+import static com.github.javaparser.utils.Utils.assertNotNull;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.WhileStmtMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * A while statement.
@@ -78,16 +82,40 @@ public final class WhileStmt extends Statement implements NodeWithBody<WhileStmt
 
     @Override
     public WhileStmt setBody(final Statement body) {
+        assertNotNull(body);
         notifyPropertyChange(ObservableProperty.BODY, this.body, body);
+        if (this.body != null)
+            this.body.setParentNode(null);
         this.body = body;
-        setAsParentNodeOf(this.body);
+        setAsParentNodeOf(body);
         return this;
     }
 
     public WhileStmt setCondition(final Expression condition) {
+        assertNotNull(condition);
         notifyPropertyChange(ObservableProperty.CONDITION, this.condition, condition);
+        if (this.condition != null)
+            this.condition.setParentNode(null);
         this.condition = condition;
-        setAsParentNodeOf(this.condition);
+        setAsParentNodeOf(condition);
         return this;
     }
+
+    @Override
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        return super.remove(node);
+    }
+
+    @Override
+    public WhileStmt clone() {
+        return (WhileStmt) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    public WhileStmtMetaModel getMetaModel() {
+        return JavaParserMetaModel.whileStmtMetaModel;
+    }
 }
+

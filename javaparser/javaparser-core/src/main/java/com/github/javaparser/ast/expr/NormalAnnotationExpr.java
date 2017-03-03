@@ -18,7 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
@@ -27,8 +26,13 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-
+import java.util.Arrays;
+import java.util.List;
 import static com.github.javaparser.utils.Utils.assertNotNull;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.NormalAnnotationExprMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * An annotation that has zero or more key-value pairs.<br/><code>@Mapping(a=5, d=10)</code>
@@ -67,9 +71,12 @@ public final class NormalAnnotationExpr extends AnnotationExpr {
     }
 
     public NormalAnnotationExpr setPairs(final NodeList<MemberValuePair> pairs) {
+        assertNotNull(pairs);
         notifyPropertyChange(ObservableProperty.PAIRS, this.pairs, pairs);
-        this.pairs = assertNotNull(pairs);
-        setAsParentNodeOf(this.pairs);
+        if (this.pairs != null)
+            this.pairs.setParentNode(null);
+        this.pairs = pairs;
+        setAsParentNodeOf(pairs);
         return this;
     }
 
@@ -90,7 +97,35 @@ public final class NormalAnnotationExpr extends AnnotationExpr {
     public NormalAnnotationExpr addPair(String key, NameExpr value) {
         MemberValuePair memberValuePair = new MemberValuePair(key, value);
         getPairs().add(memberValuePair);
-        memberValuePair.setParentNode(this);
         return this;
     }
+
+    @Override
+    public List<NodeList<?>> getNodeLists() {
+        return Arrays.asList(getPairs());
+    }
+
+    @Override
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        for (int i = 0; i < pairs.size(); i++) {
+            if (pairs.get(i) == node) {
+                pairs.remove(i);
+                return true;
+            }
+        }
+        return super.remove(node);
+    }
+
+    @Override
+    public NormalAnnotationExpr clone() {
+        return (NormalAnnotationExpr) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    public NormalAnnotationExprMetaModel getMetaModel() {
+        return JavaParserMetaModel.normalAnnotationExprMetaModel;
+    }
 }
+

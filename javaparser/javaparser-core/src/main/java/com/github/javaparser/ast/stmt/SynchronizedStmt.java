@@ -18,7 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package com.github.javaparser.ast.stmt;
 
 import com.github.javaparser.Range;
@@ -30,8 +29,11 @@ import com.github.javaparser.ast.nodeTypes.NodeWithExpression;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-
 import static com.github.javaparser.utils.Utils.assertNotNull;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.SynchronizedStmtMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * Usage of the synchronized keyword.
@@ -39,9 +41,7 @@ import static com.github.javaparser.utils.Utils.assertNotNull;
  *
  * @author Julio Vilmar Gesser
  */
-public final class SynchronizedStmt extends Statement implements
-        NodeWithBlockStmt<SynchronizedStmt>,
-        NodeWithExpression<SynchronizedStmt> {
+public final class SynchronizedStmt extends Statement implements NodeWithBlockStmt<SynchronizedStmt>, NodeWithExpression<SynchronizedStmt> {
 
     private Expression expression;
 
@@ -77,9 +77,12 @@ public final class SynchronizedStmt extends Statement implements
     }
 
     public SynchronizedStmt setExpression(final Expression expression) {
+        assertNotNull(expression);
         notifyPropertyChange(ObservableProperty.EXPRESSION, this.expression, expression);
-        this.expression = assertNotNull(expression);
-        setAsParentNodeOf(this.expression);
+        if (this.expression != null)
+            this.expression.setParentNode(null);
+        this.expression = expression;
+        setAsParentNodeOf(expression);
         return this;
     }
 
@@ -89,10 +92,31 @@ public final class SynchronizedStmt extends Statement implements
     }
 
     @Override
-    public SynchronizedStmt setBody(BlockStmt body) {
+    public SynchronizedStmt setBody(final BlockStmt body) {
+        assertNotNull(body);
         notifyPropertyChange(ObservableProperty.BODY, this.body, body);
-        this.body = assertNotNull(body);
-        setAsParentNodeOf(this.body);
+        if (this.body != null)
+            this.body.setParentNode(null);
+        this.body = body;
+        setAsParentNodeOf(body);
         return this;
     }
+
+    @Override
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        return super.remove(node);
+    }
+
+    @Override
+    public SynchronizedStmt clone() {
+        return (SynchronizedStmt) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    public SynchronizedStmtMetaModel getMetaModel() {
+        return JavaParserMetaModel.synchronizedStmtMetaModel;
+    }
 }
+
