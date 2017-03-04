@@ -11,9 +11,10 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.utils.Pair;
 
-import jgrapht.DirectedGraph;
-import jgrapht.experimental.dag.DirectedAcyclicGraph;
-import jgrapht.graph.DefaultEdge;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedAcyclicGraph;
+
 import visitors.ASTUtil;
 
 /**

@@ -11,9 +11,9 @@ import com.github.javaparser.ast.body.Parameter;
 
 import datastructures.BackEdge;
 import datastructures.NodeWrapper;
-import jgrapht.DirectedGraph;
-import jgrapht.graph.DefaultEdge;
-import jgrapht.graph.DirectedPseudograph;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedPseudograph;
 import parsers.ControlFlowParser;
 
 /*

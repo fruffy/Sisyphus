@@ -17,11 +17,11 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.Stack;
 
-import jgrapht.DirectedGraph;
-import jgrapht.EdgeFactory;
-import jgrapht.experimental.dag.DirectedAcyclicGraph;
-import jgrapht.graph.DefaultEdge;
-import jgrapht.graph.SimpleDirectedGraph;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.EdgeFactory;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedAcyclicGraph;
+import org.jgrapht.graph.SimpleDirectedGraph;
 
 /**
  * Computation of dominators in a flow graph. Algorithm see "A fast algorithm

@@ -19,10 +19,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import jgrapht.DirectedGraph;
-import jgrapht.experimental.dag.DirectedAcyclicGraph;
-import jgrapht.graph.DefaultEdge;
-import jgrapht.traverse.DepthFirstIterator;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedAcyclicGraph;
+import org.jgrapht.traverse.DepthFirstIterator;
 
 
 /**

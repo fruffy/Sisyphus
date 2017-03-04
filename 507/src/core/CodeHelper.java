@@ -9,8 +9,8 @@ import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.type.Type;
 
 import datastructures.NodeWrapper;
-import jgrapht.DirectedGraph;
-import jgrapht.graph.DefaultEdge;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
 import parsers.ControlFlowParser;
 import parsers.ControlListParser;
 import parsers.SyntaxParser;
@@ -18,7 +18,7 @@ import parsers.SyntaxParser;
 public class CodeHelper {
 	public static void main(String[] args) {
 
-		String srcName = "src/examples/Testcode.java";
+		String srcName = "src/examples/TestCode.java";
 
 		File libFile = new File("Library.java");
 		File srcfile = new File(srcName);
@@ -44,8 +44,8 @@ public class CodeHelper {
 
 		// initialize java parser for both library and source code.
 		try {
-			libparser = new SyntaxParser(libFile);
 			srcparser = new SyntaxParser(srcfile);
+			libparser = new SyntaxParser(libFile);
 		} catch (IOException e) {
 			new RuntimeException(e);
 			return;

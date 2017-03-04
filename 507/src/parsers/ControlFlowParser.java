@@ -20,8 +20,8 @@ import core.Method;
 import datastructures.BackEdge;
 import datastructures.EntryStmt;
 import datastructures.NodeWrapper;
-import jgrapht.graph.DefaultEdge;
-import jgrapht.graph.DirectedPseudograph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedPseudograph;
 
 /**
  * Construct a new control flow graph.

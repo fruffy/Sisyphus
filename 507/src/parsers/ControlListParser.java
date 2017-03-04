@@ -5,10 +5,10 @@ import java.util.List;
 
 import core.Method;
 import datastructures.NodeWrapper;
-import jgrapht.DirectedGraph;
-import jgrapht.experimental.dag.DirectedAcyclicGraph;
-import jgrapht.graph.DefaultEdge;
-import jgrapht.graph.DirectedPseudograph;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.graph.DirectedAcyclicGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedPseudograph;
 
 public class ControlListParser {
 	List<DirectedPseudograph<NodeWrapper, DefaultEdge>> cfgList;

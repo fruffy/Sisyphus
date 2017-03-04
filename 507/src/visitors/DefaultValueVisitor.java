@@ -54,6 +54,12 @@ import com.github.javaparser.ast.expr.ThisExpr;
 import com.github.javaparser.ast.expr.TypeExpr;
 import com.github.javaparser.ast.expr.UnaryExpr;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
+import com.github.javaparser.ast.modules.ModuleDeclaration;
+import com.github.javaparser.ast.modules.ModuleExportsStmt;
+import com.github.javaparser.ast.modules.ModuleOpensStmt;
+import com.github.javaparser.ast.modules.ModuleProvidesStmt;
+import com.github.javaparser.ast.modules.ModuleRequiresStmt;
+import com.github.javaparser.ast.modules.ModuleUsesStmt;
 import com.github.javaparser.ast.stmt.AssertStmt;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.BreakStmt;
@@ -603,6 +609,42 @@ public class DefaultValueVisitor<Ret> implements GenericVisitor<Ret, Object> {
 	@Override
 	public Ret visit(ImportDeclaration n, Object arg) {
 
+		return defaultValue;
+	}
+
+	@Override
+	public Ret visit(ModuleDeclaration n, Object arg) {
+		// TODO Auto-generated method stub
+		return defaultValue;
+	}
+
+	@Override
+	public Ret visit(ModuleRequiresStmt n, Object arg) {
+		// TODO Auto-generated method stub
+		return defaultValue;
+	}
+
+	@Override
+	public Ret visit(ModuleExportsStmt n, Object arg) {
+		// TODO Auto-generated method stub
+		return defaultValue;
+	}
+
+	@Override
+	public Ret visit(ModuleProvidesStmt n, Object arg) {
+		// TODO Auto-generated method stub
+		return defaultValue;
+	}
+
+	@Override
+	public Ret visit(ModuleUsesStmt n, Object arg) {
+		// TODO Auto-generated method stub
+		return defaultValue;
+	}
+
+	@Override
+	public Ret visit(ModuleOpensStmt n, Object arg) {
+		// TODO Auto-generated method stub
 		return defaultValue;
 	}
 

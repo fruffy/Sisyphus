@@ -5,9 +5,9 @@ import java.util.Iterator;
 import datastructures.DominatorTree;
 import datastructures.EntryStmt;
 import datastructures.NodeWrapper;
-import jgrapht.DirectedGraph;
-import jgrapht.experimental.dag.DirectedAcyclicGraph;
-import jgrapht.graph.DefaultEdge;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedAcyclicGraph;
 
 public class ControlDependencyParser {
 	private DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg;

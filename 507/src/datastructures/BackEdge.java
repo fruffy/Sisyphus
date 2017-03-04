@@ -1,6 +1,6 @@
 package datastructures;
 
-import jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultEdge;
 
 public class BackEdge extends DefaultEdge {
 

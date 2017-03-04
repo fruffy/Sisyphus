@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import jgrapht.DirectedGraph;
+import org.jgrapht.DirectedGraph;
 
 /**
  * Provides ways to traverse a directed graph. Currently only depth first search

@@ -2,7 +2,6 @@ package parsers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.github.javaparser.JavaParser;
@@ -14,10 +13,12 @@ import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
 import com.github.javaparser.symbolsolver.model.declarations.Declaration;
+import com.github.javaparser.symbolsolver.model.declarations.FieldDeclaration;
+import com.github.javaparser.symbolsolver.model.declarations.TypeParameterDeclaration;
+import com.github.javaparser.symbolsolver.model.methods.MethodUsage;
 import com.github.javaparser.symbolsolver.model.resolution.SymbolReference;
 import com.github.javaparser.symbolsolver.model.typesystem.ReferenceType;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
-import com.github.javaparser.symbolsolver.resolution.typesolvers.JarTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 
@@ -44,43 +45,33 @@ public class SyntaxParser {
 		this.methodDeclarationList = this.getMethodDeclaration();
 		this.MethodCallExprList = this.getMethodInvocation();
 		processJavaFile1(inputFile);
+		// processJavaFile( JavaParserFacade.get(this.t));
+
 	}
 
 	/********************************************************************************************/
 
 	class TypeCalculatorVisitor extends VoidVisitorAdapter<JavaParserFacade> {
-		@Override
-		public void visit(ReturnStmt n, JavaParserFacade javaParserFacade) {
-			super.visit(n, javaParserFacade);
-			// System.out.println(n.getExpr().toString() + " has type " +
-			// javaParserFacade.getType(n.getExpr()));
-		}
 
 		@Override
 		public void visit(MethodCallExpr n, JavaParserFacade javaParserFacade) {
-			System.out.println(n);
 			super.visit(n, javaParserFacade);
-			System.out.println(n.toString() + " has type " + javaParserFacade.getType(n).describe());
-			if (javaParserFacade.getType(n).isReferenceType()) {
-				for (ReferenceType ancestor : javaParserFacade.getType(n).asReferenceType().getAllAncestors()) {
-					// System.out.println("Ancestor " + ancestor.describe());
-				}
+			com.github.javaparser.symbolsolver.model.declarations.MethodDeclaration nest = javaParserFacade.solve(n).getCorrespondingDeclaration();
+			System.out.println(n.toString() + " has type " + nest.getSignature());
+
+			for (TypeParameterDeclaration test : nest.getTypeParameters()) {
+				System.out.println(n.getNameAsString() + " is " + test.getQualifiedName());
 			}
+
 		}
 	}
 
 	public void processJavaFile1(File inputFile) throws FileNotFoundException {
-		CombinedTypeSolver typeSolver = new CombinedTypeSolver(new ReflectionTypeSolver());
-		typeSolver.add(new JavaParserTypeSolver(new File("C:\\Projects\\CPSC_507\\jgrapht")));
-		try {
-			typeSolver.add(new JarTypeSolver(
-					"C:\\Projects\\CPSC_507\\javaparser\\javaparser-core\\target\\javaparser-core-3.0.2-SNAPSHOT.jar"));
-			typeSolver.add(new JarTypeSolver(
-					"C:\\Projects\\CPSC_507\\javasymbolsolver\\java-symbol-solver-core\\target\\java-symbol-solver-core-0.4-SNAPSHOT.jar"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//CombinedTypeSolver typeSolver = new CombinedTypeSolver(new ReflectionTypeSolver());
+		CombinedTypeSolver typeSolver = new CombinedTypeSolver(new JavaParserTypeSolver(new File("./reference/")));
+		//typeSolver.add(new JavaParserTypeSolver(new File("StrictMath.class")));
+		//typeSolver.add(new ReflectionTypeSolver());
+		//typeSolver.add(new JavaParserTypeSolver(new File("C:\\Projects\\CPSC_507")));
 
 		CompilationUnit agendaCu = JavaParser.parse(inputFile);
 
@@ -97,10 +88,12 @@ public class SyntaxParser {
 			// System.out.println(methodCallExpr);
 
 			try {
-				SymbolReference methodRef = facade.solve(methodCallExpr);
+				SymbolReference<com.github.javaparser.symbolsolver.model.declarations.MethodDeclaration> methodRef = facade
+						.solve(methodCallExpr);
 				if (methodRef.isSolved()) {
-					Declaration methodDecl = methodRef.getCorrespondingDeclaration();
-					System.out.println("  -> ${methodDecl.qualifiedSignature}");
+					com.github.javaparser.symbolsolver.model.declarations.MethodDeclaration methodDecl = methodRef
+							.getCorrespondingDeclaration();
+					System.out.println("  -> " + methodDecl.getQualifiedSignature());
 				} else {
 					System.out.println("???");
 				}

@@ -17,6 +17,15 @@ import parsers.SyntaxParser;
 
 public class TestCode {
 
+	public int absoluteLib(int num) {
+		return Math.abs(num);
+
+	}
+
+	public double absoluteLib(double num) {
+		return Math.abs(num);
+	}
+	
 	private int buildCFG(List<Method> methList) {
 
 		for (int i = 0, j = 2; i < methList.length(); i++) {
@@ -104,14 +113,7 @@ public class TestCode {
 
 	}
 
-	public int absoluteLib(int num) {
-		return Math.abs(num);
 
-	}
-
-	public double absoluteLib(double num) {
-		return Math.abs(num);
-	}
 
 	public int noOfLegs() {
 		int test = 3 + 3;
