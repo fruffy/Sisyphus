@@ -6,7 +6,7 @@ target
 *~
 /target
 .project'
-.classpath
+#.classpath
 .idea/
 *.iml
 release.properties
