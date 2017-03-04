@@ -1,2 +1,0 @@
-javaparser-testing/target/test-classes/com/github/javaparser/TestFileIso88591.java
-javaparser-testing/src/test/resources/com/github/javaparser/TestFileIso88591.java
