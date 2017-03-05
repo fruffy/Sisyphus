@@ -8,19 +8,8 @@ import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.MethodCallExpr;
-import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
-import com.github.javaparser.symbolsolver.model.declarations.Declaration;
-import com.github.javaparser.symbolsolver.model.declarations.FieldDeclaration;
-import com.github.javaparser.symbolsolver.model.declarations.TypeParameterDeclaration;
-import com.github.javaparser.symbolsolver.model.methods.MethodUsage;
-import com.github.javaparser.symbolsolver.model.resolution.SymbolReference;
-import com.github.javaparser.symbolsolver.model.typesystem.ReferenceType;
-import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
-import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
-import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 
 import core.Method;
 
@@ -33,76 +22,12 @@ import core.Method;
 
 public class SyntaxParser {
 
-	private CompilationUnit cu;
-	private ArrayList<MethodDeclaration> methodDeclarationList;
-	private ArrayList<MethodCallExpr> MethodCallExprList;
-
-	private CombinedTypeSolver t;
-
+	public CompilationUnit cu;
+	public ArrayList<MethodDeclaration> methodDeclarationList;
+	
 	public SyntaxParser(File inputFile) throws FileNotFoundException {
-		this.t = new CombinedTypeSolver(new ReflectionTypeSolver());
 		this.cu = JavaParser.parse(inputFile);
 		this.methodDeclarationList = this.getMethodDeclaration();
-		this.MethodCallExprList = this.getMethodInvocation();
-		processJavaFile1(inputFile);
-		// processJavaFile( JavaParserFacade.get(this.t));
-
-	}
-
-	/********************************************************************************************/
-
-	class TypeCalculatorVisitor extends VoidVisitorAdapter<JavaParserFacade> {
-
-		@Override
-		public void visit(MethodCallExpr n, JavaParserFacade javaParserFacade) {
-			super.visit(n, javaParserFacade);
-			com.github.javaparser.symbolsolver.model.declarations.MethodDeclaration nest = javaParserFacade.solve(n).getCorrespondingDeclaration();
-			System.out.println(n.toString() + " has type " + nest.getSignature());
-
-			for (TypeParameterDeclaration test : nest.getTypeParameters()) {
-				System.out.println(n.getNameAsString() + " is " + test.getQualifiedName());
-			}
-
-		}
-	}
-
-	public void processJavaFile1(File inputFile) throws FileNotFoundException {
-		//CombinedTypeSolver typeSolver = new CombinedTypeSolver(new ReflectionTypeSolver());
-		CombinedTypeSolver typeSolver = new CombinedTypeSolver(new JavaParserTypeSolver(new File("./reference/")));
-		//typeSolver.add(new JavaParserTypeSolver(new File("StrictMath.class")));
-		//typeSolver.add(new ReflectionTypeSolver());
-		//typeSolver.add(new JavaParserTypeSolver(new File("C:\\Projects\\CPSC_507")));
-
-		CompilationUnit agendaCu = JavaParser.parse(inputFile);
-
-		agendaCu.accept(new TypeCalculatorVisitor(), JavaParserFacade.get(typeSolver));
-
-	}
-	// TODO: Convert to Java Code
-
-	public void processJavaFile(JavaParserFacade facade) {
-
-		ArrayList<MethodCallExpr> methodInvocations = getMethodInvocations();
-
-		for (MethodCallExpr methodCallExpr : methodInvocations) {
-			// System.out.println(methodCallExpr);
-
-			try {
-				SymbolReference<com.github.javaparser.symbolsolver.model.declarations.MethodDeclaration> methodRef = facade
-						.solve(methodCallExpr);
-				if (methodRef.isSolved()) {
-					com.github.javaparser.symbolsolver.model.declarations.MethodDeclaration methodDecl = methodRef
-							.getCorrespondingDeclaration();
-					System.out.println("  -> " + methodDecl.getQualifiedSignature());
-				} else {
-					System.out.println("???");
-				}
-			} catch (Exception e) {
-				System.out.println(" ERR ${e.message}");
-			} catch (Throwable t) {
-				t.printStackTrace();
-			}
-		}
 	}
 
 	/********************************************************************************************/
@@ -172,11 +97,6 @@ public class SyntaxParser {
 			methodNames.add(call.getMethodName());
 		}
 		return methodNames;
-	}
-
-	/* Returns an arraylist of method names in the class */
-	public ArrayList<MethodCallExpr> getMethodInvocations() {
-		return MethodCallExprList;
 	}
 
 	/* Returns an arraylist of method return types in the class */

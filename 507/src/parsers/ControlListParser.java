@@ -19,7 +19,6 @@ public class ControlListParser {
 		cfgList = new LinkedList<DirectedPseudograph<NodeWrapper, DefaultEdge>>();
 		cdgList = new LinkedList<DirectedAcyclicGraph<NodeWrapper, DefaultEdge>>();
 		fdtList = new LinkedList<DirectedAcyclicGraph<NodeWrapper, DefaultEdge>>();
-
 		buildCFG(methList);
 	}
 
@@ -53,11 +52,6 @@ public class ControlListParser {
 
 	private void printGraph(Method m, DirectedGraph<NodeWrapper, DefaultEdge> cdg) {
 
-		/*
-		 * for (DefaultEdge e : cdg.edgeSet()) {
-		 * System.out.println(cdg.getEdgeSource(e).NODE + " --> " +
-		 * cdg.getEdgeTarget(e).NODE); }
-		 */
 		for (NodeWrapper n : cdg.vertexSet()) {
 			System.out.println(n.NODE);
 			for (DefaultEdge e : cdg.outgoingEdgesOf(n)) {

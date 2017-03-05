@@ -11,6 +11,7 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.Type;
 
 import normalizers.Normalizer;
+import parsers.MethodSolver;
 
 /*
  * Method class that holds information about a particular method
@@ -31,6 +32,7 @@ public class Method {
 		this.returnType = methodDeclaration.getType();
 		this.body = methodDeclaration.getBody().get();
 		this.trimBody();
+		resolveMethodCalls();
 	}
 
 	public String getMethodName() {
@@ -141,5 +143,9 @@ public class Method {
 	public Method normalize(Normalizer norm) {
 		norm.initialize(this.originalDecl);
 		return new Method((MethodDeclaration) norm.result());
+	}
+
+	private void resolveMethodCalls() {
+		new MethodSolver(this.body);
 	}
 }
