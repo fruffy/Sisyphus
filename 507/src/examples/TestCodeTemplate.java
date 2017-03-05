@@ -43,6 +43,28 @@ public class TestCodeTemplate {
 		//YOUR CODE HERE
 	}
 	
+	
+	/**
+	 * Returns the value of the first argument raised to the power
+	 * of the second argument
+	 * @param val1 - the base
+	 * @param val2 - the exponent
+	 * @return val1^val2
+	 */
+	public static double power(double val1, double val2){
+		//YOUR CODE HERE
+	}
+	
+	/**
+	 * Swaps the element at pos1 with element at pos2 in array
+	 * @param pos1 - the position of one element to be swapped
+	 * @param pos2 - the position of another element to be swapped
+	 * @param array - the array where the elements are swapped
+	 */
+	public static void swap(int pos1, int pos2, int[] array){
+		//YOUR CODE HERE
+	}
+	
 	/**
 	 * Returns true if the two specified arrays of ints
 	 * are equal to one another. Two arrays are considered equal 
