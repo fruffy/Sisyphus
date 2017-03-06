@@ -1,10 +1,12 @@
 package parsers;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
@@ -13,6 +15,7 @@ import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParse
 import com.github.javaparser.symbolsolver.model.declarations.MethodDeclaration;
 import com.github.javaparser.symbolsolver.model.resolution.SymbolReference;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
+import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 
 public class MethodSolver {
@@ -23,9 +26,8 @@ public class MethodSolver {
 	public MethodSolver(BlockStmt methodBody) {
 		this.methodBody = methodBody;
 		this.typeSolver = new CombinedTypeSolver();
-		// typeSolver.add(new JavaParserTypeSolver(new
-		// File("C:\\Projects\\CPSC_507\\src")));
-		this.typeSolver.add(new ReflectionTypeSolver());
+		this.typeSolver.add(new JavaParserTypeSolver(new File("C:\\Projects\\CPSC_507\\jre_library\\")));
+		//this.typeSolver.add(new ReflectionTypeSolver());
 		bodyMap = new HashMap<MethodCallExpr, Optional<BlockStmt>>();
 		processMethod();
 	}
@@ -64,7 +66,20 @@ public class MethodSolver {
 			methodCallExpr.setName(methodDecl.getQualifiedName());
 
 			if (methodBdy != null && methodBdy.isPresent()) {
-				this.bodyMap.put(methodCallExpr, methodBdy);
+			//	methodCallExpr.setAsParentNodeOf(methodBody);
+				//this.bodyMap.put(methodCallExpr, methodBdy);
+				//System.out.println(methodCallExpr+ "\n------------------");
+				methodCallExpr.getParentNode().get().setAsParentNodeOf((methodBdy.get().getChildNodes()));
+				//methodBdy.get().setParentNode(methodCallExpr.getParentNode().get().getParentNode().get());
+				methodCallExpr.remove();
+/*				for (Node t : methodCallExpr.getChildNodes()) {
+					//t.remove();
+					System.out.println("BEFORE "+t);
+				}
+				for (Node t : methodCallExpr.getChildNodes()) {
+					System.out.println("AFTER "+t);
+				}
+				System.out.println("------------------");*/
 			}
 
 		} else {
@@ -73,16 +88,18 @@ public class MethodSolver {
 	}
 
 	private void processMethod() {
+		System.out.println("BEFORE "+this.methodBody);
+
 		this.methodBody.accept(new TypeCalculatorVisitor(), JavaParserFacade.get(typeSolver));
-		if (this.bodyMap != null) {
+		System.out.println("AFTER "+this.methodBody);
+		System.out.println("------------------");
+
+/*		if (this.bodyMap != null) {
 			Set<MethodCallExpr> bodySet = this.bodyMap.keySet();
 			for (MethodCallExpr b : bodySet) {
-				System.out.println("BEFORE"+ methodBody);
-
 				b.setAsParentNodeOf(this.bodyMap.get(b).get());
-				System.out.println("AFTER"+ methodBody);
 			}
-		}
+		}*/
 
 	}
 

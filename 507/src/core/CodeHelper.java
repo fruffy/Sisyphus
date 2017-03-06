@@ -51,7 +51,7 @@ public class CodeHelper {
 		// testing(srcparser, libparser);
 		srcMethods = srcparser.getMethods();
 
-		//ControlListParser cfg = new ControlListParser(srcMethods);
+		ControlListParser cfg = new ControlListParser(srcMethods);
 		CloneDetector cloneDetect = new CloneDetector(libparser.getMethods());
 		
 		cloneDetect.findSimiliarMethods(srcMethods);
