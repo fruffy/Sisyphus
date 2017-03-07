@@ -11,9 +11,9 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.utils.Pair;
 
-import jgrapht.DirectedGraph;
-import jgrapht.experimental.dag.DirectedAcyclicGraph;
+import jgrapht.graph.DirectedPseudograph;
 import jgrapht.graph.DefaultEdge;
+import jgrapht.graph.DirectedPseudograph;
 import visitors.ASTUtil;
 
 /**
@@ -53,7 +53,7 @@ public class DataDependencyGraphFinder {
 
 	}
 
-	private final DirectedAcyclicGraph<Node, DefaultEdge> cfg;
+	private final DirectedPseudograph<Node, DefaultEdge> cfg;
 	private final Set<Node> allNodes;
 	private Worklist worklist;
 
@@ -97,13 +97,13 @@ public class DataDependencyGraphFinder {
 	}
 
 
-	public DataDependencyGraphFinder(DirectedAcyclicGraph<Node, DefaultEdge> cfg){
+	public DataDependencyGraphFinder(DirectedPseudograph<Node, DefaultEdge> cfg){
 		this.cfg = cfg;
 		this.allNodes = cfg.vertexSet();
 		this.worklist = new Worklist();
 	}
 
-	public DirectedGraph<Node, DefaultEdge> findReachingDefs(){
+	public DirectedPseudograph<Node, DefaultEdge> findReachingDefs(){
 		//Set the reaching defs to bottom (empty set) for each node
 		for (Node node : allNodes){
 			entrySet.put(node, bottom());
@@ -154,8 +154,8 @@ public class DataDependencyGraphFinder {
 			}
 		}
 
-		DirectedGraph<Node, DefaultEdge> ret =
-				new DirectedAcyclicGraph<Node, DefaultEdge>(DefaultEdge.class);
+		DirectedPseudograph<Node, DefaultEdge> ret =
+				new DirectedPseudograph<Node, DefaultEdge>(DefaultEdge.class);
 
 		for (Node n : allNodes){
 			for (Pair<String, AssignExpr> defPair : exitSet.get(n)){
