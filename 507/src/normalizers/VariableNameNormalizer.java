@@ -24,6 +24,10 @@ import com.github.javaparser.utils.Pair;
 import datastructures.VariableEnv;
 
 public class VariableNameNormalizer extends Normalizer {
+	
+	static String cleanTypeName(Type type){
+		return type.toString().replaceAll("[^-_A-Za-z0-9]/", "__");
+	}
 
 	/**
 	 * The arguments we pass down to the tree as we traverse it.
@@ -71,7 +75,8 @@ public class VariableNameNormalizer extends Normalizer {
 			}
 
 			//We generate a new, standardized name for this declaration, based on its type
-			String newName = info.gamma.freshKey("var_" + type.toString());
+			String cleanTypeName = cleanTypeName(type);
+			String newName = info.gamma.freshKey("var_" + cleanTypeName);
 			n.setName(newName);
 
 			//Tell our parent that we declared a new name
@@ -94,7 +99,7 @@ public class VariableNameNormalizer extends Normalizer {
 			Type type = (Type) n.getType().accept(this, info);
 
 			//We generate a new, standardized name for this declaration, based on its type
-			String newName = info.gamma.freshKey("param_" + type.toString());
+			String newName = info.gamma.freshKey("param_" + cleanTypeName(type));
 			System.out.println("Choosing new name " + newName + " for param " + n);
 			n.setName(newName);
 
