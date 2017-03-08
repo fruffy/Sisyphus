@@ -1,6 +1,8 @@
 package dfg;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -11,10 +13,10 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.utils.Pair;
 
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DirectedAcyclicGraph;
-
+import datastructures.NodeWrapper;
+import jgrapht.graph.DirectedPseudograph;
+import jgrapht.graph.DefaultEdge;
+import jgrapht.graph.DirectedPseudograph;
 import visitors.ASTUtil;
 
 /**
@@ -54,12 +56,12 @@ public class DataDependencyGraphFinder {
 
 	}
 
-	private final DirectedAcyclicGraph<Node, DefaultEdge> cfg;
+	private final DirectedPseudograph<NodeWrapper, DefaultEdge> cfg;
 	private final Set<Node> allNodes;
 	private Worklist worklist;
 
-	private HashMap<Node, Set<Pair<String, AssignExpr>>> exitSet;
-	private HashMap<Node, Set<Pair<String, AssignExpr>>> entrySet;
+	private HashMap<Node, Set<Pair<String, AssignExpr>>> exitSet = new HashMap<Node, Set<Pair<String, AssignExpr>>>();
+	private HashMap<Node, Set<Pair<String, AssignExpr>>> entrySet = new HashMap<Node, Set<Pair<String, AssignExpr>>>();
 
 	static Set<Pair<String, AssignExpr>> bottom(){
 		return new HashSet<Pair<String, AssignExpr>>();
@@ -98,15 +100,21 @@ public class DataDependencyGraphFinder {
 	}
 
 
-	public DataDependencyGraphFinder(DirectedAcyclicGraph<Node, DefaultEdge> cfg){
+	public DataDependencyGraphFinder(DirectedPseudograph<NodeWrapper, DefaultEdge> cfg){
 		this.cfg = cfg;
-		this.allNodes = cfg.vertexSet();
+		Set<NodeWrapper> cfgNodeWrappers = cfg.vertexSet();
+		ArrayList<Node> cfgNodeList = new ArrayList<Node>();
+		for(NodeWrapper n: cfgNodeWrappers){
+			cfgNodeList.add(n.NODE);
+		}
+		this.allNodes = new HashSet<Node>(cfgNodeList);
 		this.worklist = new Worklist();
 	}
 
-	public DirectedGraph<Node, DefaultEdge> findReachingDefs(){
+	public DirectedPseudograph<NodeWrapper, DefaultEdge> findReachingDefs(){
 		//Set the reaching defs to bottom (empty set) for each node
 		for (Node node : allNodes){
+			//System.out.println(node);
 			entrySet.put(node, bottom());
 			exitSet.put(node, bottom());
 		}
@@ -129,8 +137,8 @@ public class DataDependencyGraphFinder {
 			}
 			else {
 				//Our entry contains all of our predecessors' exits
-				for (DefaultEdge incomingEdge : cfg.incomingEdgesOf(currentNode) ){
-					Node previousNode = cfg.getEdgeSource(incomingEdge);
+				for (DefaultEdge incomingEdge : cfg.incomingEdgesOf(new NodeWrapper(currentNode)) ){
+					NodeWrapper previousNode = cfg.getEdgeSource(incomingEdge);
 					newEntry.addAll(exitSet.get(previousNode));
 				}
 
@@ -149,14 +157,16 @@ public class DataDependencyGraphFinder {
 			exitSet.put(currentNode, newExit);
 
 			//Add all our successors to the worklist
-			Set<DefaultEdge> outgoingEdges = cfg.outgoingEdgesOf(currentNode);
+			Set<DefaultEdge> outgoingEdges = cfg.outgoingEdgesOf(new NodeWrapper(currentNode));
 			for (DefaultEdge edge : outgoingEdges){
-				worklist.push(cfg.getEdgeTarget(edge));
+				worklist.push(cfg.getEdgeTarget(edge).NODE);
 			}
 		}
 
-		DirectedGraph<Node, DefaultEdge> ret =
-				new DirectedAcyclicGraph<Node, DefaultEdge>(DefaultEdge.class);
+		DirectedPseudograph<Node, DefaultEdge> ret =
+				new DirectedPseudograph<Node, DefaultEdge>(DefaultEdge.class);
+		DirectedPseudograph<NodeWrapper, DefaultEdge> ret2 =
+				new DirectedPseudograph<NodeWrapper, DefaultEdge>(DefaultEdge.class);
 
 		for (Node n : allNodes){
 			for (Pair<String, AssignExpr> defPair : exitSet.get(n)){
@@ -165,10 +175,12 @@ public class DataDependencyGraphFinder {
 				//TODO check use, not occurrence
 				if (ASTUtil.occursFree(n, defPair.a)){
 					ret.addEdge(defPair.b, n);
+					ret2.addEdge(new NodeWrapper(defPair.b), new NodeWrapper(n));
 				}
 			}
 		}
-		return ret;
+		
+		return ret2;
 	}
 
 }

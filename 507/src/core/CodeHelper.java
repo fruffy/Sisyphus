@@ -4,14 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
-
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.type.Type;
 
 import datastructures.NodeWrapper;
+import jgrapht.DirectedGraph;
+import jgrapht.graph.DefaultEdge;
 import parsers.ControlFlowParser;
 import parsers.ControlListParser;
 import parsers.SyntaxParser;
@@ -19,7 +18,7 @@ import parsers.SyntaxParser;
 public class CodeHelper {
 	public static void main(String[] args) {
 
-		String srcName = "src/examples/TestCodeV2.java";
+		String srcName = "src/examples/Testcode.java";
 
 		File libFile = new File("Library.java");
 		File srcfile = new File(srcName);
@@ -27,44 +26,50 @@ public class CodeHelper {
 		SyntaxParser libparser;
 		SyntaxParser srcparser;
 		ArrayList<Method> srcMethods;
-		ArrayList<Method> libMethods;
 
 		if (!(srcfile.exists()) || srcfile.isDirectory()) {
 			System.out.println("Input file does not exist or is not a valid input.");
+			// Debug
+			// System.out.println("Working Directory = " +
+			// System.getProperty("user.dir"));
 			return;
 		}
 		if (!(libFile.exists()) || libFile.isDirectory()) {
 			System.out.println("Error reading reference library.");
+			// Debug
+			// System.out.println("Working Directory = " +
+			// System.getProperty("user.dir"));
 			return;
 		}
 
 		// initialize java parser for both library and source code.
 		try {
-			srcparser = new SyntaxParser(srcfile);
 			libparser = new SyntaxParser(libFile);
+			srcparser = new SyntaxParser(srcfile);
 		} catch (IOException e) {
 			new RuntimeException(e);
 			return;
 		}
-
 
 		// testing(srcparser, libparser);
 		srcMethods = srcparser.getMethods();
 
 		ControlListParser cfg = new ControlListParser(srcMethods);
 		CloneDetector cloneDetect = new CloneDetector(libparser.getMethods());
-		
-		cloneDetect.findSimiliarMethods(srcMethods);
+
+		// cloneDetect.findSimiliarMethods(srcMethods);
 
 		// testing graph similarity algorithm
-		//Method method1 = srcMethods.get(1);
-		//Method method2 = srcMethods.get(1);
-		//ControlFlowParser cfgParse = new ControlFlowParser(method1);
-		//DirectedGraph<NodeWrapper, DefaultEdge> pdg1 = cfgParse.getCFG();
-		//ControlFlowParser cfgParse2 = new ControlFlowParser(method2);
-		//DirectedGraph<NodeWrapper, DefaultEdge> pdg2 = cfgParse2.getCFG();
-		//System.out.println("Match between " + method1.getMethodName() + " and " + method2.getMethodName() + "?");
-		//System.out.println(cloneDetect.matchMethodPDGs(method1, method2));
+		Method method1 = srcMethods.get(2);
+		Method method2 = srcMethods.get(1);
+		/*ControlFlowParser cfgParse = new ControlFlowParser(method1);
+		DirectedGraph<NodeWrapper, DefaultEdge> pdg1 = cfgParse.getCFG();
+		ControlFlowParser cfgParse2 = new ControlFlowParser(method2);
+		DirectedGraph<NodeWrapper, DefaultEdge> pdg2 = cfgParse2.getCFG();
+		System.out.println("Match between " + method1.getMethodName() + " and " + method2.getMethodName() + "?");
+		System.out.println(cloneDetect.matchMethodPDGs(method1, method2));*/
+		DirectedGraph<NodeWrapper, DefaultEdge> pdg1 = method1.getPDG();
+		//DirectedGraph<NodeWrapper, DefaultEdge> pdg2 = method2.getPDG();
 
 	}
 

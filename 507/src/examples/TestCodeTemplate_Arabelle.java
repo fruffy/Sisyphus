@@ -20,7 +20,7 @@ public class TestCodeTemplate {
 	 * @return the absolute value of val.
 	 */
 	public int absoluteValue(int val){
-		//YOUR CODE HERE
+		return val > 0 ? val : -val;
 	}
 	
 	/**
@@ -30,7 +30,7 @@ public class TestCodeTemplate {
 	 * @return the larger of val1 and val2
 	 */
 	public static int maximum(int val1, int val2){
-		//YOUR CODE HERE
+		return val1 > val2 ? val1 : val2;
 	}
 	
 	/**
@@ -40,7 +40,7 @@ public class TestCodeTemplate {
 	 * @return the smaller of val1 and val2
 	 */
 	public static int minimum(int val1, int val2){
-		//YOUR CODE HERE
+		return val1 < val2 ? val1 : val2;
 	}
 	
 	
@@ -52,7 +52,7 @@ public class TestCodeTemplate {
 	 * @return val1^val2
 	 */
 	public static double power(double val1, double val2){
-		//YOUR CODE HERE
+		return Math.pow(val1, val2);
 	}
 	
 	/**
@@ -62,7 +62,9 @@ public class TestCodeTemplate {
 	 * @param array - the array where the elements are swapped
 	 */
 	public static void swap(int pos1, int pos2, int[] array){
-		//YOUR CODE HERE
+		int temp = array[pos1];
+		array[pos1] = array[pos2];
+		array[pos2] = temp;
 	}
 	
 	/**
@@ -75,7 +77,18 @@ public class TestCodeTemplate {
 	 * @return true if the two arrays are equal
 	 */
 	public static boolean equals(int[] array1, int[] array2){
-		//YOUR CODE HERE
+		if (array1.length != array2.length) {
+		    return false;
+		}
+		
+		for (int i = 0; i < array1.length; i++)
+		{
+			if (array1[i] != array2[i]) {
+			    return false;
+			}
+			    
+		}
+		return true;
 	}
 	
 	/**
@@ -85,7 +98,10 @@ public class TestCodeTemplate {
 	 * @param val - the value to be stored in all elements of the array
 	 */
 	public static void fillArray(int[] array, int val){
-		//YOUR CODE HERE
+		for (int i = 0; i < array.length; i++)
+		{
+			array[i] = val;
+		}
 	}
 	
 	/**
@@ -100,7 +116,10 @@ public class TestCodeTemplate {
 	 */
 	
 	public static void fillArrayPartially(int[] array, int val, int startIndex, int endIndex){
-		//YOUR CODE HERE
+		for (int i = startIndex; i < endIndex; i++)
+		{
+			array[i] = val;
+		}
 	}
 	
 	/**
@@ -115,7 +134,12 @@ public class TestCodeTemplate {
 	 * @return a copy of the original array, truncated or padded with zeros to obtain the specified length
 	 */
 	public static int[] returnCopy(int[] array, int newLength){
-		//YOUR CODE HERE
+		int[] arr = new int[newLength];
+		for (int i = 0; i < newLength; i++)
+		{
+			arr[i] = i < array.length ? array[i] : 0;
+		}
+		return arr;
 	}
 	
 	
@@ -128,7 +152,12 @@ public class TestCodeTemplate {
 	 * @return a new array containing the specified range from the original array, truncated or padded with zeros to obtain the required length
 	 */
 	public static int[] returnCopyRange(int[] array, int startIndex, int endIndex){
-		//YOUR CODE HERE
+		int[] arr = new int[endIndex - startIndex];
+		for (int i = startIndex; i < endIndex; i++)
+		{
+			arr[i - startIndex] = i < array.length ? array[i] : 0;
+		}
+		return arr;
 	}
 	
 	/**
@@ -137,7 +166,12 @@ public class TestCodeTemplate {
 	 * @return the list version of array
 	 */
 	public static List<Integer> convertToList(int[] array){
-		//YOUR CODE HERE
+		List<Integer> l = new ArrayList<Integer>(array.length);
+		for (int i = 0; i < array.length; i++)
+		{
+			l.add(array[i]);
+		}
+		return l;
 	}
 	
 	/**
@@ -151,7 +185,25 @@ public class TestCodeTemplate {
 	 * @return a string representation of array
 	 */
 	public static String arrToString(int[] array){
-		//YOUR CODE HERE
+		if (array == null)
+		{
+			return "null";
+		}
+
+		StringBuilder s = new StringBuilder();
+		s.append("[");
+
+		for (int i = 0; i < array.length; i++)
+		{
+			s.append(i);
+			if (i != array.length - 1)
+			{
+				s.append(", ");
+			}
+		}
+		s.append("]");
+
+		return s.toString();
 	}
 	
 	
