@@ -9,6 +9,7 @@ import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.Type;
+import com.github.javaparser.ast.visitor.TreeStructureVisitor;
 
 import normalizers.Normalizer;
 import parsers.MethodSolver;
@@ -32,7 +33,11 @@ public class Method {
 		this.returnType = methodDeclaration.getType();
 		this.body = methodDeclaration.getBody().get();
 		this.trimBody();
-		resolveMethodCalls();
+		System.out.println("BEFORE " + this.body);
+		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
+		resolveMethodCalls(methodDeclaration);
+		System.out.println("AFTER " + this.body);
+		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
 	}
 
 	public String getMethodName() {
@@ -61,8 +66,8 @@ public class Method {
 	}
 
 	public void trimBody() {
-		BlockStmt filteredBody = (BlockStmt) this.body.clone();
-		for (Comment co : filteredBody.getAllContainedComments()) {
+		//BlockStmt filteredBody = (BlockStmt) this.body.clone();
+		for (Comment co : this.body.getAllContainedComments()) {
 			co.remove();
 		}
 	}
@@ -72,7 +77,6 @@ public class Method {
 		for (Comment co : methodDeclaration.getAllContainedComments()) {
 			co.remove();
 		}
-
 		return methodDeclaration;
 	}
 
@@ -145,7 +149,7 @@ public class Method {
 		return new Method((MethodDeclaration) norm.result());
 	}
 
-	private void resolveMethodCalls() {
-		new MethodSolver(this.body);
+	private void resolveMethodCalls(MethodDeclaration methodDecl) {
+		new MethodSolver(methodDecl.getBody().get());
 	}
 }

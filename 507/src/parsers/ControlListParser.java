@@ -36,17 +36,15 @@ public class ControlListParser {
 			this.cdgList.add(cdg);
 			this.cdgList.add(fdt);
 			// Debug
-			System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+/*			System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 			System.out.println(m.getFilteredBody().toString());
 			System.out.println("Control Flow Raw Content ");
 			printGraph(m, cfg);
-			
 			//System.out.println("Forward Dominator Raw Content ");
 			//printGraph(m, fdt);
-			
 			System.out.println("Control Dependence Raw Content ");
 			printGraph(m, cdg);
-
+*/
 		}
 	}
 
