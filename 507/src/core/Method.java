@@ -10,7 +10,15 @@ import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.Type;
 
+import datastructures.NodeWrapper;
+import dfg.DataDependencyGraphFinder;
+import jgrapht.DirectedGraph;
+import jgrapht.experimental.dag.DirectedAcyclicGraph;
+import jgrapht.graph.DefaultEdge;
+import jgrapht.graph.DirectedPseudograph;
 import normalizers.Normalizer;
+import parsers.ControlDependencyParser;
+import parsers.ControlFlowParser;
 
 /*
  * Method class that holds information about a particular method
@@ -141,5 +149,26 @@ public class Method {
 	public Method normalize(Normalizer norm) {
 		norm.initialize(this.originalDecl);
 		return new Method((MethodDeclaration) norm.result());
+	}
+	
+	public DirectedGraph<NodeWrapper, DefaultEdge> getPDG(){
+		ControlFlowParser cfp = new ControlFlowParser(this);
+		DirectedPseudograph<NodeWrapper, DefaultEdge> cfg = cfp.getCFG();
+		ControlDependencyParser cdp = new ControlDependencyParser(cfg);
+		DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg = cdp.getCDG();
+		DataDependencyGraphFinder ddgf = new DataDependencyGraphFinder(cfg);
+		DirectedPseudograph<NodeWrapper, DefaultEdge> ddg = ddgf.findReachingDefs();
+		System.out.println("\n+++++++++++++++++cdg vertices++++++++++++++++++++++++++++++++");
+		for (NodeWrapper n : cdg.vertexSet()) {
+			System.out.println(n.NODE);
+		}
+		
+		System.out.println("\n+++++++++++++++++ddg vertices++++++++++++++++++++++++++++++++");
+		for (NodeWrapper n : ddg.vertexSet()) {
+			System.out.println(n.NODE);
+		}
+		
+		return cfg;
+	
 	}
 }
