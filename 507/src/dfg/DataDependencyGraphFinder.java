@@ -1,5 +1,6 @@
 package dfg;
 
+import java.awt.List;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,10 +8,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.AssignExpr;
+import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.utils.Pair;
 
 import datastructures.NodeWrapper;
@@ -26,6 +29,26 @@ import visitors.ASTUtil;
  *
  */
 public class DataDependencyGraphFinder {
+	
+	/**
+	 * Returns null if the node isn't an assignment
+	 * Otherwise, it checks if it's an assignment (or wrapper around it)
+	 * and returns it
+	 */
+	private static void recursivelyGetAssignments(Node node, LinkedList<AssignExpr> foundAssigns){
+		if (node instanceof AssignExpr){
+			foundAssigns.add((AssignExpr)node);
+		}
+		for (Node child : node.getChildNodes()){
+			recursivelyGetAssignments(child, foundAssigns);
+		}
+	}
+	
+	private static LinkedList<AssignExpr> assignmentsWithin(Node n){
+		LinkedList<AssignExpr> ret = new LinkedList<AssignExpr>();
+		recursivelyGetAssignments(n, ret);
+		return ret;
+	}
 
 	private class Worklist{
 
@@ -87,12 +110,8 @@ public class DataDependencyGraphFinder {
 		HashSet<Pair<String, AssignExpr>> ret = new HashSet<Pair<String, AssignExpr>>();
 
 		//Assignments generate definitions of the variables they assign to
-		System.out.println("ddg genSet(currentNode)" +node);
-		System.out.println(node.getClass());
-		if (node instanceof AssignExpr){
-			System.out.println("Coming here?");
-			AssignExpr aexpr = (AssignExpr)node;
-			//Check if the think we possibly kill is 
+		for (AssignExpr aexpr : assignmentsWithin(node)){
+			//Check if the thing we possibly kill is 
 			//an assignment to the variable we are assigning
 			ret.add(new Pair<String, AssignExpr>(aexpr.getTarget().toString(), aexpr));
 		}
