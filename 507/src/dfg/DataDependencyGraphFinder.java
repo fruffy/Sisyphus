@@ -52,29 +52,29 @@ public class DataDependencyGraphFinder {
 
 	private class Worklist{
 
-		private LinkedHashSet<Node> innerSet;
+		private LinkedHashSet<NodeWrapper> innerSet;
 
 		public boolean isEmpty(){
 			return innerSet.isEmpty();
 		}
 
-		public void push(Node elem){
+		public void push(NodeWrapper elem){
 			innerSet.add(elem);
 		}
 
-		public void push(Collection<Node> coll){
+		public void push(Collection<NodeWrapper> coll){
 			innerSet.addAll(coll);
 		}
 
-		public Node pop(){
-			Iterator<Node> iterator = innerSet.iterator();
-			Node result = iterator.next();
+		public NodeWrapper pop(){
+			Iterator<NodeWrapper> iterator = innerSet.iterator();
+			NodeWrapper result = iterator.next();
 			iterator.remove();
 			return result;
 		}
 
 		public Worklist(){
-			this.innerSet = new LinkedHashSet<Node>();
+			this.innerSet = new LinkedHashSet<NodeWrapper>();
 		}
 
 	}
@@ -83,17 +83,16 @@ public class DataDependencyGraphFinder {
 	private final Set<Node> allNodes;
 	private Worklist worklist;
 
-	private HashMap<Node, Set<Pair<String, AssignExpr>>> exitSet = new HashMap<Node, Set<Pair<String, AssignExpr>>>();
-	private HashMap<Node, Set<Pair<String, AssignExpr>>> entrySet = new HashMap<Node, Set<Pair<String, AssignExpr>>>();
+	private HashMap<NodeWrapper, Set<Pair<String, NodeWrapper>>> exitSet = new HashMap<NodeWrapper, Set<Pair<String, NodeWrapper>>>();
+	private HashMap<NodeWrapper, Set<Pair<String, NodeWrapper>>> entrySet = new HashMap<NodeWrapper, Set<Pair<String, NodeWrapper>>>();
 
-	static Set<Pair<String, AssignExpr>> bottom(){
-		return new HashSet<Pair<String, AssignExpr>>();
+	static Set<Pair<String, NodeWrapper>> bottom(){
+		return new HashSet<Pair<String, NodeWrapper>>();
 	}
 
-	private boolean inKillSet(Pair<String, AssignExpr> defPair, Node node){
+	private boolean inKillSet(Pair<String, NodeWrapper> defPair, NodeWrapper node){
 		//Assignments kill definitions of the variables they assign to
-		if (node instanceof AssignExpr){
-			AssignExpr aexpr = (AssignExpr)node;
+		for (AssignExpr aexpr : assignmentsWithin(node.NODE)){
 			//Check if the think we possibly kill is 
 			//an assignment to the variable we are assigning
 			if (aexpr.getTarget().toString() == defPair.a){
@@ -106,14 +105,15 @@ public class DataDependencyGraphFinder {
 		return false;
 	}
 
-	static Set<Pair<String, AssignExpr>> genSet(Node node){
-		HashSet<Pair<String, AssignExpr>> ret = new HashSet<Pair<String, AssignExpr>>();
+	static Set<Pair<String, NodeWrapper>> genSet(NodeWrapper node){
+		HashSet<Pair<String, NodeWrapper>> ret = new HashSet<Pair<String, NodeWrapper>>();
 
 		//Assignments generate definitions of the variables they assign to
-		for (AssignExpr aexpr : assignmentsWithin(node)){
+		for (AssignExpr aexpr : assignmentsWithin(node.NODE)){
 			//Check if the thing we possibly kill is 
 			//an assignment to the variable we are assigning
-			ret.add(new Pair<String, AssignExpr>(aexpr.getTarget().toString(), aexpr));
+			ret.add(new Pair<String, NodeWrapper>(aexpr.getTarget().toString(), node));
+			return ret;
 		}
 		
 		//TODO other things that gen? Method calls?
@@ -135,38 +135,36 @@ public class DataDependencyGraphFinder {
 
 	public DirectedPseudograph<NodeWrapper, DefaultEdge> findReachingDefs(){
 		//Set the reaching defs to bottom (empty set) for each node
-		for (Node node : allNodes){
-			//System.out.println(node);
-			entrySet.put(node, bottom());
-			exitSet.put(node, bottom());
-		}
-
-
 		//Add all nodes to our worklist initially, since we need to update values for each node
-		worklist.push(allNodes);
+		for (Node n : allNodes){
+			NodeWrapper nw = new NodeWrapper(n);
+			entrySet.put(nw, bottom());
+			exitSet.put(nw, bottom());
+			worklist.push(nw);
+		}
 
 		//Keep updating by the dataflow equations until nothing is on our worklist
 		while (!worklist.isEmpty()){
-			Node currentNode = worklist.pop();
-			Set<Pair<String, AssignExpr>> currentEntry = entrySet.get(currentNode);
-			Set<Pair<String, AssignExpr>> currentExit = exitSet.get(currentNode);
+			NodeWrapper currentNode = worklist.pop();
+			Set<Pair<String, NodeWrapper>> currentEntry = entrySet.get(currentNode);
+			Set<Pair<String, NodeWrapper>> currentExit = exitSet.get(currentNode);
 
-			Set<Pair<String, AssignExpr>> newEntry = entrySet.get(currentNode);
-			Set<Pair<String, AssignExpr>> newExit = exitSet.get(currentNode);
+			Set<Pair<String, NodeWrapper>> newEntry = entrySet.get(currentNode);
+			Set<Pair<String, NodeWrapper>> newExit = exitSet.get(currentNode);
 
 			if (false){ //TODO check if is initial label
 				//TODO set to free vars of graph
 			}
 			else {
 				//Our entry contains all of our predecessors' exits
-				for (DefaultEdge incomingEdge : cfg.incomingEdgesOf(new NodeWrapper(currentNode)) ){
+				for (DefaultEdge incomingEdge : cfg.incomingEdgesOf(currentNode) ){
 					NodeWrapper previousNode = cfg.getEdgeSource(incomingEdge);
 					newEntry.addAll(exitSet.get(previousNode));
 				}
 
 				//Our exit set: add everything from entry that wasn't killed
 				//Plus anything new we defined in this statement
-				for (Pair<String, AssignExpr> pair : newEntry){
+				for (Pair<String, NodeWrapper> pair : newEntry){
 					if (!inKillSet(pair, currentNode)){
 						newExit.add(pair);
 					}
@@ -179,25 +177,34 @@ public class DataDependencyGraphFinder {
 			exitSet.put(currentNode, newExit);
 
 			//Add all our successors to the worklist
-			Set<DefaultEdge> outgoingEdges = cfg.outgoingEdgesOf(new NodeWrapper(currentNode));
+			Set<DefaultEdge> outgoingEdges = cfg.outgoingEdgesOf(currentNode);
 			for (DefaultEdge edge : outgoingEdges){
-				worklist.push(cfg.getEdgeTarget(edge).NODE);
+				worklist.push(cfg.getEdgeTarget(edge));
 			}
 		}
 
-		DirectedPseudograph<Node, DefaultEdge> ret =
-				new DirectedPseudograph<Node, DefaultEdge>(DefaultEdge.class);
+		//DirectedPseudograph<Node, DefaultEdge> ret =
+		//		new DirectedPseudograph<Node, DefaultEdge>(DefaultEdge.class);
 		DirectedPseudograph<NodeWrapper, DefaultEdge> ret2 =
 				new DirectedPseudograph<NodeWrapper, DefaultEdge>(DefaultEdge.class);
 
-		for (Node n : allNodes){
-			for (Pair<String, AssignExpr> defPair : exitSet.get(n)){
+		for (NodeWrapper nw : exitSet.keySet()){
+			ret2.addVertex(nw);
+		}
+		
+		for (NodeWrapper nw : exitSet.keySet()){
+			for (Pair<String, NodeWrapper> defPair : exitSet.get(nw)){
 				//If a def reaches a node, and that node references that variable
 				//then we have an edge
 				//TODO check use, not occurrence
-				if (ASTUtil.occursFree(n, defPair.a)){
-					ret.addEdge(defPair.b, n);
-					ret2.addEdge(new NodeWrapper(defPair.b), new NodeWrapper(n));
+				if (ASTUtil.occursFree(nw.NODE, defPair.a)){
+					//ret.addEdge(defPair.b, n);
+					if (!ret2.containsVertex(defPair.b)){
+						ret2.addVertex(defPair.b);
+					}
+					ret2.addEdge(defPair.b, nw);
+				} else{
+					System.out.println("Node " + nw.NODE + ", " + " doesn't contain " + defPair.a);
 				}
 			}
 		}

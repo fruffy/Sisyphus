@@ -168,6 +168,16 @@ public class Method {
 			System.out.println(n.NODE);
 		}
 		
+		System.out.println("\n+++++++++++++++++cdg edges++++++++++++++++++++++++++++++++");
+		for (DefaultEdge e : cdg.edgeSet()) {
+			System.out.println(e);
+		}
+		
+		System.out.println("\n+++++++++++++++++ddg edges++++++++++++++++++++++++++++++++");
+		for (DefaultEdge e : ddg.edgeSet()) {
+			System.out.println(e);
+		}
+		
 		return cfg;
 	
 	}

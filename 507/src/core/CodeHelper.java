@@ -17,8 +17,11 @@ import parsers.SyntaxParser;
 
 public class CodeHelper {
 	public static void main(String[] args) {
+		
+		System.out.println("Working Directory = " +
+	              System.getProperty("user.dir"));
 
-		String srcName = "src/examples/Testcode.java";
+		String srcName = "src/examples/TestCode.java";
 
 		File libFile = new File("Library.java");
 		File srcfile = new File(srcName);
