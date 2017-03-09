@@ -1,5 +1,8 @@
 package core;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,11 +15,13 @@ import com.github.javaparser.ast.type.Type;
 
 import datastructures.NodeWrapper;
 import dfg.DataDependencyGraphFinder;
+import jgrapht.DOTExporter;
 import jgrapht.DirectedGraph;
 import jgrapht.experimental.dag.DirectedAcyclicGraph;
 import jgrapht.graph.DefaultEdge;
 import jgrapht.graph.DirectedPseudograph;
 import normalizers.Normalizer;
+import normalizers.StandardForm;
 import parsers.ControlDependencyParser;
 import parsers.ControlFlowParser;
 
@@ -146,9 +151,8 @@ public class Method {
 	 * Return a new method that is equivalent to this method, but normalized by
 	 * the given normalizer
 	 */
-	public Method normalize(Normalizer norm) {
-		norm.initialize(this.originalDecl);
-		return new Method((MethodDeclaration) norm.result());
+	public Method normalize() {
+		return  new Method((MethodDeclaration)StandardForm.toStandardForm(this.body));
 	}
 	
 	public DirectedGraph<NodeWrapper, DefaultEdge> getPDG(){
@@ -177,6 +181,22 @@ public class Method {
 		for (DefaultEdge e : ddg.edgeSet()) {
 			System.out.println(e);
 		}
+		
+		DOTExporter<NodeWrapper, DefaultEdge> dotExport = new DOTExporter<NodeWrapper, DefaultEdge>();
+		Writer cdgFile, ddgFile;
+		try {
+			cdgFile = new FileWriter("cdg.dot");
+			dotExport.exportGraph(cdg, cdgFile);
+			cdgFile.close();
+			
+			ddgFile = new FileWriter("ddg.dot");
+			dotExport.exportGraph(ddg, ddgFile);
+			ddgFile.close();
+		} catch (IOException e1) {
+			
+			
+		}
+
 		
 		return cfg;
 	
