@@ -14,6 +14,7 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.Type;
 
 import datastructures.NodeWrapper;
+import datastructures.PDGGraphViz;
 import dfg.DataDependencyGraphFinder;
 import jgrapht.DOTExporter;
 import jgrapht.DirectedGraph;
@@ -182,20 +183,8 @@ public class Method {
 			System.out.println(e);
 		}
 		
-		DOTExporter<NodeWrapper, DefaultEdge> dotExport = new DOTExporter<NodeWrapper, DefaultEdge>();
-		Writer cdgFile, ddgFile;
-		try {
-			cdgFile = new FileWriter("cdg.dot");
-			dotExport.exportGraph(cdg, cdgFile);
-			cdgFile.close();
-			
-			ddgFile = new FileWriter("ddg.dot");
-			dotExport.exportGraph(ddg, ddgFile);
-			ddgFile.close();
-		} catch (IOException e1) {
-			
-			
-		}
+		PDGGraphViz.writeDot(cdg, "cdg.dot");
+		PDGGraphViz.writeDot(ddg, "ddg.dot");
 
 		
 		return cfg;
