@@ -60,8 +60,8 @@ public class DataDependencyGraphFinder {
 	private final Set<Node> allNodes;
 	private Worklist worklist;
 
-	private HashMap<Node, Set<Pair<String, AssignExpr>>> exitSet = new HashMap<Node, Set<Pair<String, AssignExpr>>>();
-	private HashMap<Node, Set<Pair<String, AssignExpr>>> entrySet = new HashMap<Node, Set<Pair<String, AssignExpr>>>();
+	private HashMap<Node, Set<Pair<String, AssignExpr>>> exitSet;
+	private HashMap<Node, Set<Pair<String, AssignExpr>>> entrySet;
 
 	static Set<Pair<String, AssignExpr>> bottom(){
 		return new HashSet<Pair<String, AssignExpr>>();
@@ -87,11 +87,14 @@ public class DataDependencyGraphFinder {
 		HashSet<Pair<String, AssignExpr>> ret = new HashSet<Pair<String, AssignExpr>>();
 
 		//Assignments generate definitions of the variables they assign to
+		System.out.println("ddg genSet(currentNode)" +node);
+		System.out.println(node.getClass());
 		if (node instanceof AssignExpr){
+			System.out.println("Coming here?");
 			AssignExpr aexpr = (AssignExpr)node;
 			//Check if the think we possibly kill is 
 			//an assignment to the variable we are assigning
-			new Pair<String, AssignExpr>(aexpr.getTarget().toString(), aexpr);
+			ret.add(new Pair<String, AssignExpr>(aexpr.getTarget().toString(), aexpr));
 		}
 		
 		//TODO other things that gen? Method calls?
@@ -109,6 +112,9 @@ public class DataDependencyGraphFinder {
 		}
 		this.allNodes = new HashSet<Node>(cfgNodeList);
 		this.worklist = new Worklist();
+		this.entrySet = new HashMap<Node, Set<Pair<String, AssignExpr>>>();
+		this.exitSet = new HashMap<Node, Set<Pair<String, AssignExpr>>>();
+		
 	}
 
 	public DirectedPseudograph<NodeWrapper, DefaultEdge> findReachingDefs(){
@@ -153,6 +159,7 @@ public class DataDependencyGraphFinder {
 			}
 
 			//Update our new entry and exit values
+			System.out.println("ddg exitset "+exitSet);
 			entrySet.put(currentNode, newEntry);
 			exitSet.put(currentNode, newExit);
 
@@ -167,7 +174,6 @@ public class DataDependencyGraphFinder {
 				new DirectedPseudograph<Node, DefaultEdge>(DefaultEdge.class);
 		DirectedPseudograph<NodeWrapper, DefaultEdge> ret2 =
 				new DirectedPseudograph<NodeWrapper, DefaultEdge>(DefaultEdge.class);
-
 		for (Node n : allNodes){
 			for (Pair<String, AssignExpr> defPair : exitSet.get(n)){
 				//If a def reaches a node, and that node references that variable
