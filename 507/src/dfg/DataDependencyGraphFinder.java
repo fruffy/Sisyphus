@@ -16,6 +16,7 @@ import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.utils.Pair;
 
+import datastructures.EntryStmt;
 import datastructures.NodeWrapper;
 import jgrapht.graph.DirectedPseudograph;
 import jgrapht.graph.DefaultEdge;
@@ -91,6 +92,7 @@ public class DataDependencyGraphFinder {
 	}
 
 	private boolean inKillSet(Pair<String, NodeWrapper> defPair, NodeWrapper node){
+		
 		//Assignments kill definitions of the variables they assign to
 		for (AssignExpr aexpr : assignmentsWithin(node.NODE)){
 			//Check if the think we possibly kill is 
@@ -152,8 +154,9 @@ public class DataDependencyGraphFinder {
 			Set<Pair<String, NodeWrapper>> newEntry = entrySet.get(currentNode);
 			Set<Pair<String, NodeWrapper>> newExit = exitSet.get(currentNode);
 
-			if (false){ //TODO check if is initial label
+			if (currentNode.NODE instanceof EntryStmt){ 
 				//TODO set to free vars of graph
+				
 			}
 			else {
 				//Our entry contains all of our predecessors' exits
