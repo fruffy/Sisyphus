@@ -87,6 +87,7 @@ public class DataDependencyGraphFinder {
 	private HashMap<NodeWrapper, Set<Pair<String, NodeWrapper>>> exitSet = new HashMap<NodeWrapper, Set<Pair<String, NodeWrapper>>>();
 	private HashMap<NodeWrapper, Set<Pair<String, NodeWrapper>>> entrySet = new HashMap<NodeWrapper, Set<Pair<String, NodeWrapper>>>();
 
+
 	static Set<Pair<String, NodeWrapper>> bottom(){
 		return new HashSet<Pair<String, NodeWrapper>>();
 	}
@@ -133,6 +134,7 @@ public class DataDependencyGraphFinder {
 		}
 		this.allNodes = new HashSet<Node>(cfgNodeList);
 		this.worklist = new Worklist();
+		
 	}
 
 	public DirectedPseudograph<NodeWrapper, DefaultEdge> findReachingDefs(){
@@ -176,6 +178,7 @@ public class DataDependencyGraphFinder {
 			}
 
 			//Update our new entry and exit values
+			System.out.println("ddg exitset "+exitSet);
 			entrySet.put(currentNode, newEntry);
 			exitSet.put(currentNode, newExit);
 

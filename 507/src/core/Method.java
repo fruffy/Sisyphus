@@ -152,7 +152,7 @@ public class Method {
 	 * the given normalizer
 	 */
 	public Method normalize() {
-		return  new Method((MethodDeclaration)StandardForm.toStandardForm(this.body));
+		return  new Method((MethodDeclaration)StandardForm.toStandardForm(this.originalDecl));
 	}
 	
 	public DirectedGraph<NodeWrapper, DefaultEdge> getPDG(){

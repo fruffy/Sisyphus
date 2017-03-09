@@ -13,7 +13,7 @@ public class ListNormalizer extends Normalizer {
 
 	private List<Normalizer> subNormalizers;
 
-	public ListNormalizer(Node startBlock, List<Normalizer> subNormalizers){
+	public ListNormalizer(List<Normalizer> subNormalizers){
 		this.subNormalizers = subNormalizers;
 	}
 
