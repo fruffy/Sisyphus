@@ -9,10 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.Node.ObserverRegistrationMode;
 import com.github.javaparser.ast.expr.MethodCallExpr;
-import com.github.javaparser.ast.observer.AstObserver;
-import com.github.javaparser.ast.observer.PropagatingAstObserver;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;

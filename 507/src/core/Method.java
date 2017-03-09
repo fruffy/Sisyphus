@@ -3,24 +3,24 @@ package core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedAcyclicGraph;
+import org.jgrapht.graph.DirectedPseudograph;
+
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.Type;
-import com.github.javaparser.ast.visitor.TreeStructureVisitor;
 
 import datastructures.NodeWrapper;
 import dfg.DataDependencyGraphFinder;
-import jgrapht.DirectedGraph;
-import jgrapht.experimental.dag.DirectedAcyclicGraph;
-import jgrapht.graph.DefaultEdge;
-import jgrapht.graph.DirectedPseudograph;
 import normalizers.Normalizer;
-import parsers.MethodSolver;
 import parsers.ControlDependencyParser;
 import parsers.ControlFlowParser;
+import parsers.MethodSolver;
 
 /*
  * Method class that holds information about a particular method
