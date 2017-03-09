@@ -1,4 +1,4 @@
-package examples;
+package example;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,13 @@ public class TestCodeTemplate {
 	 */
 	public int absoluteValue(int val){
 		//YOUR CODE HERE
+
+        if (val < 0) {
+            return (-1) * val;
+        }
+
+        return val;
+
 	}
 	
 	/**
@@ -31,6 +38,14 @@ public class TestCodeTemplate {
 	 */
 	public static int maximum(int val1, int val2){
 		//YOUR CODE HERE
+
+        // if there is a tie, either works, so return val1
+        if (val1 >= val2) {
+            return val1;
+        }
+
+        return val2;
+
 	}
 	
 	/**
@@ -41,6 +56,13 @@ public class TestCodeTemplate {
 	 */
 	public static int minimum(int val1, int val2){
 		//YOUR CODE HERE
+
+        if (val1 <= val2) {
+            return val1;
+        }
+
+        return val2;
+
 	}
 	
 	
@@ -53,6 +75,26 @@ public class TestCodeTemplate {
 	 */
 	public static double power(double val1, double val2){
 		//YOUR CODE HERE
+
+        // I don't actually know how to do this if val2 is not an int...
+        double accum = 1;
+
+        if (val2 >= 0) {
+
+            // this also handles the zero case... just don't enter loop, return 1
+            for (int i = 0; i < val2; i++) {
+                accum *= val1;
+            }
+        } else {
+
+            // handle negative exponents
+            for (int i = 0; i > val2; i--) {
+                accum /= val1;
+            }
+        }
+
+        return accum;
+
 	}
 	
 	/**
@@ -63,6 +105,13 @@ public class TestCodeTemplate {
 	 */
 	public static void swap(int pos1, int pos2, int[] array){
 		//YOUR CODE HERE
+
+        int elem1 = array[pos1];
+        int elem2 = array[pos2];
+
+        array[pos1] = elem2;
+        array[pos2] = elem1;
+
 	}
 	
 	/**
@@ -76,6 +125,18 @@ public class TestCodeTemplate {
 	 */
 	public static boolean equals(int[] array1, int[] array2){
 		//YOUR CODE HERE
+
+        if (array1.length != array2.length) {
+            return false;
+        }
+
+        for (int i = 0; i < array1.length; i++) {
+            if (array1[i] != array2[i]) {
+                return false;
+            }
+        }
+
+        return true;
 	}
 	
 	/**
@@ -86,6 +147,11 @@ public class TestCodeTemplate {
 	 */
 	public static void fillArray(int[] array, int val){
 		//YOUR CODE HERE
+
+        for (int i = 0; i < array.length; i++) {
+            array[i] = val;
+        }
+
 	}
 	
 	/**
@@ -101,6 +167,16 @@ public class TestCodeTemplate {
 	
 	public static void fillArrayPartially(int[] array, int val, int startIndex, int endIndex){
 		//YOUR CODE HERE
+
+        // avoid degenerate cases
+        if (array.length < endIndex || endIndex < startIndex) {
+            return;
+        }
+
+        for (int i = startIndex; i < endIndex; i++) {
+            array[i] = val;
+        }
+
 	}
 	
 	/**
@@ -116,19 +192,49 @@ public class TestCodeTemplate {
 	 */
 	public static int[] returnCopy(int[] array, int newLength){
 		//YOUR CODE HERE
+
+        int newArray[] = new int[newLength];
+
+        for (int i = 0; i < newLength; i++) {
+
+            if (i < array.length) {
+                newArray[i] = array[i];
+            } else {
+                newArray[i] = 0;
+            }
+        }
+
+        return newArray;
+
 	}
 	
 	
 	/**
 	 * Copies the specified range of the specified array into a new array and 
-	 * returns the new array of length endIndex - startIndex
+	 * returns the new array
 	 * @param array - the array from which a range is to be copied
 	 * @param startIndex - the initial index of the range to be copied, inclusive
 	 * @param endIndex -  the final index of the range to be copied, exclusive. (This index may lie outside the array.)
-	 * @return a new array containing the specified range from the original array
+	 * @return a new array containing the specified range from the original array, truncated or padded with zeros to obtain the required length
 	 */
 	public static int[] returnCopyRange(int[] array, int startIndex, int endIndex){
 		//YOUR CODE HERE
+
+        // I'm not sure I finally understand... is the newLength just the range? or the length of original array?
+
+        int newArray[] = new int[array.length];
+
+        for (int i = 0; i < array.length; i++) {
+
+            if (i >= startIndex && i < endIndex) {
+                newArray[i] = array[i];
+            } else {
+                newArray[i] = 0;
+            }
+        }
+
+        return newArray;
+
 	}
 	
 	/**
@@ -138,6 +244,15 @@ public class TestCodeTemplate {
 	 */
 	public static List<Integer> convertToList(int[] array){
 		//YOUR CODE HERE
+
+        List<Integer> li = new ArrayList<Integer>();
+
+        for (int i = 0; i < array.length; i++) {
+            li.add(array[i]);
+        }
+
+        return li;
+
 	}
 	
 	/**
@@ -152,6 +267,27 @@ public class TestCodeTemplate {
 	 */
 	public static String arrToString(int[] array){
 		//YOUR CODE HERE
+
+        if (array == null) {
+            return "null";
+        }
+
+        StringBuilder accum = new StringBuilder();
+        accum.append("[");
+
+        for (int i = 0; i < array.length; i++) {
+
+            if (i != 0) {
+                accum.append(", ").append(array[i]);
+            } else {
+                accum.append(array[i]);
+            }
+
+        }
+
+        accum.append("]");
+        return accum.toString();
+
 	}
 	
 	

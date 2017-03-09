@@ -37,7 +37,7 @@ public class TestCode {
 	}
 
 	public int cdgStmt(int num) {
-		if (number < 0) {
+		if (num < 0) {
 			num = num + 2; // Check2
 		} else {
 			num = num - 1;

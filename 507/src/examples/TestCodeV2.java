@@ -6,6 +6,51 @@ import java.util.List;
 public class TestCodeV2 {
 	
 	/**
+	 * @author Clement
+	 * Returns the absolute value an int value
+	 * @param val
+	 * @return the absolute value of val.
+	 */
+	public int absoluteValueCl(int val){
+		//YOUR CODE HERE
+
+        if (val < 0) {
+            return (-1) * val;
+        }
+
+        return val;
+
+	}
+
+	
+	/**
+	 * @author Xing
+	 * Returns the absolute value an int value
+	 * @param val
+	 * @return the absolute value of val.
+	 */
+	public int absoluteValueX(int val){
+		//YOUR CODE HERE
+        int mul = 1;
+        if (val < 0) {
+            mul = -1;
+        }
+        return val * mul;
+	}
+	
+	
+	/**
+	 * @author Alex
+	 * Returns the absolute value an int value
+	 * @param val
+	 * @return the absolute value of val.
+	 */
+	public int absoluteValueAl(int val){
+		return val >= 0? val : -val;
+	}
+	
+	
+	/**
 	 * @author Devon
 	 * Returns the absolute value an int value
 	 * @param val
@@ -59,28 +104,63 @@ public class TestCodeV2 {
 	 * @param val
 	 * @return
 	 */
-	public static int absoluteValue(int val){
+	public static int absoluteValueI(int val){
 		if(val < 0){
 			return -val;
 		}
 		return val;
 	}
 	
-	/**
-	 * @author Itrat
-	 * @param value
-	 * @return
-	 */
-	public static int absoluteValue2(int value){
-	  if (value < 0) {
-		    return -value;
-		  }
-		  else {
-		    return value;  
-		  }
-	}
 	
 /******************************************************************/
+	
+	/**
+	 * @author Clement
+	 * Returns the maximum of two int values
+	 * @param val1
+	 * @param val2
+	 * @return the larger of val1 and val2
+	 */
+	public static int maximumCl(int val1, int val2){
+		//YOUR CODE HERE
+
+        // if there is a tie, either works, so return val1
+        if (val1 >= val2) {
+            return val1;
+        }
+
+        return val2;
+
+	}
+
+	
+	/**
+	 * @author Xing
+	 * Returns the maximum of two int values
+	 * @param val1
+	 * @param val2
+	 * @return the larger of val1 and val2
+	 */
+	public static int maximumX(int val1, int val2){
+		//YOUR CODE HERE
+        if (val1 > val2) {
+            return val1;
+        }
+        return val2;
+	}
+
+	
+	/**
+	 * @author Alex
+	 * Returns the maximum of two int values
+	 * @param val1
+	 * @param val2
+	 * @return the larger of val1 and val2
+	 */
+	public static int maximumAl(int val1, int val2){
+		return val1 > val2 ? val1 : val2;
+	}
+
 	
 	/**
 	 * @author Devon
@@ -144,117 +224,61 @@ public class TestCodeV2 {
 	 * @param val2
 	 * @return
 	 */
-	public static int maximum(int val1, int val2){
+	public static int maximumI(int val1, int val2){
 		if(val1 < val2){
 			return val2;
 		}
 		return val1;
 	}
 	
-	/**
-	 * @author Itrat
-	 * @param val1
-	 * @param val2
-	 * @return
-	 */
-	public static int maximum2(int val1, int val2){
-		int maxVal = val1;
-		if(maxVal < val2){
-			maxVal = val2;
-		}
-		return maxVal;
-	}
-	
-	/**
-	 * @author Itrat
-	 * @param val1
-	 * @param val2
-	 * @return
-	 */
-	public static int maximum3(int val1, int val2){
-		int maxVal = 0;
-		if(val1 < val2){
-			maxVal = val2;
-		}
-		else if(val1 >= val2){
-			maxVal = val1;
-		}
-		return maxVal;
-	}
-	
-	
-	/**
-	 * @author Itrat
-	 * @param val1
-	 * @param val2
-	 * @return
-	 */
-	public static int maximum4(int val1, int val2){
-		int maxVal = 0;
-		if(val1 <= val2){
-			maxVal = val2;
-		}
-		else if(val1 > val2){
-			maxVal = val1;
-		}
-		return maxVal;
-	}
-	
-	/**
-	 * @author Itrat
-	 * @param val1
-	 * @param val2
-	 * @return
-	 */
-	public static int maximum5(int val1, int val2){
-		if(val1 <= val2){
-			return val2;
-		}
-		return val1;
-	}
-	
-	/**
-	 * @author Itrat
-	 * @param val1
-	 * @param val2
-	 * @return
-	 */
-	public static int maximum6(int val1, int val2){
-		int maxVal = val1;
-		if(maxVal <= val2){
-			maxVal = val2;
-		}
-		return maxVal;
-	}
-	
-	/**
-	 * @author Itrat
-	 * @param val1
-	 * @param val2
-	 * @return
-	 */
-	public static int maximum7(int val1, int val2){
-		if(val1 >= val2){
-			return val1;
-		}
-		return val2;
-	}
-	
-	/**
-	 * @author Itrat
-	 * @param val1
-	 * @param val2
-	 * @return
-	 */
-	public static int maximum8(int val1, int val2){
-		int maxVal = val2;
-		if(val1 >= maxVal){
-			maxVal = val1;
-		}
-		return maxVal;
-	}
 	
 /******************************************************************/
+	
+	/**
+	 * @author Clement
+	 * Returns the minimum of two int values
+	 * @param val1
+	 * @param val2
+	 * @return the smaller of val1 and val2
+	 */
+	public static int minimumCl(int val1, int val2){
+		//YOUR CODE HERE
+
+        if (val1 <= val2) {
+            return val1;
+        }
+
+        return val2;
+
+	}
+
+	/**
+	 * @author Xing
+	 * Returns the minimum of two int values
+	 * @param val1
+	 * @param val2
+	 * @return the smaller of val1 and val2
+	 */
+	public static int minimumX(int val1, int val2){
+		//YOUR CODE HERE
+        if (val1 < val2) {
+            return val1;
+        }
+        return val2;
+	}
+
+	
+	/**
+	 * @author Alex
+	 * Returns the minimum of two int values
+	 * @param val1
+	 * @param val2
+	 * @return the smaller of val1 and val2
+	 */
+	public static int minimumAl(int val1, int val2){
+		return val1 < val2 ? val1 : val2;
+	}
+	
 	/**
 	 * @author Devon
 	 * Returns the minimum of two int values
@@ -315,120 +339,93 @@ public class TestCodeV2 {
 	 * @param val2
 	 * @return
 	 */
-	public static int minimum(int val1, int val2){
+	public static int minimumI(int val1, int val2){
 		if(val1 < val2){
 			return val1;
 		}
 		return val2;
 	}
 	
-	/**
-	 * @author Itrat
-	 * @param val1
-	 * @param val2
-	 * @return
-	 */
-	public static int minimum2(int val1, int val2){
-		int minVal = val1;
-		if(minVal > val2){
-			minVal = val2;
-		}
-		return minVal;
-	}
 	
+/*******************************************************************/
 	
 	/**
-	 * @author Itrat
-	 * @param val1
-	 * @param val2
-	 * @return
+	 * @author Clement
+	 * Returns the value of the first argument raised to the power
+	 * of the second argument
+	 * @param val1 - the base
+	 * @param val2 - the exponent
+	 * @return val1^val2
 	 */
-	public static int minimum3(int val1, int val2){
-		int minVal = 0;
-		if(val1 < val2){
-			minVal = val1;
-		}
-		else if(val1 >= val2){
-			minVal = val2;
-		}
-		return minVal;
-	}
-	
-	
-	/**
-	 * @author Itrat
-	 * @param val1
-	 * @param val2
-	 * @return
-	 */
-	public static int minimum4(int val1, int val2){
-		int minVal = 0;
-		if(val1 <= val2){
-			minVal = val1;
-		}
-		else if(val1 > val2){
-			minVal = val2;
-		}
-		return minVal;
-	}
-	
-	
-	/**
-	 * @author Itrat
-	 * @param val1
-	 * @param val2
-	 * @return
-	 */
-	public static int minimum5(int val1, int val2){
-		if(val1 <= val2){
-			return val1;
-		}
-		return val2;
-	}
-	
-	
-	/**
-	 * @author Itrat
-	 * @param val1
-	 * @param val2
-	 * @return
-	 */
-	public static int minimum6(int val1, int val2){
-		int minVal = val1;
-		if(val2 <= minVal){
-			minVal = val2;
-		}
-		return minVal;
-	}
-	
-	/**
-	 * @author Itrat
-	 * @param val1
-	 * @param val2
-	 * @return
-	 */
-	public static int minimum7(int val1, int val2){
-		if(val1 >= val2){
-			return val2;
-		}
-		return val1;
-	}
-	
-	/**
-	 * @author Itrat
-	 * @param val1
-	 * @param val2
-	 * @return
-	 */
-	public static int minimum8(int val1, int val2){
-		int minVal = val2;
-		if(minVal >= val1){
-			minVal = val1;
-		}
-		return minVal;
+	public static double powerCl(double val1, double val2){
+		//YOUR CODE HERE
+
+        // I don't actually know how to do this if val2 is not an int...
+        double accum = 1;
+
+        if (val2 >= 0) {
+
+            // this also handles the zero case... just don't enter loop, return 1
+            for (int i = 0; i < val2; i++) {
+                accum *= val1;
+            }
+        } else {
+
+            // handle negative exponents
+            for (int i = 0; i > val2; i--) {
+                accum /= val1;
+            }
+        }
+
+        return accum;
+
 	}
 
-/*******************************************************************/
+	
+	/**
+	 * @author Xing
+	 * Returns the value of the first argument raised to the power
+	 * of the second argument
+	 * @param val1 - the base
+	 * @param val2 - the exponent
+	 * @return val1^val2
+	 */
+	public static double powerX(double val1, double val2){
+		//YOUR CODE HERE
+        if (val2 < 0) {
+            return 1.0 / TestCodeTemplate.power(val1, -val2);
+        }
+        if (val2 == 0) {
+            return 1;
+        }
+        if (val2 <= 1) {
+            return val1;
+        }
+        double val2_rm = val2 % 2;
+        double val2_m = (val2 - val2_rm) / 2;
+        double rcpower = powerX(val1, val2_m);
+        double rcremain = powerX(val1, val2_rm);
+        return rcpower * rcpower * rcremain;
+	}
+	
+	/**
+	 * @author Alex
+	 * Returns the value of the first argument raised to the power
+	 * of the second argument
+	 * @param val1 - the base
+	 * @param val2 - the exponent
+	 * @return val1^val2
+	 */
+	public static double powerAl(double val1, double val2){
+		if (val2 == 0)  
+			return 1;
+	    if (val2 == 1)      
+	    	return val1;
+	    if (val2%2 == 0)
+	    	return powerAl(val1*val1, val2/2);
+	    else
+	    	return val1 * powerAl(val1, val2-1);
+	}
 	
 	/**
 	 * @author Devon
@@ -476,6 +473,54 @@ public class TestCodeV2 {
 	/**************************************************************/
 	
 	/**
+	 * @author Clement
+	 * Swaps the element at pos1 with element at pos2 in array
+	 * @param pos1 - the position of one element to be swapped
+	 * @param pos2 - the position of another element to be swapped
+	 * @param array - the array where the elements are swapped
+	 */
+	public static void swapCl(int pos1, int pos2, int[] array){
+		//YOUR CODE HERE
+
+        int elem1 = array[pos1];
+        int elem2 = array[pos2];
+
+        array[pos1] = elem2;
+        array[pos2] = elem1;
+
+	}
+
+	
+	/**
+	 * @author Xing
+	 * Swaps the element at pos1 with element at pos2 in array
+	 * @param pos1 - the position of one element to be swapped
+	 * @param pos2 - the position of another element to be swapped
+	 * @param array - the array where the elements are swapped
+	 */
+	public static void swapX(int pos1, int pos2, int[] array){
+		//YOUR CODE HERE
+        int temp;
+        temp = array[pos1];
+        array[pos1] = array[pos2];
+        array[pos2] = temp;
+	}
+	
+	/**
+	 * @author Alex
+	 * Swaps the element at pos1 with element at pos2 in array
+	 * @param pos1 - the position of one element to be swapped
+	 * @param pos2 - the position of another element to be swapped
+	 * @param array - the array where the elements are swapped
+	 */
+	public static void swapAl(int pos1, int pos2, int[] array){
+		int temp = array[pos1];
+		array[pos1] = array[pos2];
+		array[pos2] = temp;
+	}
+
+	
+	/**
 	 * @author Devon
 	 * Swaps the element at pos1 with element at pos2 in array
 	 * @param pos1 - the position of one element to be swapped
@@ -519,7 +564,76 @@ public class TestCodeV2 {
 	
 	/*********************************************************/
 	
+	/**
+	 * @author Clement
+	 * Returns true if the two specified arrays of ints
+	 * are equal to one another. Two arrays are considered equal 
+	 * if both arrays contain the same number of elements, and all 
+	 * corresponding pairs of elements in the two arrays are equal. 
+	 * @param array1 -  one array to be tested for equality
+	 * @param array2 - the other array to be tested for equality
+	 * @return true if the two arrays are equal
+	 */
+	public static boolean equalsCl(int[] array1, int[] array2){
+		//YOUR CODE HERE
 
+        if (array1.length != array2.length) {
+            return false;
+        }
+
+        for (int i = 0; i < array1.length; i++) {
+            if (array1[i] != array2[i]) {
+                return false;
+            }
+        }
+
+        return true;
+	}
+
+	
+	/**
+	 * @author Xing
+	 * Returns true if the two specified arrays of ints
+	 * are equal to one another. Two arrays are considered equal 
+	 * if both arrays contain the same number of elements, and all 
+	 * corresponding pairs of elements in the two arrays are equal. 
+	 * @param array1 -  one array to be tested for equality
+	 * @param array2 - the other array to be tested for equality
+	 * @return true if the two arrays are equal
+	 */
+	public static boolean equalsX(int[] array1, int[] array2){
+		//YOUR CODE HERE
+        if (array1.length != array2.length) {
+            return false; 
+        }
+        for (int i = 0; i < array1.length; i++) {
+            if (array1[i] != array2[i]) {
+                return false;
+            }
+        }
+        return true;
+	}
+	
+	/**
+	 * @author Alex
+	 * Returns true if the two specified arrays of ints
+	 * are equal to one another. Two arrays are considered equal 
+	 * if both arrays contain the same number of elements, and all 
+	 * corresponding pairs of elements in the two arrays are equal. 
+	 * @param array1 -  one array to be tested for equality
+	 * @param array2 - the other array to be tested for equality
+	 * @return true if the two arrays are equal
+	 */
+	public static boolean equalsAl(int[] array1, int[] array2){
+		if (array1.length != array2.length)
+			return false;
+		for (int i = 0; i < array1.length; i++)
+			if (array1[i] != array2[i])
+				return false;
+		return true;
+	}
+	
+	
 	/**
 	 * @author Devon
 	 * Returns true if the two specified arrays of ints
@@ -625,7 +739,7 @@ public class TestCodeV2 {
 	 * @param array2
 	 * @return 
 	 */
-	public static boolean equals(int[] array1, int[] array2){
+	public static boolean equalsI(int[] array1, int[] array2){
 		if(array1.length != array2.length){
 			return false;
 		}
@@ -635,112 +749,53 @@ public class TestCodeV2 {
 			}
 		}
 		return true;
-	}
-	
-	/**
-	 * @author Itrat
-	 * @param array1
-	 * @param array2
-	 * @return
-	 */
-	public static boolean equals2(int[] array1, int[] array2){
-		int arr1Length = array1.length;
-		int arr2Length = array2.length;
-		if(arr1Length != arr2Length){
-			return false;
-		}
-		for(int i = 0; i<arr1Length; i++){
-			if(array1[i]!=array2[i]){
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	/**
-	 * @author Itrat
-	 * @param array1
-	 * @param array2
-	 * @return
-	 */
-	public static boolean equals3(int[] array1, int[] array2){
-		boolean ifEqual = true;
-		if(array1.length != array2.length){
-			ifEqual = false;
-		}
-		for(int i = 0; i<array1.length; i++){
-			if(array1[i]!=array2[i]){
-				ifEqual = false;
-				break;
-			}
-		}
-		return ifEqual;
-	}
-	
-	/**
-	 * @author Itrat
-	 * @param array1
-	 * @param array2
-	 * @return
-	 */
-	public static boolean equals4(int[] array1, int[] array2){
-		boolean ifEqual = true;
-		int arr1Length = array1.length;
-		int arr2Length = array2.length;
-		if(arr1Length != arr2Length){
-			ifEqual = false;
-		}
-		for(int i = 0; i<arr1Length; i++){
-			if(array1[i]!=array2[i]){
-				ifEqual =  false;
-				break;
-			}
-		}
-		return ifEqual;
-	}
-	
-	/**
-	 * @author Itrat
-	 * @param array1
-	 * @param array2
-	 * @return
-	 */
-	public static boolean equals5(int[] array1, int[] array2){
-		boolean ifEqual = true;
-		if(array1.length != array2.length){
-			ifEqual = false;
-		}
-		for(int i = 0; i<array1.length; i++){
-			if(array1[i]!=array2[i]){
-				ifEqual = false;
-			}
-		}
-		return ifEqual;
-	}
-	
-	/**
-	 * @author Itrat
-	 * @param array1
-	 * @param array2
-	 * @return
-	 */
-	public static boolean equals6(int[] array1, int[] array2){
-		boolean ifEqual = true;
-		int arr1Length = array1.length;
-		int arr2Length = array2.length;
-		if(arr1Length != arr2Length){
-			ifEqual = false;
-		}
-		for(int i = 0; i<arr1Length; i++){
-			if(array1[i]!=array2[i]){
-				ifEqual =  false;
-			}
-		}
-		return ifEqual;
 	}
 	
 	
 	/*************************************************************/
+	
+	/**
+	 * @author Clement
+	 * Assigns the specified int value to each element of the specified 
+	 * array of ints.
+	 * @param array - the array to be filled
+	 * @param val - the value to be stored in all elements of the array
+	 */
+	public static void fillArrayCl(int[] array, int val){
+		//YOUR CODE HERE
+
+        for (int i = 0; i < array.length; i++) {
+            array[i] = val;
+        }
+
+	}
+	
+	
+	/**
+	 * @author Xing
+	 * Assigns the specified int value to each element of the specified 
+	 * array of ints.
+	 * @param array - the array to be filled
+	 * @param val - the value to be stored in all elements of the array
+	 */
+	public static void fillArrayX(int[] array, int val){
+		//YOUR CODE HERE
+        for (int i = 0; i < array.length; i++) {
+            array[i] = val;
+        }
+	}
+	
+	/**
+	 * @author Alex
+	 * Assigns the specified int value to each element of the specified 
+	 * array of ints.
+	 * @param array - the array to be filled
+	 * @param val - the value to be stored in all elements of the array
+	 */
+	public static void fillArrayAl(int[] array, int val){
+		for (int i = 0; i < array.length; i++)
+			array[i] = val;
+	}
 	
 	/**
 	 * @author Devon
@@ -804,39 +859,79 @@ public class TestCodeV2 {
 	 * @param array
 	 * @param val
 	 */
-	public static void fillArray(int[] array, int val){
+	public static void fillArrayI(int[] array, int val){
 		for(int i = 0; i<array.length; i++){
 			array[i] = val;
 		}
 	}
 	
-	/**
-	 * @author Itrat
-	 * @param array
-	 * @param val
-	 */
-	public static void fillArray2(int[] array, int val){
-		int i = 0;
-		while(i<array.length){
-			array[i] = val;
-			i = i+1;
-		}
-	}
-	
-	/**
-	 * @author Itrat
-	 * @param array
-	 * @param val
-	 */
-	public static void fillArray3(int[] array, int val){
-		int i = 0;
-		while(i<array.length){
-			array[i] = val;
-			i++;
-		}
-	}
 	
 	/*************************************************************/
+	
+	/**
+	 * @author Clement
+	 * Assigns the specified int value to each element of the specified 
+	 * range of the specified array of ints. The range to be filled 
+	 * extends from index startIndex, inclusive, to index endIndex, 
+	 * exclusive.
+	 * @param array - the array to be filled
+	 * @param val - the value to be stored in all elements of the array
+	 * @param startIndex - the index of the first element (inclusive) to be filled with the specified value
+	 * @param endIndex - the index of the last element (exclusive) to be filled with the specified value
+	 */
+	
+	public static void fillArrayPartiallyCl(int[] array, int val, int startIndex, int endIndex){
+		//YOUR CODE HERE
+
+        // avoid degenerate cases
+        if (array.length < endIndex || endIndex < startIndex) {
+            return;
+        }
+
+        for (int i = startIndex; i < endIndex; i++) {
+            array[i] = val;
+        }
+
+	}
+	
+	/**
+	 * @author Xing
+	 * Assigns the specified int value to each element of the specified 
+	 * range of the specified array of ints. The range to be filled 
+	 * extends from index startIndex, inclusive, to index endIndex, 
+	 * exclusive.
+	 * @param array - the array to be filled
+	 * @param val - the value to be stored in all elements of the array
+	 * @param startIndex - the index of the first element (inclusive) to be filled with the specified value
+	 * @param endIndex - the index of the last element (exclusive) to be filled with the specified value
+	 */
+	
+	public static void fillArrayPartiallyX(int[] array, int val, int startIndex, int endIndex){
+		//YOUR CODE HERE
+        for (int i = startIndex; i < endIndex + 1; i++) {
+            array[i] = val;
+        }
+	}
+
+	
+	/**
+	 * @author Alex
+	 * Assigns the specified int value to each element of the specified 
+	 * range of the specified array of ints. The range to be filled 
+	 * extends from index startIndex, inclusive, to index endIndex, 
+	 * exclusive.
+	 * @param array - the array to be filled
+	 * @param val - the value to be stored in all elements of the array
+	 * @param startIndex - the index of the first element (inclusive) to be filled with the specified value
+	 * @param endIndex - the index of the last element (exclusive) to be filled with the specified value
+	 */
+	
+	public static void fillArrayPartiallyAl(int[] array, int val, int startIndex, int endIndex){
+		if (startIndex < array.length && endIndex < array.length && startIndex <= endIndex)
+			for (int i = startIndex; i < endIndex; i++)
+				array[i] = val;
+	}
+	
 	
 	/**
 	 * @author Devon
@@ -870,7 +965,7 @@ public class TestCodeV2 {
      */
     
     public static void fillArrayPartiallyJ(int[] array, int val, int startIndex, int endIndex){
-        for(int i = startIndex; i < minimum(array.length, endIndex); i++){
+        for(int i = startIndex; i < minimumJ(array.length, endIndex); i++){
             array[i] = val;
         }
     }
@@ -916,6 +1011,7 @@ public class TestCodeV2 {
 	}
 	
 	/**
+	 * @author Itrat
 	 * Fill array with val from startIndex to endIndex(not inclusive)
 	 * @param array
 	 * @param val
@@ -923,7 +1019,7 @@ public class TestCodeV2 {
 	 * @param endIndex
 	 */
 	
-	public static void fillArrayPartially(int[] array, int val, int startIndex, int endIndex){
+	public static void fillArrayPartiallyI(int[] array, int val, int startIndex, int endIndex){
 		if(startIndex < 0 || startIndex >= array.length || endIndex <0 || endIndex >= array.length){
 			return;
 		}
@@ -932,45 +1028,87 @@ public class TestCodeV2 {
 		}
 	}
 	
-	/**
-	 * @author Itrat
-	 * @param array
-	 * @param val
-	 * @param startIndex
-	 * @param endIndex
-	 */
-	public static void fillArrayPartially2(int[] array, int val, int startIndex, int endIndex){
-		if(startIndex < 0 || startIndex >= array.length){
-			return;
-		}
-		if( endIndex <0 || endIndex >= array.length){
-			return;
-		}
-		for(int i = startIndex; i<endIndex; i++){
-			array[i] = val;
-		}
-	}
-	
-	/**
-	 * @author Itrat
-	 * @param array
-	 * @param val
-	 * @param startIndex
-	 * @param endIndex
-	 */
-	public static void fillArrayPartially3(int[] array, int val, int startIndex, int endIndex){
-		if(startIndex < 0 || startIndex >= array.length || endIndex <0 || endIndex >= array.length){
-			return;
-		}
-		int i = startIndex;
-		while(i<endIndex){
-			array[i] = val;
-			i++;
-		}
-	}
 	
 	/*************************************************************/
 	 
+	/**
+	 * @author Clement
+	 * Copies the specified array, truncating or padding with zeros (if necessary) 
+	 * so the copy has the specified length. For all indices that are valid in both
+	 * the original array and the copy, the two arrays will contain identical values.
+	 * For any indices that are valid in the copy but not the original, the copy will 
+	 * contain 0. Such indices will exist if and only if the specified length is greater 
+	 * than that of the original array.
+	 * @param array - the array to be copied
+	 * @param newLength - the length of the copy to be returned
+	 * @return a copy of the original array, truncated or padded with zeros to obtain the specified length
+	 */
+	public static int[] returnCopyCl(int[] array, int newLength){
+		//YOUR CODE HERE
+
+        int newArray[] = new int[newLength];
+
+        for (int i = 0; i < newLength; i++) {
+
+            if (i < array.length) {
+                newArray[i] = array[i];
+            } else {
+                newArray[i] = 0;
+            }
+        }
+
+        return newArray;
+
+	}
+
+	
+	/**
+	 * @author Xing
+	 * Copies the specified array, truncating or padding with zeros (if necessary) 
+	 * so the copy has the specified length. For all indices that are valid in both
+	 * the original array and the copy, the two arrays will contain identical values.
+	 * For any indices that are valid in the copy but not the original, the copy will 
+	 * contain 0. Such indices will exist if and only if the specified length is greater 
+	 * than that of the original array.
+	 * @param array - the array to be copied
+	 * @param newLength - the length of the copy to be returned
+	 * @return a copy of the original array, truncated or padded with zeros to obtain the specified length
+	 */
+	public static int[] returnCopyX(int[] array, int newLength){
+		//YOUR CODE HERE
+        int fillLength = TestCodeTemplate.minimum(newLength, array.length);
+        int [] newArray = new int[newLength];
+        for (int i = 0; i < fillLength; i++) {
+            newArray[i] = array[i];
+        }
+        return newArray;
+	}
+
+	
+	/**
+	 * @author Alex
+	 * Copies the specified array, truncating or padding with zeros (if necessary) 
+	 * so the copy has the specified length. For all indices that are valid in both
+	 * the original array and the copy, the two arrays will contain identical values.
+	 * For any indices that are valid in the copy but not the original, the copy will 
+	 * contain 0. Such indices will exist if and only if the specified length is greater 
+	 * than that of the original array.
+	 * @param array - the array to be copied
+	 * @param newLength - the length of the copy to be returned
+	 * @return a copy of the original array, truncated or padded with zeros to obtain the specified length
+	 */
+	public static int[] returnCopyAL(int[] array, int newLength){
+		int[] copy = new int[newLength];
+		for (int i = 0; i < newLength; i++){
+			if (i < array.length)
+				copy[i] = array[i];
+			else
+				copy[i] = 0;
+		}
+		return copy;
+	}
+	
+	
 	/**
 	 * @author Devon
 	 * Copies the specified array, truncating or padding with zeros (if necessary) 
@@ -1076,7 +1214,7 @@ public class TestCodeV2 {
 	 * @param array
 	 * @return
 	 */
-	public static int[] returnCopy(int[] array){
+	public static int[] returnCopyI(int[] array){
 		int[] newArray = new int[array.length];
 		for(int i = 0; i<newArray.length; i++){
 			newArray[i] = array[i];
@@ -1085,6 +1223,85 @@ public class TestCodeV2 {
 	}
 	
 	/*************************************************************/
+	
+	/**
+	 * @author Clement
+	 * Copies the specified range of the specified array into a new array and 
+	 * returns the new array
+	 * @param array - the array from which a range is to be copied
+	 * @param startIndex - the initial index of the range to be copied, inclusive
+	 * @param endIndex -  the final index of the range to be copied, exclusive. (This index may lie outside the array.)
+	 * @return a new array containing the specified range from the original array, 
+	 */
+	public static int[] returnCopyRangeCl(int[] array, int startIndex, int endIndex){
+		//YOUR CODE HERE
+
+        // I'm not sure I finally understand... is the newLength just the range? or the length of original array?
+
+        int newArray[] = new int[array.length];
+
+        for (int i = 0; i < array.length; i++) {
+
+            if (i >= startIndex && i < endIndex) {
+                newArray[i] = array[i];
+            } else {
+                newArray[i] = 0;
+            }
+        }
+
+        return newArray;
+
+	}
+	
+	/**
+	 * @author Xing
+	 * Copies the specified range of the specified array into a new array and 
+	 * returns the new array
+	 * @param array - the array from which a range is to be copied
+	 * @param startIndex - the initial index of the range to be copied, inclusive
+	 * @param endIndex -  the final index of the range to be copied, exclusive. (This index may lie outside the array.)
+	 * @return a new array containing the specified range from the original array, truncated or padded with zeros to obtain the required length
+	 */
+	public static int[] returnCopyRangeX(int[] array, int startIndex, int endIndex){
+		//YOUR CODE HERE
+        int arrayLength = endIndex - startIndex + 1;
+        int [] newArray = new int[arrayLength];
+        for (int i = 0; i < arrayLength; i++) {
+            newArray[i] = array[i + startIndex];
+        }
+        return newArray;
+	}
+
+	
+	/**
+	 * @author Alex
+	 * Copies the specified range of the specified array into a new array and 
+	 * returns the new array
+	 * @param array - the array from which a range is to be copied
+	 * @param startIndex - the initial index of the range to be copied, inclusive
+	 * @param endIndex -  the final index of the range to be copied, exclusive. (This index may lie outside the array.)
+	 * @return a new array containing the specified range from the original array, truncated or padded with zeros to obtain the required length
+	 */
+	public static int[] returnCopyRangeAl(int[] array, int startIndex, int endIndex){
+		if (endIndex >= startIndex){
+			int len = endIndex - startIndex;
+			int[] copy = new int[len];
+			if (startIndex < array.length){
+				for (int i = 0; i < len; i++){
+					if (i + startIndex < array.length)
+						copy[i] = array[i + startIndex];
+					else
+						copy[i] = 0;
+				}
+			} else {
+				for (int i = 0; i < len; i++)
+					copy[i] = 0;
+			}	
+			return copy;
+		}
+		return null;
+	}
+
 	
 	/**
 	 * @author Devon
@@ -1174,7 +1391,7 @@ public class TestCodeV2 {
 	 * @param endIndex
 	 * @return
 	 */
-	public static int[] returnPartialCopy(int[] array, int startIndex, int endIndex){
+	public static int[] returnCopyRangeI(int[] array, int startIndex, int endIndex){
 		if(startIndex < 0 || startIndex >= array.length || endIndex <0 || endIndex >= array.length){
 			System.out.println("startIndex and endIndex do not make sense");
 			return new int[0];
@@ -1189,65 +1406,56 @@ public class TestCodeV2 {
 		return newArray;
 	}
 	
-	/**
-	 * @author Itrat
-	 * @param array
-	 * @param startIndex
-	 * @param endIndex
-	 * @return
-	 */
-	public static int[] returnPartialCopy2(int[] array, int startIndex, int endIndex){
-		if(startIndex < 0 || startIndex >= array.length || endIndex <0 || endIndex >= array.length){
-			System.out.println("startIndex and endIndex do not make sense");
-			return new int[0];
-		}
-		int[] newArray = new int[endIndex - startIndex];
-		for(int i = startIndex; i<endIndex; i++){
-			newArray[i-startIndex] = array[i];
-		}
-		return newArray;
-	}
 	
-	/**
-	 * @author Itrat
-	 * @param array
-	 * @param startIndex
-	 * @param endIndex
-	 * @return
-	 */
-	public static int[] returnPartialCopy3(int[] array, int startIndex, int endIndex){
-		if(startIndex < 0 || startIndex >= array.length || endIndex <0 || endIndex >= array.length){
-			System.out.println("startIndex and endIndex do not make sense");
-			return new int[0];
-		}
-		int[] newArray = new int[endIndex - startIndex];
-		for(int i = 0; i<endIndex - startIndex; i++){
-			newArray[i] = array[i+startIndex];
-		}
-		return newArray;
-	}
-	
-	/**
-	 * @author Itrat
-	 * @param array
-	 * @param startIndex
-	 * @param endIndex
-	 * @return
-	 */
-	public static int[] returnPartialCopy4(int[] array, int startIndex, int endIndex){
-		if(startIndex < 0 || startIndex >= array.length || endIndex <0 || endIndex >= array.length){
-			System.out.println("startIndex and endIndex do not make sense");
-			return new int[0];
-		}
-		int newLength = endIndex - startIndex;
-		int[] newArray = new int[newLength];
-		for(int i = 0; i<newLength; i++){
-			newArray[i] = array[i+startIndex];
-		}
-		return newArray;
-	}
 	
 	/************************************************************/
+	
+	/**
+	 * @author Clement
+	 * Returns a list version of the array
+	 * @param array the array to be converted
+	 * @return the list version of array
+	 */
+	public static List<Integer> convertToListCl(int[] array){
+		//YOUR CODE HERE
+
+        List<Integer> li = new ArrayList<Integer>();
+
+        for (int i = 0; i < array.length; i++) {
+            li.add(array[i]);
+        }
+
+        return li;
+
+	}
+	
+	/**
+	 * @author Xing
+	 * Returns a list version of the array
+	 * @param array the array to be converted
+	 * @return the list version of array
+	 */
+	public static List<Integer> convertToListX(int[] array){
+		//YOUR CODE HERE
+        List<Integer> newArray = new ArrayList<Integer>();
+        for (int i = 0; i < array.length; i++) {
+            newArray.add(array[i]);
+        }
+        return newArray;
+	}
+	
+	/**
+	 * @author Alex
+	 * Returns a list version of the array
+	 * @param array the array to be converted
+	 * @return the list version of array
+	 */
+	public static List<Integer> convertToListAl(int[] array){
+		List<Integer> list = new ArrayList<Integer>();
+		for (int i = 0; i < array.length; i++)
+			list.add(array[i]);
+		return list;
+	}
 	
 	/**
 	 * @author Devon
@@ -1316,7 +1524,7 @@ public class TestCodeV2 {
 	 * @param array
 	 * @return
 	 */
-	public static List<Integer> convertToList(int[] array){
+	public static List<Integer> convertToListI(int[] array){
 		ArrayList<Integer> arrList = new ArrayList<Integer>();
 		for(int a: array){
 			arrList.add(a);
@@ -1324,33 +1532,96 @@ public class TestCodeV2 {
 		return arrList;
 	}
 	
-	/**
-	 * @author Itrat
-	 * @param array
-	 * @return
-	 */
-	public static List<Integer> convertToList2(int[] array){
-		ArrayList<Integer> arrList = new ArrayList<Integer>();
-		for(int i = 0; i<array.length; i++){
-			arrList.add(array[i]);
-		}
-		return arrList;
-	}
-	
-	/**
-	 * @author Itrat
-	 * @param array
-	 * @return
-	 */
-	public static List<Integer> convertToList3(int[] array){
-		ArrayList<Integer> arrList = new ArrayList<Integer>(array.length);
-		for(int i = 0; i<array.length; i++){
-			arrList.set(i,array[i]);
-		}
-		return arrList;
-	}
 	
 	/*************************************************************/
+	
+	/**
+	 * @author Clement
+	 * Returns a string representation of the contents of the specified 
+	 * array. The string representation consists of a list of the array's 
+	 * elements, enclosed in square brackets ("[]"). Adjacent elements are
+	 * separated by the characters ", " (a comma followed by a space). 
+	 * Elements are converted to strings as by String.valueOf(int). 
+	 * Returns "null" if a is null.
+	 * @param array - the array whose string representation to return
+	 * @return a string representation of array
+	 */
+	public static String arrToStringCl(int[] array){
+		//YOUR CODE HERE
+
+        if (array == null) {
+            return "null";
+        }
+
+        StringBuilder accum = new StringBuilder();
+        accum.append("[");
+
+        for (int i = 0; i < array.length; i++) {
+
+            if (i != 0) {
+                accum.append(", ").append(array[i]);
+            } else {
+                accum.append(array[i]);
+            }
+
+        }
+
+        accum.append("]");
+        return accum.toString();
+
+	}
+
+	
+	/**
+	 * @author Xing
+	 * Returns a string representation of the contents of the specified 
+	 * array. The string representation consists of a list of the array's 
+	 * elements, enclosed in square brackets ("[]"). Adjacent elements are
+	 * separated by the characters ", " (a comma followed by a space). 
+	 * Elements are converted to strings as by String.valueOf(int). 
+	 * Returns "null" if a is null.
+	 * @param array - the array whose string representation to return
+	 * @return a string representation of array
+	 */
+	public static String arrToStringX(int[] array){
+		//YOUR CODE HERE
+        String newString = "[";
+        for (int i = 0; i < array.length; i++) {
+            newString += array[i];
+            if (i != array.length - 1) {
+                newString += ",";
+            }
+        }
+        newString += "]";
+        return newString;
+	}
+	
+
+	
+	/**
+	 * @author Alex
+	 * Returns a string representation of the contents of the specified 
+	 * array. The string representation consists of a list of the array's 
+	 * elements, enclosed in square brackets ("[]"). Adjacent elements are
+	 * separated by the characters ", " (a comma followed by a space). 
+	 * Elements are converted to strings as by String.valueOf(int). 
+	 * Returns "null" if a is null.
+	 * @param array - the array whose string representation to return
+	 * @return a string representation of array
+	 */
+	public static String arrToStringAl(int[] array){
+		if (array == null)
+			return null;
+		String s = "[";
+		for (int i = 0; i < array.length; i++){
+			s += String.valueOf(array[i]);
+			if (i + 1 < array.length)
+				s += ", ";
+		}
+		s += "]";
+		return s;
+	}	
+
 	
 	/**
 	 * @author Devon
@@ -1477,7 +1748,7 @@ public class TestCodeV2 {
 	 * @param array
 	 * @return
 	 */
-	public static String arrToString(int[] array){
+	public static String arrToStringI(int[] array){
 		String arrString = "[";
 		for(int i = 0; i<array.length; i++){
 			int a = array[i];
@@ -1490,25 +1761,9 @@ public class TestCodeV2 {
 		return arrString;
 	}
 	
-	/**
-	 * @author Itrat
-	 * @param array
-	 * @return
-	 */
-	public static String arrToString2(int[] array){
-		String arrString = "[";
-		for(int i = 0; i<array.length; i++){
-			arrString += array[i];
-			if(i!=array.length-1){
-				arrString += ", ";
-			}
-		}
-		arrString += "]";
-		return arrString;
-	}
 
 	public static void main(String[] args){
-		int val = -1;
+		/*int val = -1;
 		System.out.println("Absolute value of "+ val +" is "+absoluteValue(val));
 		System.out.println("Minimum of 2 and 3 is "+minimum(2,3));
 		System.out.println("Maximum of 2 and 3 is "+maximum(2,3));
@@ -1532,7 +1787,7 @@ public class TestCodeV2 {
 		arrayCopy = returnPartialCopy(array1,0,3);
 		System.out.println("After copying array1 to arrayCopy paritally from index 0 to 3: "+arrToString(arrayCopy));
 		List<Integer> arrList = convertToList(array1);
-		System.out.println("ArrayList version of array1: "+ arrList);
+		System.out.println("ArrayList version of array1: "+ arrList);*/
 	
 	}
 }
