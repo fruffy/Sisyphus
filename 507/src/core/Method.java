@@ -156,38 +156,47 @@ public class Method {
 		return  new Method((MethodDeclaration)StandardForm.toStandardForm(this.originalDecl));
 	}
 	
-	public DirectedGraph<NodeWrapper, DefaultEdge> getPDG(){
+	public DirectedGraph<Node, DefaultEdge> getPDG(){
 		ControlFlowParser cfp = new ControlFlowParser(this);
 		DirectedPseudograph<NodeWrapper, DefaultEdge> cfg = cfp.getCFG();
 		ControlDependencyParser cdp = new ControlDependencyParser(cfg);
 		DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg = cdp.getCDG();
 		DataDependencyGraphFinder ddgf = new DataDependencyGraphFinder(cfg);
 		DirectedPseudograph<NodeWrapper, DefaultEdge> ddg = ddgf.findReachingDefs();
-		System.out.println("\n+++++++++++++++++cdg vertices++++++++++++++++++++++++++++++++");
-		for (NodeWrapper n : cdg.vertexSet()) {
-			System.out.println(n.NODE);
-		}
 		
-		System.out.println("\n+++++++++++++++++ddg vertices++++++++++++++++++++++++++++++++");
-		for (NodeWrapper n : ddg.vertexSet()) {
-			System.out.println(n.NODE);
+		//combine cdg and ddg to pdg with Nodes as vertices rather
+		//than NodeWrappers
+		DirectedPseudograph<Node, DefaultEdge> pdgNode = new DirectedPseudograph<>(DefaultEdge.class);
+		for(NodeWrapper n: cdg.vertexSet()){
+			pdgNode.addVertex(n.NODE);
+		}
+		for(DefaultEdge e: cdg.edgeSet()){
+			pdgNode.addEdge(cdg.getEdgeSource(e).NODE, cdg.getEdgeTarget(e).NODE);
+		}
+		for(DefaultEdge e: ddg.edgeSet()){
+			pdgNode.addEdge(ddg.getEdgeSource(e).NODE, ddg.getEdgeTarget(e).NODE);
 		}
 		
 		System.out.println("\n+++++++++++++++++cdg edges++++++++++++++++++++++++++++++++");
 		for (DefaultEdge e : cdg.edgeSet()) {
-			System.out.println(e);
+			System.out.println(cdg.getEdgeSource(e).NODE+"-->"+cdg.getEdgeTarget(e).NODE);
 		}
 		
 		System.out.println("\n+++++++++++++++++ddg edges++++++++++++++++++++++++++++++++");
 		for (DefaultEdge e : ddg.edgeSet()) {
-			System.out.println(e);
+			System.out.println(ddg.getEdgeSource(e).NODE+"-->"+ddg.getEdgeTarget(e).NODE);
+		}
+		
+		System.out.println("\n+++++++++++++++++pdg edges++++++++++++++++++++++++++++++++");
+		for (DefaultEdge e : pdgNode.edgeSet()) {
+			System.out.println(ddg.getEdgeSource(e)+"-->"+ddg.getEdgeTarget(e));
 		}
 		
 		PDGGraphViz.writeDot(cdg, "cdg.dot");
 		PDGGraphViz.writeDot(ddg, "ddg.dot");
-
+		PDGGraphViz.writeDotNode(pdgNode, "pdg.dot");
 		
-		return cfg;
+		return pdgNode;
 	
 	}
 }

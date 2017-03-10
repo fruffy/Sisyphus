@@ -1,4 +1,4 @@
-strict digraph G {
+digraph G {
   1 [ label="" ];
   2 [ label="(line 40,col 7)-(line 40,col 13): num < 0" ];
   3 [ label="(line 41,col 4)-(line 41,col 17): num = num + 2;" ];
@@ -10,4 +10,8 @@ strict digraph G {
   2 -> 4;
   1 -> 5;
   1 -> 6;
+  3 -> 3;
+  3 -> 6;
+  4 -> 6;
+  4 -> 4;
 }

@@ -71,7 +71,7 @@ public class CodeHelper {
 		DirectedGraph<NodeWrapper, DefaultEdge> pdg2 = cfgParse2.getCFG();
 		System.out.println("Match between " + method1.getMethodName() + " and " + method2.getMethodName() + "?");
 		System.out.println(cloneDetect.matchMethodPDGs(method1, method2));*/
-		DirectedGraph<NodeWrapper, DefaultEdge> pdg1 = method1.getPDG();
+		DirectedGraph<Node, DefaultEdge> pdg1 = method1.getPDG();
 		//DirectedGraph<NodeWrapper, DefaultEdge> pdg2 = method2.getPDG();
 
 	}
