@@ -1,4 +1,5 @@
-package me.tomassetti;
+package someproject.me.tomassetti;
+
 
 public class Address {
     private String street;
