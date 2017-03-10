@@ -1236,17 +1236,11 @@ public class TestCodeV2 {
 	public static int[] returnCopyRangeCl(int[] array, int startIndex, int endIndex){
 		//YOUR CODE HERE
 
-        // I'm not sure I finally understand... is the newLength just the range? or the length of original array?
+        int length = endIndex - startIndex;
+        int newArray[] = new int[length];
 
-        int newArray[] = new int[array.length];
-
-        for (int i = 0; i < array.length; i++) {
-
-            if (i >= startIndex && i < endIndex) {
-                newArray[i] = array[i];
-            } else {
-                newArray[i] = 0;
-            }
+        for (int i = 0; i < length; i++) {
+            newArray[i] = array[startIndex + i];
         }
 
         return newArray;

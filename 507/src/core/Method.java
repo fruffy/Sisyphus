@@ -1,12 +1,8 @@
 package core;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.jgrapht.graph.DirectedPseudograph;
@@ -21,12 +17,6 @@ import com.github.javaparser.ast.type.Type;
 import datastructures.NodeWrapper;
 import datastructures.PDGGraphViz;
 import dfg.DataDependencyGraphFinder;
-import jgrapht.DOTExporter;
-import jgrapht.DirectedGraph;
-import jgrapht.experimental.dag.DirectedAcyclicGraph;
-import jgrapht.graph.DefaultEdge;
-import jgrapht.graph.DirectedPseudograph;
-import normalizers.Normalizer;
 import normalizers.StandardForm;
 import parsers.ControlDependencyParser;
 import parsers.ControlFlowParser;
@@ -51,10 +41,10 @@ public class Method {
 		this.returnType = methodDeclaration.getType();
 		this.body = methodDeclaration.getBody().get();
 		this.trimBody();
-		System.out.println("BEFORE " + this.body);
+		//System.out.println("BEFORE " +methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
 		resolveMethodCalls(methodDeclaration);
-		System.out.println("AFTER " + this.body);
+		//System.out.println("AFTER " + methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
 	}
 
@@ -169,38 +159,47 @@ public class Method {
 	private void resolveMethodCalls(MethodDeclaration methodDecl) {
 		new MethodSolver(methodDecl.getBody().get());
 	}
-	public DirectedGraph<NodeWrapper, DefaultEdge> getPDG(){
+	public DirectedPseudograph<Node, DefaultEdge> getPDG(){
 		ControlFlowParser cfp = new ControlFlowParser(this);
 		DirectedPseudograph<NodeWrapper, DefaultEdge> cfg = cfp.getCFG();
 		ControlDependencyParser cdp = new ControlDependencyParser(cfg);
 		DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg = cdp.getCDG();
 		DataDependencyGraphFinder ddgf = new DataDependencyGraphFinder(cfg);
 		DirectedPseudograph<NodeWrapper, DefaultEdge> ddg = ddgf.findReachingDefs();
-		System.out.println("\n+++++++++++++++++cdg vertices++++++++++++++++++++++++++++++++");
-		for (NodeWrapper n : cdg.vertexSet()) {
-			System.out.println(n.NODE);
+		
+		//combine cdg and ddg to pdg with Nodes as vertices rather
+		//than NodeWrappers
+		DirectedPseudograph<Node, DefaultEdge> pdgNode = new DirectedPseudograph<>(DefaultEdge.class);
+		for(NodeWrapper n: cdg.vertexSet()){
+			pdgNode.addVertex(n.NODE);
+		}
+		for(DefaultEdge e: cdg.edgeSet()){
+			pdgNode.addEdge(cdg.getEdgeSource(e).NODE, cdg.getEdgeTarget(e).NODE);
+		}
+		for(DefaultEdge e: ddg.edgeSet()){
+			pdgNode.addEdge(ddg.getEdgeSource(e).NODE, ddg.getEdgeTarget(e).NODE);
 		}
 		
-		System.out.println("\n+++++++++++++++++ddg vertices++++++++++++++++++++++++++++++++");
-		for (NodeWrapper n : ddg.vertexSet()) {
-			System.out.println(n.NODE);
-		}
-		
-		System.out.println("\n+++++++++++++++++cdg edges++++++++++++++++++++++++++++++++");
+		/*System.out.println("\n+++++++++++++++++cdg edges++++++++++++++++++++++++++++++++");
 		for (DefaultEdge e : cdg.edgeSet()) {
-			System.out.println(e);
+			System.out.println(cdg.getEdgeSource(e).NODE+"-->"+cdg.getEdgeTarget(e).NODE);
 		}
 		
 		System.out.println("\n+++++++++++++++++ddg edges++++++++++++++++++++++++++++++++");
 		for (DefaultEdge e : ddg.edgeSet()) {
-			System.out.println(e);
+			System.out.println(ddg.getEdgeSource(e).NODE+"-->"+ddg.getEdgeTarget(e).NODE);
 		}
+		
+		System.out.println("\n+++++++++++++++++pdg edges++++++++++++++++++++++++++++++++");
+		for (DefaultEdge e : pdgNode.edgeSet()) {
+			System.out.println(ddg.getEdgeSource(e)+"-->"+ddg.getEdgeTarget(e));
+		}*/
 		
 		PDGGraphViz.writeDot(cdg, "cdg.dot");
 		PDGGraphViz.writeDot(ddg, "ddg.dot");
-
+		PDGGraphViz.writeDotNode(pdgNode, "pdg.dot");
 		
-		return cfg;
+		return pdgNode;
 	
 	}
 }

@@ -22,8 +22,8 @@ public class ControlDependencyParser {
 	 */
 	public ControlDependencyParser(DirectedGraph<NodeWrapper, DefaultEdge> cfg) {
 		// this.cfg = cfg;
-		cdg = new DirectedAcyclicGraph<NodeWrapper, DefaultEdge>(DefaultEdge.class);
-		parse(cfg);
+			cdg = new DirectedAcyclicGraph<NodeWrapper, DefaultEdge>(DefaultEdge.class);
+			parse(cfg);
 	}
 
 	/**
@@ -33,23 +33,23 @@ public class ControlDependencyParser {
 		return cdg;
 	}
 
-	private void parse(DirectedGraph<NodeWrapper, DefaultEdge> cfg) {
-		DirectedAcyclicGraph<NodeWrapper, DefaultEdge> fdt = buildForwardDominanceTree(cfg);
-		buildControlDependenceGraph(cfg, fdt);
-
-	}
-
-	public DirectedAcyclicGraph<NodeWrapper, DefaultEdge> buildForwardDominanceTree(
+	public DirectedGraph<NodeWrapper, DefaultEdge> buildForwardDominanceTree(
 			DirectedGraph<NodeWrapper, DefaultEdge> cfg) {
+		if (cfg.vertexSet().size() == 0) {
+			return cfg;
+		}
 		DominatorTree<NodeWrapper, DefaultEdge> fdtBuilder = new DominatorTree<>(cfg,
 				cfg.vertexSet().iterator().next());
 		return fdtBuilder.getDominatorTree();
-		//DominatorTree2<NodeWrapper, DefaultEdge> fdtBuilder = new DominatorTree2<NodeWrapper, DefaultEdge>(cfg, cfg.vertexSet().iterator().next());
-		//return fdtBuilder.getDominationTree();
+	}
+
+	private void parse(DirectedGraph<NodeWrapper, DefaultEdge> cfg) {
+		DirectedGraph<NodeWrapper, DefaultEdge> fdt = buildForwardDominanceTree(cfg);
+		buildControlDependenceGraph(cfg, fdt);
 	}
 
 	private void buildControlDependenceGraph(DirectedGraph<NodeWrapper, DefaultEdge> cfg,
-			DirectedAcyclicGraph<NodeWrapper, DefaultEdge> fdt) {
+			DirectedGraph<NodeWrapper, DefaultEdge> fdt) {
 		NodeWrapper entry = new NodeWrapper(new EntryStmt());
 		NodeWrapper previousNode = entry;
 		cdg.addVertex(entry);

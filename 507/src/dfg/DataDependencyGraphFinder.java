@@ -177,7 +177,7 @@ public class DataDependencyGraphFinder {
 			}
 
 			//Update our new entry and exit values
-			System.out.println("ddg exitset "+exitSet);
+			//System.out.println("ddg exitset "+exitSet);
 			entrySet.put(currentNode, newEntry);
 			exitSet.put(currentNode, newExit);
 
@@ -209,7 +209,7 @@ public class DataDependencyGraphFinder {
 					}
 					ret2.addEdge(defPair.b, nw);
 				} else{
-					System.out.println("Node " + nw.NODE + ", " + " doesn't contain " + defPair.a);
+					//System.out.println("Node " + nw.NODE + ", " + " doesn't contain " + defPair.a);
 				}
 			}
 		}

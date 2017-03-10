@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedPseudograph;
+
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.BreakStmt;
 import com.github.javaparser.ast.stmt.CatchClause;
@@ -21,8 +23,6 @@ import core.Method;
 import datastructures.BackEdge;
 import datastructures.EntryStmt;
 import datastructures.NodeWrapper;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DirectedPseudograph;
 
 /**
  * Construct a new control flow graph.
@@ -125,19 +125,12 @@ public class ControlFlowParser {
 	// - Do Statements
 	// - maybe parallel programming primitives?
 	private NodeWrapper parseRec(Node statement) {
+		if (statement.getChildNodes().size() == 0) {
+			return null;
+		}
 		NodeWrapper currentNode = new NodeWrapper(statement);
 		List<Node> children = currentNode.NODE.getChildNodes();
-		for (Node child : children) {
-			if (currentNode.NODE instanceof MethodCallExpr) {				
-				List<Node> test = ((MethodCallExpr)currentNode.NODE).getChildNodes();
-				for (Node t : test) {
-					System.out.println("MethodCall" + currentNode.NODE.toString() + " CHILDREN: "+ t.toString());
-
-				}
-				//parseRec(((MethodCallExpr)currentNode.NODE).getChildNodes());
-				
-				System.out.println("MethodCall" + currentNode.NODE.toString());
-			}
+		for (Node child : children) {		
 			currentNode = new NodeWrapper(child);
 			// Handle conditionals
 			if (currentNode.NODE instanceof IfStmt) {
@@ -166,6 +159,7 @@ public class ControlFlowParser {
 				refreshPreviousNodes(currentNode);
 			}
 		}
+
 		return currentNode;
 	}
 

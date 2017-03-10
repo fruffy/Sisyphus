@@ -2,15 +2,21 @@ package parsers;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.body.Parameter;
+import com.github.javaparser.ast.expr.AssignExpr;
+import com.github.javaparser.ast.expr.AssignExpr.Operator;
+import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.stmt.ReturnStmt;
+import com.github.javaparser.ast.stmt.Statement;
+import com.github.javaparser.ast.visitor.ModifierVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
 import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserMethodDeclaration;
@@ -44,21 +50,24 @@ public class MethodSolver {
 		}
 	}
 
-	class TypeCalculatorVisitor extends VoidVisitorAdapter<JavaParserFacade> {
+	class MethodResolveVisitor extends ModifierVisitor<JavaParserFacade> {
 
 		@Override
-		public void visit(MethodCallExpr methodCallExpr, JavaParserFacade facade) {
+		public MethodCallExpr visit(MethodCallExpr methodCallExpr, JavaParserFacade facade) {
 			try {
-				modifyMethodName(methodCallExpr, facade);
+				if (modifyMethodName(methodCallExpr, facade)) {
+					return null;
+				}
 			} catch (RuntimeException e) {
 				System.out.println("ERROR " + e.getMessage());
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}
+			return methodCallExpr;
 		}
 	}
 
-	private void modifyMethodName(MethodCallExpr methodCallExpr, JavaParserFacade facade) {
+	private boolean modifyMethodName(MethodCallExpr methodCallExpr, JavaParserFacade facade) {
 		SymbolReference<MethodDeclaration> methodRef = facade.solve(methodCallExpr);
 		Node methodCallParent = methodCallExpr.getParentNode().get();
 		Optional<BlockStmt> methodBdy = null;
@@ -69,6 +78,13 @@ public class MethodSolver {
 				if (test instanceof JavaParserMethodDeclaration) {
 					if (test.getQualifiedName().equals(methodDecl.getQualifiedName())) {
 						methodBdy = ((JavaParserMethodDeclaration) test).getWrappedNode().getBody();
+						List<Expression > methodArguments = methodCallExpr.getArguments();
+						List<Parameter> resolveArguments = ((JavaParserMethodDeclaration) test).getWrappedNode().getParameters();
+						for (int i = 0; i < methodArguments.size(); i++) {
+							Expression quasimode = new AssignExpr(new NameExpr(resolveArguments.get(i).getNameAsString()),methodArguments.get(i),  Operator.ASSIGN);
+							int childIndex = methodCallParent.getChildNodes().indexOf(methodCallExpr);
+							methodBdy.get().addStatement(childIndex, quasimode);							
+						}
 					}
 				}
 			}
@@ -76,62 +92,36 @@ public class MethodSolver {
 			methodCallExpr.setName(methodDecl.getQualifiedName());
 
 			if (methodBdy != null && methodBdy.isPresent()) {
-				// BlockStmt newNode = methodBdy.get().clone();
-				// newNode.setRange(methodCallExpr.getRange().get());
-				// methodCallParent.setAsParentNodeOf(newNode.getChildNodes());
-
-
-				//this.bodyMap.put(methodCallExpr, methodBdy.get().getChildNodes());
-				// System.out.println(methodCallExpr+ "\n------------------");
-				//this.methodBody.register(new PropagatingAstObserver(), ObserverRegistrationMode.SELF_PROPAGATING);.addStatement(index, expr).addAndGetStatement(methodBdy.get().clone());
-
-				for (Node n : methodBdy.get().getChildNodes()) {
-					Node newNode = n.clone();
-					newNode.setParentNode(methodCallParent);	
-				}
-
-				methodCallExpr.remove();
+				
+				BlockStmt newBody = methodBdy.get().clone();
+				newBody.accept(new MethodResolveVisitor(), JavaParserFacade.get(typeSolver));
+				if (methodCallParent instanceof ReturnStmt) {
+					this.methodBody.addStatement(newBody);
+					methodCallParent.remove();
+				} else {
+					//this.methodBody.addStatement(newBody);
+					for (Node n : methodBdy.get().getChildNodes()) {
+						Node newNode = n.clone();
+						int childIndex = this.methodBody.getChildNodes().indexOf(methodCallParent);
+						if (newNode instanceof Statement) {
+							this.methodBody.addStatement(childIndex,(Statement) newNode);
+						} else if (newNode instanceof Expression) {
+							this.methodBody.addStatement(childIndex,(Expression) newNode);
+						}
+					}
+					methodCallExpr.remove();
+				}				
+				return true;
 			}
-
 		} else {
 			System.out.println("???");
 		}
+		return false;
 	}
 
 	private void processMethod() {
-		// this.methodBody.accept(new MethodCallExprVisitor(),
-		// JavaParserFacade.get(typeSolver));
-		this.methodBody.accept(new TypeCalculatorVisitor(), JavaParserFacade.get(typeSolver));
+		this.methodBody.accept(new MethodResolveVisitor(), JavaParserFacade.get(typeSolver));
 
-	}
-
-	private void attachMethodCallBodies() {
-		Iterator<MethodCallExpr> test = this.callList.iterator();
-		while (test.hasNext()) {
-			try {
-				modifyMethodName(test.next(), JavaParserFacade.get(typeSolver));
-			} catch (RuntimeException e) {
-				System.out.println("ERROR " + e.getMessage());
-			} catch (Throwable t) {
-				t.printStackTrace();
-			}
-		}
-
-		if (this.bodyMap != null) {
-			Set<MethodCallExpr> bodySet = this.bodyMap.keySet();
-			Iterator<MethodCallExpr> iter = bodySet.iterator();
-			while (iter.hasNext()) {
-				MethodCallExpr m = iter.next();
-				Node methodCallParent = m.getParentNode().get();
-				List<Node> newNodes = bodyMap.get(m);
-				for (Node node : newNodes) {
-					Node newNode = node.clone();
-					newNode.setRange(m.getRange().get());
-					methodCallParent.setAsParentNodeOf(newNode);
-				}
-				m.remove();
-			}
-		}
 	}
 
 }

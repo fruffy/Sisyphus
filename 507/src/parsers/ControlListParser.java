@@ -13,38 +13,37 @@ import org.jgrapht.graph.DirectedPseudograph;
 public class ControlListParser {
 	List<DirectedPseudograph<NodeWrapper, DefaultEdge>> cfgList;
 	List<DirectedAcyclicGraph<NodeWrapper, DefaultEdge>> cdgList;
-	List<DirectedAcyclicGraph<NodeWrapper, DefaultEdge>> fdtList;
+	List<DirectedGraph<NodeWrapper, DefaultEdge>> fdtList;
 
 	public ControlListParser(List<Method> methList) {
 		cfgList = new LinkedList<DirectedPseudograph<NodeWrapper, DefaultEdge>>();
 		cdgList = new LinkedList<DirectedAcyclicGraph<NodeWrapper, DefaultEdge>>();
-		fdtList = new LinkedList<DirectedAcyclicGraph<NodeWrapper, DefaultEdge>>();
+		fdtList = new LinkedList<DirectedGraph<NodeWrapper, DefaultEdge>>();
 		buildCFG(methList);
 	}
 
 	private void buildCFG(List<Method> methList) {
 
 		for (Method m : methList) {
-
 			ControlFlowParser cfgParse = new ControlFlowParser(m);
 			DirectedPseudograph<NodeWrapper, DefaultEdge> cfg = cfgParse.getCFG();
 			ControlDependencyParser cdgParse = new ControlDependencyParser(cfg);
 			DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg = cdgParse.getCDG();
-			DirectedAcyclicGraph<NodeWrapper, DefaultEdge> fdt = cdgParse.buildForwardDominanceTree(cfg);
+			DirectedGraph<NodeWrapper, DefaultEdge> fdt = cdgParse.buildForwardDominanceTree(cfg);
 
 			this.cfgList.add(cfg);
 			this.cdgList.add(cdg);
-			this.cdgList.add(fdt);
+			this.fdtList.add(fdt);
 			// Debug
-/*			System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-			System.out.println(m.getFilteredBody().toString());
-			System.out.println("Control Flow Raw Content ");
-			printGraph(m, cfg);
-			//System.out.println("Forward Dominator Raw Content ");
-			//printGraph(m, fdt);
-			System.out.println("Control Dependence Raw Content ");
-			printGraph(m, cdg);
-*/
+			
+			 System.out.println(
+			 "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+			 System.out.println(m.getFilteredBody().toString());
+			 System.out.println("Control Flow Raw Content "); printGraph(m,
+			 cfg); //System.out.println("Forward Dominator Raw Content ");
+			 //printGraph(m, fdt);
+			 System.out.println("Control Dependence Raw Content ");
+			 printGraph(m, cdg);
 		}
 	}
 
