@@ -156,7 +156,7 @@ public class Method {
 		return  new Method((MethodDeclaration)StandardForm.toStandardForm(this.originalDecl));
 	}
 	
-	public DirectedGraph<Node, DefaultEdge> getPDG(){
+	public DirectedPseudograph<Node, DefaultEdge> getPDG(){
 		ControlFlowParser cfp = new ControlFlowParser(this);
 		DirectedPseudograph<NodeWrapper, DefaultEdge> cfg = cfp.getCFG();
 		ControlDependencyParser cdp = new ControlDependencyParser(cfg);
@@ -177,7 +177,7 @@ public class Method {
 			pdgNode.addEdge(ddg.getEdgeSource(e).NODE, ddg.getEdgeTarget(e).NODE);
 		}
 		
-		System.out.println("\n+++++++++++++++++cdg edges++++++++++++++++++++++++++++++++");
+		/*System.out.println("\n+++++++++++++++++cdg edges++++++++++++++++++++++++++++++++");
 		for (DefaultEdge e : cdg.edgeSet()) {
 			System.out.println(cdg.getEdgeSource(e).NODE+"-->"+cdg.getEdgeTarget(e).NODE);
 		}
@@ -190,7 +190,7 @@ public class Method {
 		System.out.println("\n+++++++++++++++++pdg edges++++++++++++++++++++++++++++++++");
 		for (DefaultEdge e : pdgNode.edgeSet()) {
 			System.out.println(ddg.getEdgeSource(e)+"-->"+ddg.getEdgeTarget(e));
-		}
+		}*/
 		
 		PDGGraphViz.writeDot(cdg, "cdg.dot");
 		PDGGraphViz.writeDot(ddg, "ddg.dot");

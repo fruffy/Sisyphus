@@ -11,6 +11,7 @@ import com.github.javaparser.ast.type.Type;
 import datastructures.NodeWrapper;
 import jgrapht.DirectedGraph;
 import jgrapht.graph.DefaultEdge;
+import jgrapht.graph.DirectedPseudograph;
 import parsers.ControlFlowParser;
 import parsers.ControlListParser;
 import parsers.SyntaxParser;
@@ -64,15 +65,9 @@ public class CodeHelper {
 
 		// testing graph similarity algorithm
 		Method method1 = srcMethods.get(2);
-		Method method2 = srcMethods.get(1);
-		/*ControlFlowParser cfgParse = new ControlFlowParser(method1);
-		DirectedGraph<NodeWrapper, DefaultEdge> pdg1 = cfgParse.getCFG();
-		ControlFlowParser cfgParse2 = new ControlFlowParser(method2);
-		DirectedGraph<NodeWrapper, DefaultEdge> pdg2 = cfgParse2.getCFG();
+		Method method2 = srcMethods.get(2);
 		System.out.println("Match between " + method1.getMethodName() + " and " + method2.getMethodName() + "?");
-		System.out.println(cloneDetect.matchMethodPDGs(method1, method2));*/
-		DirectedGraph<Node, DefaultEdge> pdg1 = method1.getPDG();
-		//DirectedGraph<NodeWrapper, DefaultEdge> pdg2 = method2.getPDG();
+		System.out.println(cloneDetect.matchMethodPDGs(method1, method2));
 
 	}
 
