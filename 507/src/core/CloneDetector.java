@@ -278,7 +278,6 @@ public class CloneDetector {
 						param2Matched[j] = true;
 						foundMatch = true;
 					}
-
 				}
 			}
 			if (!foundMatch) {

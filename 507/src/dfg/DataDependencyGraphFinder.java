@@ -1,6 +1,5 @@
 package dfg;
 
-import java.awt.List;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,7 +14,6 @@ import org.jgrapht.graph.DirectedPseudograph;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.AssignExpr;
-import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.utils.Pair;
 
 import datastructures.EntryStmt;

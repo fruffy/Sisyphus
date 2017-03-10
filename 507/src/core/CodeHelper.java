@@ -18,7 +18,7 @@ public class CodeHelper {
 	              System.getProperty("user.dir"));
 
 		File libFile = new File("./Library.java");
-		String srcName = "./src/examples/TestCodeV2.java";
+		String srcName = "./src/examples/TestCode.java";
 		
 		File srcfile = new File(srcName);
 
