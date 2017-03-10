@@ -1,8 +1,5 @@
 package core;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +18,6 @@ import com.github.javaparser.ast.type.Type;
 import datastructures.NodeWrapper;
 import datastructures.PDGGraphViz;
 import dfg.DataDependencyGraphFinder;
-import jgrapht.DOTExporter;
-import jgrapht.DirectedGraph;
-import jgrapht.experimental.dag.DirectedAcyclicGraph;
-import jgrapht.graph.DefaultEdge;
-import jgrapht.graph.DirectedPseudograph;
-import normalizers.Normalizer;
 import normalizers.StandardForm;
 import parsers.ControlDependencyParser;
 import parsers.ControlFlowParser;
@@ -51,10 +42,10 @@ public class Method {
 		this.returnType = methodDeclaration.getType();
 		this.body = methodDeclaration.getBody().get();
 		this.trimBody();
-		System.out.println("BEFORE " + this.body);
+		//System.out.println("BEFORE " +methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
 		resolveMethodCalls(methodDeclaration);
-		System.out.println("AFTER " + this.body);
+		//System.out.println("AFTER " + methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
 	}
 

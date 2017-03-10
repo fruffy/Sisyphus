@@ -8,10 +8,6 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.type.Type;
 
-import datastructures.NodeWrapper;
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
-import parsers.ControlFlowParser;
 import parsers.ControlListParser;
 import parsers.SyntaxParser;
 
@@ -22,7 +18,7 @@ public class CodeHelper {
 	              System.getProperty("user.dir"));
 
 		File libFile = new File("./Library.java");
-		String srcName = "./src/examples/TestCode.java";
+		String srcName = "./src/examples/TestCodeV2.java";
 		
 		File srcfile = new File(srcName);
 

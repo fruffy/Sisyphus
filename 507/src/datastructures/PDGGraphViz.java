@@ -4,11 +4,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
-import jgrapht.ComponentNameProvider;
-import jgrapht.DOTExporter;
-import jgrapht.Graph;
-import jgrapht.IntegerComponentNameProvider;
-import jgrapht.graph.DefaultEdge;
+import org.jgrapht.Graph;
+
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.io.ComponentNameProvider;
+import org.jgrapht.io.DOTExporter;
+import org.jgrapht.io.IntegerComponentNameProvider;
 
 public class PDGGraphViz {
 	
