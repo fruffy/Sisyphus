@@ -29,8 +29,8 @@ public class MethodSolver {
 		this.methodBody = methodBody;
 		this.callList = new LinkedList<MethodCallExpr>();
 		this.typeSolver = new CombinedTypeSolver();
-		this.typeSolver.add(new JavaParserTypeSolver(new File("..\\jre_library\\")));
-		this.typeSolver.add(new JavaParserTypeSolver(new File(".\\")));
+		this.typeSolver.add(new JavaParserTypeSolver(new File("../jre_library")));
+		this.typeSolver.add(new JavaParserTypeSolver(new File("./")));
 		// this.typeSolver.add(new ReflectionTypeSolver());
 		this.bodyMap = new HashMap<MethodCallExpr, List<Node>>();
 		processMethod();

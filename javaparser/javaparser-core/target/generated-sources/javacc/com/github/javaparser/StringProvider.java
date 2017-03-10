@@ -57,4 +57,4 @@ package com.github.javaparser;
 		}
 		
 	}
-/* JavaCC - OriginalChecksum=afe26022e166438faaa1d142802fdd38 (do not edit this line) */
+/* JavaCC - OriginalChecksum=9873e92cad8666980a4c6d392c0c7ad4 (do not edit this line) */

@@ -18,9 +18,9 @@ import parsers.SyntaxParser;
 public class CodeHelper {
 	public static void main(String[] args) {
 
-		String srcName = "src/examples/Testcode.java";
-
-		File libFile = new File("Library.java");
+		String srcName = "./src/examples/TestCode.java";
+		
+		File libFile = new File("./Library.java");
 		File srcfile = new File(srcName);
 
 		SyntaxParser libparser;
@@ -30,8 +30,8 @@ public class CodeHelper {
 		if (!(srcfile.exists()) || srcfile.isDirectory()) {
 			System.out.println("Input file does not exist or is not a valid input.");
 			// Debug
-			// System.out.println("Working Directory = " +
-			// System.getProperty("user.dir"));
+			 System.out.println("Working Directory = " +
+			 System.getProperty("user.dir"));
 			return;
 		}
 		if (!(libFile.exists()) || libFile.isDirectory()) {
@@ -57,7 +57,7 @@ public class CodeHelper {
 		ControlListParser cfg = new ControlListParser(srcMethods);
 		CloneDetector cloneDetect = new CloneDetector(libparser.getMethods());
 
-		// cloneDetect.findSimiliarMethods(srcMethods);
+		cloneDetect.findSimiliarMethods(srcMethods);
 
 		// testing graph similarity algorithm
 		//Method method1 = srcMethods.get(2);
