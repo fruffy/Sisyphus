@@ -21,6 +21,11 @@ public class TestCodeTemplate {
 	 */
 	public int absoluteValue(int val){
 		//YOUR CODE HERE
+        int mul = 1;
+        if (val < 0) {
+            mul = -1;
+        }
+        return val * mul;
 	}
 	
 	/**
@@ -31,6 +36,10 @@ public class TestCodeTemplate {
 	 */
 	public static int maximum(int val1, int val2){
 		//YOUR CODE HERE
+        if (val1 > val2) {
+            return val1;
+        }
+        return val2;
 	}
 	
 	/**
@@ -41,6 +50,10 @@ public class TestCodeTemplate {
 	 */
 	public static int minimum(int val1, int val2){
 		//YOUR CODE HERE
+        if (val1 < val2) {
+            return val1;
+        }
+        return val2;
 	}
 	
 	
@@ -53,6 +66,20 @@ public class TestCodeTemplate {
 	 */
 	public static double power(double val1, double val2){
 		//YOUR CODE HERE
+        if (val2 < 0) {
+            return 1.0 / TestCodeTemplate.power(val1, -val2);
+        }
+        if (val2 == 0) {
+            return 1;
+        }
+        if (val2 <= 1) {
+            return val1;
+        }
+        double val2_rm = val2 % 2;
+        double val2_m = (val2 - val2rm) / 2
+        double rcpower = TestCodeTemplate.power(val1, val2_m);
+        double rcremain = TestCodeTemplate.power(val1, val2_rm);
+        return rcpower * rcpower * rcremain;
 	}
 	
 	/**
@@ -63,6 +90,10 @@ public class TestCodeTemplate {
 	 */
 	public static void swap(int pos1, int pos2, int[] array){
 		//YOUR CODE HERE
+        int temp;
+        temp = array[pos1];
+        array[pos1] = array[pos2];
+        array[pos2] = temp;
 	}
 	
 	/**
@@ -76,6 +107,15 @@ public class TestCodeTemplate {
 	 */
 	public static boolean equals(int[] array1, int[] array2){
 		//YOUR CODE HERE
+        if (array1.length != array2.length) {
+            return false; 
+        }
+        for (int i = 0; i < array1.length; i++) {
+            if (array1[i] != array2[i]) {
+                return false;
+            }
+        }
+        return true;
 	}
 	
 	/**
@@ -86,6 +126,9 @@ public class TestCodeTemplate {
 	 */
 	public static void fillArray(int[] array, int val){
 		//YOUR CODE HERE
+        for (int i = 0; i < array.length; i++) {
+            array[i] = val;
+        }
 	}
 	
 	/**
@@ -101,6 +144,9 @@ public class TestCodeTemplate {
 	
 	public static void fillArrayPartially(int[] array, int val, int startIndex, int endIndex){
 		//YOUR CODE HERE
+        for (int i = startIndex; i < endIndex + 1; i++) {
+            array[i] = val;
+        }
 	}
 	
 	/**
@@ -116,19 +162,31 @@ public class TestCodeTemplate {
 	 */
 	public static int[] returnCopy(int[] array, int newLength){
 		//YOUR CODE HERE
+        int fillLength = TestCodeTemplate.minimum(newLength, array.length);
+        int [] newArray = new int[newLength];
+        for (int i = 0; i < fillLength; i++) {
+            newArray[i] = array[i];
+        }
+        return newArray;
 	}
 	
 	
 	/**
 	 * Copies the specified range of the specified array into a new array and 
-	 * returns the new array of length endIndex - startIndex
+	 * returns the new array
 	 * @param array - the array from which a range is to be copied
 	 * @param startIndex - the initial index of the range to be copied, inclusive
 	 * @param endIndex -  the final index of the range to be copied, exclusive. (This index may lie outside the array.)
-	 * @return a new array containing the specified range from the original array
+	 * @return a new array containing the specified range from the original array, truncated or padded with zeros to obtain the required length
 	 */
 	public static int[] returnCopyRange(int[] array, int startIndex, int endIndex){
 		//YOUR CODE HERE
+        int arrayLength = endIndex - startIndex + 1;
+        int [] newArray = new int[arrayLength];
+        for (int i = 0; i < arrayLength; i++) {
+            newArray[i] = array[i + startIndex];
+        }
+        return newArray;
 	}
 	
 	/**
@@ -138,6 +196,11 @@ public class TestCodeTemplate {
 	 */
 	public static List<Integer> convertToList(int[] array){
 		//YOUR CODE HERE
+        List<int> newArray = new ArrayList<int>();
+        for (int i = 0; i < fillLength; i++) {
+            newArray.add(array[i]);
+        }
+        return newArray;
 	}
 	
 	/**
@@ -152,6 +215,15 @@ public class TestCodeTemplate {
 	 */
 	public static String arrToString(int[] array){
 		//YOUR CODE HERE
+        String newString = "[";
+        for (int i = 0; i < array.length; i++) {
+            newString += array[i];
+            if (i != array.length - 1) {
+                newString += ",";
+            }
+        }
+        newString += "]";
+        return newString;
 	}
 	
 	

@@ -1,5 +1,8 @@
 package core;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +19,15 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.Type;
 
 import datastructures.NodeWrapper;
+import datastructures.PDGGraphViz;
 import dfg.DataDependencyGraphFinder;
+import jgrapht.DOTExporter;
+import jgrapht.DirectedGraph;
+import jgrapht.experimental.dag.DirectedAcyclicGraph;
+import jgrapht.graph.DefaultEdge;
+import jgrapht.graph.DirectedPseudograph;
 import normalizers.Normalizer;
+import normalizers.StandardForm;
 import parsers.ControlDependencyParser;
 import parsers.ControlFlowParser;
 import parsers.MethodSolver;
@@ -152,9 +162,8 @@ public class Method {
 	 * Return a new method that is equivalent to this method, but normalized by
 	 * the given normalizer
 	 */
-	public Method normalize(Normalizer norm) {
-		norm.initialize(this.originalDecl);
-		return new Method((MethodDeclaration) norm.result());
+	public Method normalize() {
+		return  new Method((MethodDeclaration)StandardForm.toStandardForm(this.originalDecl));
 	}
 
 	private void resolveMethodCalls(MethodDeclaration methodDecl) {
@@ -176,6 +185,20 @@ public class Method {
 		for (NodeWrapper n : ddg.vertexSet()) {
 			System.out.println(n.NODE);
 		}
+		
+		System.out.println("\n+++++++++++++++++cdg edges++++++++++++++++++++++++++++++++");
+		for (DefaultEdge e : cdg.edgeSet()) {
+			System.out.println(e);
+		}
+		
+		System.out.println("\n+++++++++++++++++ddg edges++++++++++++++++++++++++++++++++");
+		for (DefaultEdge e : ddg.edgeSet()) {
+			System.out.println(e);
+		}
+		
+		PDGGraphViz.writeDot(cdg, "cdg.dot");
+		PDGGraphViz.writeDot(ddg, "ddg.dot");
+
 		
 		return cfg;
 	

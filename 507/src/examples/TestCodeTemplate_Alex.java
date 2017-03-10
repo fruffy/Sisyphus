@@ -1,5 +1,3 @@
-package examples;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +18,7 @@ public class TestCodeTemplate {
 	 * @return the absolute value of val.
 	 */
 	public int absoluteValue(int val){
-		//YOUR CODE HERE
+		return val >= 0? val : -val;
 	}
 	
 	/**
@@ -30,7 +28,7 @@ public class TestCodeTemplate {
 	 * @return the larger of val1 and val2
 	 */
 	public static int maximum(int val1, int val2){
-		//YOUR CODE HERE
+		return val1 > val2 ? val1 : val2;
 	}
 	
 	/**
@@ -40,7 +38,7 @@ public class TestCodeTemplate {
 	 * @return the smaller of val1 and val2
 	 */
 	public static int minimum(int val1, int val2){
-		//YOUR CODE HERE
+		return val1 < val2 ? val1 : val2;
 	}
 	
 	
@@ -52,7 +50,14 @@ public class TestCodeTemplate {
 	 * @return val1^val2
 	 */
 	public static double power(double val1, double val2){
-		//YOUR CODE HERE
+		if (val2 == 0)  
+			return 1;
+	    if (val2 == 1)      
+	    	return val1;
+	    if (val2%2 == 0)
+	    	return power(val1*val1, val2/2);
+	    else
+	    	return val1 * power(val1, val2-1);
 	}
 	
 	/**
@@ -62,7 +67,9 @@ public class TestCodeTemplate {
 	 * @param array - the array where the elements are swapped
 	 */
 	public static void swap(int pos1, int pos2, int[] array){
-		//YOUR CODE HERE
+		int temp = array[pos1];
+		array[pos1] = array[pos2];
+		array[pos2] = temp;
 	}
 	
 	/**
@@ -75,7 +82,12 @@ public class TestCodeTemplate {
 	 * @return true if the two arrays are equal
 	 */
 	public static boolean equals(int[] array1, int[] array2){
-		//YOUR CODE HERE
+		if (array1.length != array2.length)
+			return false;
+		for (int i = 0; i < array1.length; i++)
+			if (array1[i] != array2[i])
+				return false;
+		return true;
 	}
 	
 	/**
@@ -85,7 +97,8 @@ public class TestCodeTemplate {
 	 * @param val - the value to be stored in all elements of the array
 	 */
 	public static void fillArray(int[] array, int val){
-		//YOUR CODE HERE
+		for (int i = 0; i < array.length; i++)
+			array[i] = val;
 	}
 	
 	/**
@@ -100,7 +113,9 @@ public class TestCodeTemplate {
 	 */
 	
 	public static void fillArrayPartially(int[] array, int val, int startIndex, int endIndex){
-		//YOUR CODE HERE
+		if (startIndex < array.length && endIndex < array.length && startIndex <= endIndex)
+			for (int i = startIndex; i < endIndex; i++)
+				array[i] = val;
 	}
 	
 	/**
@@ -115,20 +130,43 @@ public class TestCodeTemplate {
 	 * @return a copy of the original array, truncated or padded with zeros to obtain the specified length
 	 */
 	public static int[] returnCopy(int[] array, int newLength){
-		//YOUR CODE HERE
+		int[] copy = new int[newLength];
+		for (int i = 0; i < newLength; i++){
+			if (i < array.length)
+				copy[i] = array[i];
+			else
+				copy[i] = 0;
+		}
+		return copy;
 	}
 	
 	
 	/**
 	 * Copies the specified range of the specified array into a new array and 
-	 * returns the new array of length endIndex - startIndex
+	 * returns the new array
 	 * @param array - the array from which a range is to be copied
 	 * @param startIndex - the initial index of the range to be copied, inclusive
 	 * @param endIndex -  the final index of the range to be copied, exclusive. (This index may lie outside the array.)
-	 * @return a new array containing the specified range from the original array
+	 * @return a new array containing the specified range from the original array, truncated or padded with zeros to obtain the required length
 	 */
 	public static int[] returnCopyRange(int[] array, int startIndex, int endIndex){
-		//YOUR CODE HERE
+		if (endIndex >= startIndex){
+			int len = endIndex - startIndex;
+			int[] copy = new int[len];
+			if (startIndex < array.length){
+				for (int i = 0; i < len; i++){
+					if (i + startIndex < array.length)
+						copy[i] = array[i + startIndex];
+					else
+						copy[i] = 0;
+				}
+			} else {
+				for (int i = 0; i < len; i++)
+					copy[i] = 0;
+			}	
+			return copy;
+		}
+		return null;
 	}
 	
 	/**
@@ -137,7 +175,10 @@ public class TestCodeTemplate {
 	 * @return the list version of array
 	 */
 	public static List<Integer> convertToList(int[] array){
-		//YOUR CODE HERE
+		List<Integer> list = new ArrayList<Integer>();
+		for (int i = 0; i < array.length; i++)
+			list.add(array[i]);
+		return list;
 	}
 	
 	/**
@@ -151,8 +192,16 @@ public class TestCodeTemplate {
 	 * @return a string representation of array
 	 */
 	public static String arrToString(int[] array){
-		//YOUR CODE HERE
-	}
-	
+		if (array == null)
+			return null;
+		String s = "[";
+		for (int i = 0; i < array.length; i++){
+			s += String.valueOf(array[i]);
+			if (i + 1 < array.length)
+				s += ", ";
+		}
+		s += "]";
+		return s;
+	}	
 	
 }
