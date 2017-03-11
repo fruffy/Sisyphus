@@ -30,6 +30,8 @@
 	<classpathentry kind="lib" path="507/lib/org.eclipse.osgi_3.11.2.v20161107-1947.jar"/>
 	<classpathentry kind="lib" path="507/target/507-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="javaparser/javaparser-core/target/javaparser-core-3.0.2-SNAPSHOT.jar"/>
+	<classpathentry kind="src" path="/jgrapht/jgrapht-io/target/jgrapht-io-1.0.2.jar"/>
+	<classpathentry kind="src" path="/jgrapht/jgrapht-core/target/jgrapht-io-1.0.2.jar"/>
 	<classpathentry kind="lib" path="javasymbolsolver/gradle/wrapper/gradle-wrapper.jar"/>
 	<classpathentry kind="lib" path="javasymbolsolver/java-symbol-solver-core/src/test/resources/javaparser-core-2.1.0.jar"/>
 	<classpathentry kind="lib" path="javasymbolsolver/java-symbol-solver-core/src/test/resources/javaparser-core-3.0.0-alpha.2.jar"/>

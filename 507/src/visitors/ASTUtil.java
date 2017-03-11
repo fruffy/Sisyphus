@@ -11,7 +11,7 @@ public class ASTUtil {
 			return true;
 		}
 		else {
-			System.out.println("Node " + node + " is not string " + ident);
+			//System.out.println("Node " + node + " is not string " + ident);
 		}
 		//Check if any children contain the identifier
 		for (Node child : node.getChildNodes()){

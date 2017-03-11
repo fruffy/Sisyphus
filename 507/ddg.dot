@@ -1,6 +1,13 @@
 digraph G {
-  1 [ label="(line 49,col 10)-(line 49,col 17): val >= 0" ];
-  2 [ label="(line 49,col 26)-(line 49,col 29): -val" ];
-  3 [ label="(line 49,col 3)-(line 49,col 30): return val >= 0 ? val : -val;" ];
-  4 [ label="(line 49,col 20)-(line 49,col 22): val" ];
+  1 [ label="(line 20,col 4)-(line 20,col 7): j++;" ];
+  2 [ label="(line 18,col 26)-(line 18,col 44): i < methList.size()" ];
+  3 [ label="(line 19,col 4)-(line 19,col 11): j = 123;" ];
+  4 [ label="(line 18,col 47)-(line 18,col 49): i++" ];
+  5 [ label="(line 23,col 3)-(line 23,col 11): return j;" ];
+  6 [ label="(line 23,col 10)-(line 23,col 10): j" ];
+  7 [ label="String s = "exit";" ];
+  8 [ label="(line 17,col 3)-(line 17,col 12): int j = 3;" ];
+  9 [ label="(line 18,col 8)-(line 18,col 23): int i = 0, k = 2" ];
+  3 -> 3;
+  7 -> 7;
 }

@@ -179,11 +179,15 @@ public class DataDependencyGraphFinder {
 			entrySet.put(currentNode, newEntry);
 			exitSet.put(currentNode, newExit);
 
-			//Add all our successors to the worklist
-			Set<DefaultEdge> outgoingEdges = cfg.outgoingEdgesOf(currentNode);
-			for (DefaultEdge edge : outgoingEdges){
-				worklist.push(cfg.getEdgeTarget(edge));
+			//If we changed, add all our successors to the worklist
+			if (!newExit.equals(currentExit)){
+				Set<DefaultEdge> outgoingEdges = cfg.outgoingEdgesOf(currentNode);
+				for (DefaultEdge edge : outgoingEdges){
+					worklist.push(cfg.getEdgeTarget(edge));
+				}
+				
 			}
+			
 		}
 
 		//DirectedPseudograph<Node, DefaultEdge> ret =
