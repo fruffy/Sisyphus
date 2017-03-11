@@ -13,8 +13,8 @@ import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
-import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
+import com.github.javaparser.ast.visitor.Visitable;
 import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
 import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserMethodDeclaration;
 import com.github.javaparser.symbolsolver.model.declarations.MethodDeclaration;
@@ -41,16 +41,23 @@ public class MethodSolver {
 		public MethodCallExpr visit(MethodCallExpr methodCallExpr, JavaParserFacade facade) {
 
 			try {
-				if (modifyMethodName(methodCallExpr, facade)) {
-					return null;
-				}
+				modifyMethodName(methodCallExpr, facade);
 			} catch (RuntimeException e) {
 				System.out.println("ERROR " + e.getMessage());
-				e.printStackTrace();
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}
 			return methodCallExpr;
+		}
+	}
+
+	class RemoveVisitor extends ModifierVisitor<MethodCallExpr> {
+		@Override
+		public MethodCallExpr visit(MethodCallExpr n, MethodCallExpr arg) {
+			if (n.equals(arg)) {
+				return null;
+			}
+			return n;
 		}
 	}
 
@@ -81,29 +88,60 @@ public class MethodSolver {
 							((BlockStmt) methodCallParent).addStatement(childIndex,
 									new ExpressionStmt(argumentAssignment));
 						}
-					}
-				}
-				methodCallExpr.removeScope();
-				methodCallExpr.setName(methodDecl.getQualifiedName());
-				methodCallParent = methodCallExpr.getParentNode().get();
-				if (methodBdy != null && methodBdy.isPresent()) {
-					BlockStmt newBody = methodBdy.get().clone();
-					while (!(methodCallParent instanceof BlockStmt)) {
-						attachmentBody = methodCallParent;
-						methodCallParent = methodCallParent.getParentNode().get();
-					}
-					int childIndex = methodCallParent.getChildNodes().indexOf(attachmentBody);
-						for (Node n : newBody.getChildNodes()) {
-							if (n instanceof Statement) {
-								((BlockStmt) methodCallParent).addStatement(childIndex,(Statement)n);
-								childIndex++;
-							} else if (n instanceof Expression) {
-								((BlockStmt) methodCallParent).addStatement(childIndex,(Expression)n);
-								childIndex++;
-							}
+
+						methodCallParent = methodCallExpr.getParentNode().get();
+						attachmentBody = methodCallExpr;
+						// methodCallExpr.removeScope();
+						//this.methodBody.accept(new RemoveVisitor(), methodCallExpr);
+						while (!(attachmentBody.remove())) {
+							attachmentBody = methodCallParent;
+							methodCallParent = methodCallParent.getParentNode().get();
+							
 						}
-					this.methodBody.accept(new MethodResolveVisitor(), JavaParserFacade.get(typeSolver));
-					return true;
+						
+						/*Optional<com.github.javaparser.ast.body.MethodDeclaration> methodCallAncestor = methodCallExpr
+								.getAncestorOfType(com.github.javaparser.ast.body.MethodDeclaration.class);*/
+						// methodCallExpr.removeScope();
+						// methodCallExpr.setName(methodDecl.getQualifiedName());
+						if (methodBdy != null && methodBdy.isPresent()) {
+							System.out.println(methodBdy.get());
+							System.out.println(methodDecl.getQualifiedSignature());
+							System.out.println(this.methodBody);
+							if (methodCallParent instanceof ExpressionStmt) {
+								methodBdy.get().accept(new MethodResolveVisitor(), JavaParserFacade.get(typeSolver));
+							}
+							/*
+							 * if (!(methodCallAncestor.isPresent() &&
+							 * methodDecl.getName().equals(methodCallAncestor.
+							 * get().getNameAsString()))) {
+							 * methodBdy.get().accept(new
+							 * MethodResolveVisitor(),
+							 * JavaParserFacade.get(typeSolver)); }
+							 */
+							BlockStmt newBody = methodBdy.get().clone();
+							methodCallParent.setAsParentNodeOf(newBody);
+							/*
+							 * while (!(methodCallParent instanceof BlockStmt))
+							 * { attachmentBody = methodCallParent;
+							 * methodCallParent =
+							 * methodCallParent.getParentNode().get(); }
+							 */
+							// int childIndex =
+							// methodCallParent.getChildNodes().indexOf(attachmentBody);
+
+							/*
+							 * for (Node n : newBody.getChildNodes()) {
+							 * ASTHelper if (n instanceof Statement) {
+							 * ((BlockStmt)
+							 * methodCallParent).addStatement(childIndex,(
+							 * Statement) n); childIndex++; } else if (n
+							 * instanceof Expression) { ((BlockStmt)
+							 * methodCallParent).addStatement(childIndex,(
+							 * Expression )n); childIndex++; } }
+							 */
+							return true;
+						}
+					}
 				}
 			}
 		} else {
