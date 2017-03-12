@@ -159,7 +159,7 @@ public class Method {
 	}
 	
 	public DirectedPseudograph<Node, DefaultEdge> constructPDG(){
-		System.out.println("Building pdg for method: "+this.getMethodName());
+		//System.out.println("Building pdg for method: "+this.getMethodName());
 		ControlFlowParser cfp = new ControlFlowParser(this);
 		DirectedPseudograph<NodeWrapper, DefaultEdge> cfg = cfp.getCFG();
 		ControlDependencyParser cdp = new ControlDependencyParser(cfg);

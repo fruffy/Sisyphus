@@ -61,7 +61,11 @@ public class CodeHelper {
 
 		CloneDetector cloneDetect = new CloneDetector(libparser.getMethods());
 
-		cloneDetect.findSimiliarMethodsPDG(srcMethods);
+		ArrayList<Method[]> matches = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsPDG(srcMethods);
+		for (Method[] match: matches){
+			System.out.println("Match! " + match[0].getMethodName() + " with return type " + match[0].getReturnType() + 
+			" can be replaced by " + match[1].getMethodName()+ " with return type " + match[1].getReturnType());
+		}
 
 		// testing graph similarity algorithm
 		/*Method method1 = srcMethods.get(0);
