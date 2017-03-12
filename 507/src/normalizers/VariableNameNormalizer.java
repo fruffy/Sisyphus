@@ -29,7 +29,7 @@ public class VariableNameNormalizer extends Normalizer {
 		String ret = type.toString();
 		ret = ret.replaceAll("\\[\\]", "_arr_");
 		ret = ret.replaceAll("[^A-Za-z0-9_\\-]", "__");
-		System.out.println("Cleaning string " + type + " to " + ret);
+		//System.err.println("Cleaning string " + type + " to " + ret);
 		return ret;
 	}
 
@@ -104,7 +104,7 @@ public class VariableNameNormalizer extends Normalizer {
 
 			//We generate a new, standardized name for this declaration, based on its type
 			String newName = info.gamma.freshKey("param_" + cleanTypeName(type));
-			System.out.println("Choosing new name " + newName + " for param " + n);
+			//System.err.println("Choosing new name " + newName + " for param " + n);
 			n.setName(newName);
 
 			//Tell our parent that we declared a new name
@@ -117,12 +117,14 @@ public class VariableNameNormalizer extends Normalizer {
 		//When we see a variable, we rename it to whatever we've stored in our Gamma
 		@Override
 		public Visitable visit(SimpleName n, VisitInfo info) {
-			//System.out.println("Visiting SimpleName " + n);
+			//System.err.println("Visiting SimpleName " + n);
 			String newIdent = info.gamma.lookup(n.getIdentifier());
 			if (newIdent != null){
-				System.out.println("Renaming " + n + " to " + newIdent);
+				//System.err.println("Renaming " + n + " to " + newIdent);
 				n.setIdentifier(newIdent);
 			}
+			//Tell our parent that we declared a new name
+			info.declsForParent.add(new Pair<String, String>(n.getIdentifier(), newIdent));
 			return n;
 		}
 
@@ -131,14 +133,14 @@ public class VariableNameNormalizer extends Normalizer {
 		@Override
 		public Visitable visit(final NameExpr n, final VisitInfo info) {
 			//visitComment(n, info);
-			//System.out.println("Visiting NameExpr " + n);
+			//System.err.println("Visiting NameExpr " + n);
 			String newIdent = info.gamma.lookup(n.getNameAsString());
 			if (newIdent != null){
-				System.out.println("Renaming " + n + " to " + newIdent);
+				//System.err.println("Renaming " + n + " to " + newIdent);
 				n.setName(newIdent);
 			}
 			else {
-				System.out.println("Couldn't find name " + n.getNameAsString() + " in gamma ");
+				//System.err.println("Couldn't find name " + n.getNameAsString() + " in gamma ");
 			}
 			return n;
 		}
@@ -164,6 +166,7 @@ public class VariableNameNormalizer extends Normalizer {
 
 				//Add all the declarations from inside that statement to our environemnt for future statements
 				gammaCurrent = gammaCurrent.appendFront(childDecls);
+				//System.err.println("DECLS appending: " + childDecls);
 				newStatementList.add(newStmt);
 			}
 
@@ -227,6 +230,7 @@ public class VariableNameNormalizer extends Normalizer {
 
 	@Override
 	public Node result() {
+		//System.err.println("Fixing names for " + this.startBlock);
 		VariableNameVisitor v = new VariableNameVisitor();
 		Visitable ret = this.startBlock.clone().accept(v, 
 				new VisitInfo(VariableEnv.empty(), new LinkedList<Pair<String, String>>()));

@@ -104,7 +104,7 @@ public class LoopNormalizer extends Normalizer {
 			}
 			
 			
-			System.err.println("COND:" + loop.getCondition());
+			//System.err.println("COND:" + loop.getCondition());
 			
 			
 
@@ -114,8 +114,8 @@ public class LoopNormalizer extends Normalizer {
 			r.setStatements(mergeBlocks(exprBlock(initialization), loop).getStatements());
 			r.setComment(comment);
 			
-			System.err.println("Changed loop:\n" + n);
-			System.err.println("to:\n" + r);
+			//System.err.println("Changed loop:\n" + n);
+			//System.err.println("to:\n" + r);
 
 			return r;
 		}		
