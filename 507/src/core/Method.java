@@ -33,6 +33,7 @@ public class Method {
 	private List<Parameter> parameters;
 	private BlockStmt body;
 	private MethodDeclaration originalDecl;
+	private DirectedPseudograph<Node, DefaultEdge> pdg;
 
 	public Method(MethodDeclaration methodDeclaration) {
 		this.originalDecl = methodDeclaration;
@@ -40,6 +41,7 @@ public class Method {
 		this.parameters = methodDeclaration.getParameters();
 		this.returnType = methodDeclaration.getType();
 		this.body = methodDeclaration.getBody().get();
+		this.pdg = this.constructPDG();
 		this.trimBody();
 		//System.out.println("BEFORE " +methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
@@ -159,7 +161,7 @@ public class Method {
 	private void resolveMethodCalls(MethodDeclaration methodDecl) {
 		new MethodSolver(methodDecl.getBody().get());
 	}
-	public DirectedPseudograph<Node, DefaultEdge> getPDG(){
+	public DirectedPseudograph<Node, DefaultEdge> constructPDG(){
 		ControlFlowParser cfp = new ControlFlowParser(this);
 		DirectedPseudograph<NodeWrapper, DefaultEdge> cfg = cfp.getCFG();
 		ControlDependencyParser cdp = new ControlDependencyParser(cfg);
@@ -201,5 +203,9 @@ public class Method {
 		
 		return pdgNode;
 	
+	}
+	
+	public DirectedPseudograph<Node, DefaultEdge> getPDG(){
+		return this.pdg;
 	}
 }

@@ -104,9 +104,9 @@ public class MethodSolver {
 						// methodCallExpr.removeScope();
 						// methodCallExpr.setName(methodDecl.getQualifiedName());
 						if (methodBdy != null && methodBdy.isPresent()) {
-							System.out.println(methodBdy.get());
+							/*System.out.println(methodBdy.get());
 							System.out.println(methodDecl.getQualifiedSignature());
-							System.out.println(this.methodBody);
+							System.out.println(this.methodBody);*/
 							if (methodCallParent instanceof ExpressionStmt) {
 								methodBdy.get().accept(new MethodResolveVisitor(), JavaParserFacade.get(typeSolver));
 							}

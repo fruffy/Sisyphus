@@ -14,6 +14,7 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.Parameter;
 
 import datastructures.EntryStmt;
+import datastructures.PDGGraphViz;
 
 /*
  * The detector class
@@ -39,9 +40,9 @@ public class CloneDetector {
 	 * @param srcMethods
 	 * @return
 	 */
-	public List<Method> findSimiliarMethods(List<Method> srcMethods) {
+	public List<Method[]> findSimiliarMethodsAST(List<Method> srcMethods) {
 
-		List<Method> matchedMethods = new ArrayList<Method>();
+		List<Method[]> matchedMethods = new ArrayList<Method[]>();
 		if (methodLibrary == null) {
 			System.out.println("Warning: Method library not initialised, nothing to compare to!");
 			return matchedMethods;
@@ -49,9 +50,10 @@ public class CloneDetector {
 		for (Method src : srcMethods) {
 			for (Method ref : methodLibrary) {
 				if (matchMethodNodeFeatures(src, ref,4)) {
-					System.out.println("Match! " + src.getMethodName() + " with return type " + src.getReturnType() + 
-							" can be replaced by " + ref.getMethodName()+ " with return type " + ref.getReturnType());
-					matchedMethods.add(src);
+					Method[] matched = {src,ref};
+					/*System.out.println("Match! " + src.getMethodName() + " with return type " + src.getReturnType() + 
+							" can be replaced by " + ref.getMethodName()+ " with return type " + ref.getReturnType());*/
+					matchedMethods.add(matched);
 				}
 
 			}
@@ -59,21 +61,28 @@ public class CloneDetector {
 		return matchedMethods;
 
 	}
-
+	
 	/**
-	 * Takes a list of Method objects and matches it against a provided
-	 * reference library Returns a list of matched methods
+	 * Takes a list of Method objects and matches it against a reference library
+	 * Returns a list of matched methods
 	 * 
 	 * @param srcMethods
 	 * @return
 	 */
-	public List<Method> findSimiliarMethods(List<Method> srcMethods, List<Method> refMethods) {
-		List<Method> matchedMethods = new ArrayList<Method>();
+	public List<Method[]> findSimiliarMethodsPDG(List<Method> srcMethods) {
+
+		List<Method[]> matchedMethods = new ArrayList<Method[]>();
+		if (methodLibrary == null) {
+			System.out.println("Warning: Method library not initialised, nothing to compare to!");
+			return matchedMethods;
+		}
 		for (Method src : srcMethods) {
-			for (Method ref : refMethods) {
-				if (matchMethodNodes(src, ref)) {
-					System.out.println("Match! " + src.getMethodName() + " can be replaced by " + ref.getMethodName());
-					matchedMethods.add(src);
+			for (Method ref : methodLibrary) {
+				if (matchMethodPDGs(src, ref)) {
+					Method[] matched = {src,ref};
+					/*System.out.println("Match! " + src.getMethodName() + " with return type " + src.getReturnType() + 
+							" can be replaced by " + ref.getMethodName()+ " with return type " + ref.getReturnType());*/
+					matchedMethods.add(matched);
 				}
 
 			}
@@ -81,6 +90,7 @@ public class CloneDetector {
 		return matchedMethods;
 
 	}
+
 	
 	private boolean compareEdgeAttributes(DirectedGraph<Node, DefaultEdge> method1pdg, 
 										DirectedGraph<Node, DefaultEdge> method2pdg,
@@ -167,20 +177,36 @@ public class CloneDetector {
         //maximum size of maximal subgraph
         int k = 100;
 		boolean matched = maximalPathSimilar(v1, v2,method1pdg, method2pdg,maxGraph, 1,k);
-		System.out.println("\n+++++++++++++++++method1pdg++++++++++++++++++++++++++++++++");
+		/*System.out.println("\n+++++++++++++++++method1pdg++++++++++++++++++++++++++++++++");
 		for (DefaultEdge e : method1pdg.edgeSet()) {
 			System.out.println(method1pdg.getEdgeSource(e) + " --> " + method1pdg.getEdgeTarget(e));
+		}*/
+		if(matched){
+			System.out.println("\n+++++++++++++++++method1pdg++++++++++++++++++++++++++++++++");
+			for (DefaultEdge e : method1pdg.edgeSet()) {
+				System.out.println(method1pdg.getEdgeSource(e) + " --> " + method1pdg.getEdgeTarget(e));
+			}
+			System.out.println("\n***************");
+			
+			System.out.println("\n+++++++++++++++++method2pdg++++++++++++++++++++++++++++++++");
+			for (DefaultEdge e : method2pdg.edgeSet()) {
+				System.out.println(method2pdg.getEdgeSource(e) + " --> " + method2pdg.getEdgeTarget(e));
+			}
+			System.out.println("\n***************");
+			System.out.println("\n+++++++++++++++++maximalSimilarGraph++++++++++++++++++++++++++++++++");
+			for (DefaultEdge e : maxGraph.edgeSet()) {
+				System.out.println(maxGraph.getEdgeSource(e) + " --> " + maxGraph.getEdgeTarget(e));
+			}
+			// System.out.println("Control Flow Raw Content " + s);
+			System.out.println("\n***************");
+			PDGGraphViz.writeDotNode(method1pdg, "pdg1.dot");
+			PDGGraphViz.writeDotNode(method2pdg, "pdg2.dot");
+			PDGGraphViz.writeDotNode(maxGraph, "max.dot");
 		}
-		// System.out.println("Control Flow Raw Content " + s);
-		System.out.println("\n***************");
-		System.out.println("\n+++++++++++++++++maximalSimilarGraph++++++++++++++++++++++++++++++++");
-		for (DefaultEdge e : maxGraph.edgeSet()) {
-			System.out.println(maxGraph.getEdgeSource(e) + " --> " + maxGraph.getEdgeTarget(e));
-		}
-		// System.out.println("Control Flow Raw Content " + s);
-		System.out.println("\n***************");
 		return matched;
 	}
+	
+	
 
 	/*
 	 * Checks if the abstract syntax tree of the body of method 1 is the same as
