@@ -113,7 +113,7 @@ public class VariableNameNormalizer extends Normalizer {
 		//When we see a variable, we rename it to whatever we've stored in our Gamma
 		@Override
 		public Visitable visit(SimpleName n, VisitInfo info) {
-			System.out.println("Visiting SimpleName " + n);
+			//System.out.println("Visiting SimpleName " + n);
 			String newIdent = info.gamma.lookup(n.getIdentifier());
 			if (newIdent != null){
 				System.out.println("Renaming " + n + " to " + newIdent);
@@ -127,7 +127,7 @@ public class VariableNameNormalizer extends Normalizer {
 		@Override
 		public Visitable visit(final NameExpr n, final VisitInfo info) {
 			//visitComment(n, info);
-			System.out.println("Visiting NameExpr " + n);
+			//System.out.println("Visiting NameExpr " + n);
 			String newIdent = info.gamma.lookup(n.getNameAsString());
 			if (newIdent != null){
 				System.out.println("Renaming " + n + " to " + newIdent);
