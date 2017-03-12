@@ -26,7 +26,11 @@ import datastructures.VariableEnv;
 public class VariableNameNormalizer extends Normalizer {
 	
 	static String cleanTypeName(Type type){
-		return type.toString().replaceAll("[^-_A-Za-z0-9]/", "__");
+		String ret = type.toString();
+		ret = ret.replaceAll("\\[\\]", "_arr_");
+		ret = ret.replaceAll("[^A-Za-z0-9_\\-]", "__");
+		System.out.println("Cleaning string " + type + " to " + ret);
+		return ret;
 	}
 
 	/**
