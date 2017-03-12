@@ -12,6 +12,7 @@ import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import core.Method;
+import jgrapht.graph.DirectedPseudograph;
 
 /*
  * The parser class
@@ -119,7 +120,9 @@ public class SyntaxParser {
 	public ArrayList<Method> getMethods() {
 		ArrayList<Method> methodList = new ArrayList<Method>();
 		for (MethodDeclaration n : this.methodDeclarationList) {
-			methodList.add(new Method(n));
+			Method nMethod = new Method(n);
+			//System.out.println("normalizing method: "+nMethod.getMethodName());
+			methodList.add(nMethod);
 		}
 		return methodList;
 	}
@@ -143,4 +146,5 @@ public class SyntaxParser {
 		}
 		return returnTypes;
 	}
+	
 }

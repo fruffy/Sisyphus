@@ -1,13 +1,5 @@
 strict digraph G {
   1 [ label="" ];
-  2 [ label="(line 40,col 7)-(line 40,col 13): num < 0" ];
-  3 [ label="(line 41,col 4)-(line 41,col 17): num = num + 2;" ];
-  4 [ label="(line 43,col 4)-(line 43,col 17): num = num - 1;" ];
-  5 [ label="(line 45,col 3)-(line 45,col 27): System.out.print("exit");" ];
-  6 [ label="(line 46,col 3)-(line 46,col 13): return num;" ];
+  2 [ label="(line 7447,col 9)-(line 7447,col 99): return StreamSupport.doubleStream(spliterator(array, startInclusive, endExclusive), false);" ];
   1 -> 2;
-  2 -> 3;
-  2 -> 4;
-  1 -> 5;
-  1 -> 6;
 }

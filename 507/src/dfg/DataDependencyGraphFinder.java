@@ -164,7 +164,9 @@ public class DataDependencyGraphFinder {
 				//Our entry contains all of our predecessors' exits
 				for (DefaultEdge incomingEdge : cfg.incomingEdgesOf(currentNode) ){
 					NodeWrapper previousNode = cfg.getEdgeSource(incomingEdge);
-					newEntry.addAll(exitSet.get(previousNode));
+					if(exitSet.get(previousNode)!=null){
+						newEntry.addAll(exitSet.get(previousNode));
+					}
 				}
 
 				//Our exit set: add everything from entry that wasn't killed

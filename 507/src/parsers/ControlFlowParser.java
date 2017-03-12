@@ -124,7 +124,9 @@ public class ControlFlowParser {
 	// - Do Statements
 	// - maybe parallel programming primitives?
 	private NodeWrapper parseRec(Statement statement) {
-
+		if (statement.getChildNodes().size() == 0) {
+	           return null;
+	       }
 		NodeWrapper currentNode = new NodeWrapper(statement);
 		// Get a list of children contained in the block
 		List<Node> children = currentNode.NODE.getChildNodes();
@@ -312,6 +314,9 @@ public class ControlFlowParser {
 	 *            The node the newly created edge will point to.
 	 */
 	private void addGraphElements(NodeWrapper targetNode) {
+		if(targetNode == null){
+			return;
+		}
 		this.cfg.addVertex(targetNode);
 		for (NodeWrapper srcNode : this.previousNodes) {
 			if (srcNode != null) {

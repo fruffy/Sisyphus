@@ -12,6 +12,7 @@ import com.github.javaparser.ast.body.Parameter;
 import datastructures.BackEdge;
 import datastructures.EntryStmt;
 import datastructures.NodeWrapper;
+import datastructures.PDGGraphViz;
 import jgrapht.DirectedGraph;
 import jgrapht.experimental.dag.DirectedAcyclicGraph;
 import jgrapht.graph.DefaultEdge;
@@ -42,9 +43,9 @@ public class CloneDetector {
 	 * @param srcMethods
 	 * @return
 	 */
-	public List<Method> findSimiliarMethods(List<Method> srcMethods) {
+	public List<Method[]> findSimiliarMethodsAST(List<Method> srcMethods) {
 
-		List<Method> matchedMethods = new ArrayList<Method>();
+		List<Method[]> matchedMethods = new ArrayList<Method[]>();
 		if (methodLibrary == null) {
 			System.out.println("Warning: Method library not initialised, nothing to compare to!");
 			return matchedMethods;
@@ -52,9 +53,10 @@ public class CloneDetector {
 		for (Method src : srcMethods) {
 			for (Method ref : methodLibrary) {
 				if (matchMethodNodeFeatures(src, ref,4)) {
-					System.out.println("Match! " + src.getMethodName() + " with return type " + src.getReturnType() + 
-							" can be replaced by " + ref.getMethodName()+ " with return type " + ref.getReturnType());
-					matchedMethods.add(src);
+					Method[] matched = {src,ref};
+					/*System.out.println("Match! " + src.getMethodName() + " with return type " + src.getReturnType() + 
+							" can be replaced by " + ref.getMethodName()+ " with return type " + ref.getReturnType());*/
+					matchedMethods.add(matched);
 				}
 
 			}
@@ -62,21 +64,28 @@ public class CloneDetector {
 		return matchedMethods;
 
 	}
-
+	
 	/**
-	 * Takes a list of Method objects and matches it against a provided
-	 * reference library Returns a list of matched methods
+	 * Takes a list of Method objects and matches it against a reference library
+	 * Returns a list of matched methods
 	 * 
 	 * @param srcMethods
 	 * @return
 	 */
-	public List<Method> findSimiliarMethods(List<Method> srcMethods, List<Method> refMethods) {
-		List<Method> matchedMethods = new ArrayList<Method>();
+	public List<Method[]> findSimiliarMethodsPDG(List<Method> srcMethods) {
+
+		List<Method[]> matchedMethods = new ArrayList<Method[]>();
+		if (methodLibrary == null) {
+			System.out.println("Warning: Method library not initialised, nothing to compare to!");
+			return matchedMethods;
+		}
 		for (Method src : srcMethods) {
-			for (Method ref : refMethods) {
-				if (matchMethodNodes(src, ref)) {
-					System.out.println("Match! " + src.getMethodName() + " can be replaced by " + ref.getMethodName());
-					matchedMethods.add(src);
+			for (Method ref : methodLibrary) {
+				if (matchMethodPDGs(src, ref)) {
+					Method[] matched = {src,ref};
+					/*System.out.println("Match! " + src.getMethodName() + " with return type " + src.getReturnType() + 
+							" can be replaced by " + ref.getMethodName()+ " with return type " + ref.getReturnType());*/
+					matchedMethods.add(matched);
 				}
 
 			}
@@ -84,6 +93,7 @@ public class CloneDetector {
 		return matchedMethods;
 
 	}
+
 	
 	private boolean compareEdgeAttributes(DirectedGraph<Node, DefaultEdge> method1pdg, 
 										DirectedGraph<Node, DefaultEdge> method2pdg,
@@ -102,7 +112,7 @@ public class CloneDetector {
 	/**
 	 * Check if there exists a path of size k in g1 for which there is a
 	 * similar path (with the same vertex and edge attributes) in g2
-	 * Store the respective similar subgraphs in maximalg1 and maximalg2.
+	 * Store the respective similar subgraphs in maxGraph.
 	 * Return true if we are able to find k-length similar paths.
 	 * Return true if the length of similar paths is less than k 
 	 * but equal the longest path of g1 and g2
@@ -113,45 +123,91 @@ public class CloneDetector {
 	 * @param v2
 	 * @param method1pdg
 	 * @param method2pdg
-	 * @param method1maxGraph
-	 * @param method2maxGraph
+	 * @param maxGraph
 	 * @param l
 	 * @param k
+	 * @param lastMatched1, lastMatched2 and matchedPdgHeight are 
+	 * helper variables to calculate height of maximal graph and pdg
+	 * for comparison purposes
 	 * @return
 	 */
 	private boolean maximalPathSimilar(Node v1, Node v2,
 			DirectedPseudograph<Node, DefaultEdge> method1pdg, 
 			DirectedPseudograph<Node, DefaultEdge> method2pdg,
 			DirectedPseudograph<Node, DefaultEdge> maxGraph, 
-			int l,int k){
+			int[] l,int k, Node[] lastMatched1, Node[] lastMatched2,
+			int[] matchedPdgHeight){
+		boolean mapSuccess = false;
 		Set<DefaultEdge> edges1Set = method1pdg.outgoingEdgesOf(v1);
 		Set<DefaultEdge> edges2Set = method2pdg.outgoingEdgesOf(v2);
 		
-		if((edges1Set.size() == 0 && edges2Set.size() == 0) || (l >=k)){
-			return true;
+		if((edges1Set.size() == 0 && edges2Set.size() == 0) || (l[0] >=k)){
+			mapSuccess = true;
 		}
 		else if(edges1Set.size() == 0 || edges2Set.size() == 0){
-			return false;
+			method1pdg.outgoingEdgesOf(lastMatched1[0]);
+			int height1 = this.height(lastMatched1[0],method1pdg);
+			int height2 = this.height(lastMatched2[0],method2pdg);
+			matchedPdgHeight[0]+= l[0] + Math.max(height1,height2);
+			mapSuccess = false;
 		}
-		boolean mapSuccess = false;
-		for(DefaultEdge edge1: edges1Set){
-			for(DefaultEdge edge2: edges2Set){
-				if(compareEdgeAttributes(method1pdg,method2pdg,edge1,edge2)){
-					maxGraph.addVertex(method1pdg.getEdgeTarget(edge1));
-					if(!maxGraph.containsEdge(v1,method1pdg.getEdgeTarget(edge1))){
-						maxGraph.addEdge(v1, method1pdg.getEdgeTarget(edge1));
-						boolean success =  maximalPathSimilar(method1pdg.getEdgeTarget(edge1),method2pdg.getEdgeTarget(edge2),
-								method1pdg,method2pdg,maxGraph,l+1,k);
-						mapSuccess = mapSuccess || success;
+		else{
+			for(DefaultEdge edge1: edges1Set){
+				for(DefaultEdge edge2: edges2Set){
+					if(compareEdgeAttributes(method1pdg,method2pdg,edge1,edge2)){
+						maxGraph.addVertex(method1pdg.getEdgeTarget(edge1));
+						if(!maxGraph.containsEdge(v1,method1pdg.getEdgeTarget(edge1))){
+							maxGraph.addEdge(v1, method1pdg.getEdgeTarget(edge1));
+							lastMatched1[0] = method1pdg.getEdgeTarget(edge1);
+							lastMatched2[0] = method2pdg.getEdgeTarget(edge1);
+							l[0]++;
+							boolean success =  maximalPathSimilar(method1pdg.getEdgeTarget(edge1),method2pdg.getEdgeTarget(edge2),
+									method1pdg,method2pdg,maxGraph,l,k, lastMatched1,lastMatched2, matchedPdgHeight);
+							mapSuccess = mapSuccess || success;
+						}
 					}
 				}
 			}
+			method1pdg.outgoingEdgesOf(lastMatched1[0]);
+			method2pdg.outgoingEdgesOf(lastMatched2[0]);
+			int height1 = this.height(lastMatched1[0],method1pdg);
+			int height2 = this.height(lastMatched2[0],method2pdg);
+			matchedPdgHeight[0]+= l[0] + Math.max(height1,height2);
 		}
 		return mapSuccess;
 		
 	}
 	
+	/**
+	 * Calculate the height of graph g from root
+	 * @param root
+	 * @param g
+	 * @return
+	 */
+	private int height(Node root, DirectedPseudograph<Node, DefaultEdge> g){
+		if(root==null){
+			return 0;
+		}
+		//System.out.println(root);
+		Set<DefaultEdge> edgeSet = g.outgoingEdgesOf(root);
+		if(edgeSet.size() == 0){
+			return 0;
+		}
+		int maxHeight = 0;
+		for(DefaultEdge edge: edgeSet){
+			Node target = g.getEdgeTarget(edge);
+			if(!(target.equals(root))){
+				int height = height(target,g);
+				if(height > maxHeight){
+					maxHeight = height;
+				}
+			}
+		}
+		return 1 + maxHeight;
+	}
 	public boolean matchMethodPDGs(Method method1, Method method2){
+		/*System.out.println("Checking match: "+method1.getMethodName()+
+							" "+method2.getMethodName());*/
 		DirectedPseudograph<Node, DefaultEdge> method1pdg = method1.getPDG();
 		DirectedPseudograph<Node, DefaultEdge> method2pdg = method2.getPDG();
 		
@@ -166,24 +222,47 @@ public class CloneDetector {
 		//Initialize maximal graphs
 		DirectedPseudograph<Node, DefaultEdge> maxGraph = new DirectedPseudograph<>(DefaultEdge.class);
         maxGraph.addVertex(v1);
-        
         //maximum size of maximal subgraph
         int k = 100;
-		boolean matched = maximalPathSimilar(v1, v2,method1pdg, method2pdg,maxGraph, 1,k);
-		System.out.println("\n+++++++++++++++++method1pdg++++++++++++++++++++++++++++++++");
-		for (DefaultEdge e : method1pdg.edgeSet()) {
-			System.out.println(method1pdg.getEdgeSource(e) + " --> " + method1pdg.getEdgeTarget(e));
+        int[] l = {0};
+        Node[] lastMatched1 = {v1};
+        Node[] lastMatched2 = {v2};
+        int[] matchedPdgHeight = {0};
+		boolean matched = maximalPathSimilar(v1, v2,method1pdg, 
+				method2pdg,maxGraph, l,k,lastMatched1,lastMatched2,matchedPdgHeight);
+		
+	
+		if(matched){
+			/*System.out.println("Checking match: "+method1.getMethodName()+
+					" "+method2.getMethodName());
+			System.out.println("\n+++++++++++++++++method1pdg++++++++++++++++++++++++++++++++");
+			for (DefaultEdge e : method1pdg.edgeSet()) {
+				System.out.println(method1pdg.getEdgeSource(e) + " --> " + method1pdg.getEdgeTarget(e));
+			}
+			System.out.println("***************");
+			
+			System.out.println("+++++++++++++++++method2pdg++++++++++++++++++++++++++++++++");
+			for (DefaultEdge e : method2pdg.edgeSet()) {
+				System.out.println(method2pdg.getEdgeSource(e) + " --> " + method2pdg.getEdgeTarget(e));
+			}
+			System.out.println("***************");
+			System.out.println("+++++++++++++++++maximalSimilarGraph++++++++++++++++++++++++++++++++");
+			for (DefaultEdge e : maxGraph.edgeSet()) {
+				System.out.println(maxGraph.getEdgeSource(e) + " --> " + maxGraph.getEdgeTarget(e));
+			}
+			System.out.println("lastMatched "+ lastMatched1[0]);
+			System.out.println("maxGraphHeight " + l[0]);
+			System.out.println("maxPDGHeight "+ matchedPdgHeight[0]);
+			System.out.println("ifMatched "+matched);
+			System.out.println("\n***************");*/
+			PDGGraphViz.writeDotNode(method1pdg, "pdg1.dot");
+			PDGGraphViz.writeDotNode(method2pdg, "pdg2.dot");
+			PDGGraphViz.writeDotNode(maxGraph, "max.dot");
 		}
-		// System.out.println("Control Flow Raw Content " + s);
-		System.out.println("\n***************");
-		System.out.println("\n+++++++++++++++++maximalSimilarGraph++++++++++++++++++++++++++++++++");
-		for (DefaultEdge e : maxGraph.edgeSet()) {
-			System.out.println(maxGraph.getEdgeSource(e) + " --> " + maxGraph.getEdgeTarget(e));
-		}
-		// System.out.println("Control Flow Raw Content " + s);
-		System.out.println("\n***************");
 		return matched;
 	}
+	
+	
 
 	/*
 	 * Checks if the abstract syntax tree of the body of method 1 is the same as
@@ -252,44 +331,6 @@ public class CloneDetector {
 			return true;
 		}
 		return false;
-	}
-
-	/*
-	 * This method should do some kind of comparison between Method 1 and Method
-	 * 2 and return true if they are exact/near matches. Right now they just
-	 * return true if they are exact matches
-	 */
-	public boolean matchMethods(Method method1, Method method2) {
-		if (method1.getMethodName().compareToIgnoreCase(method2.getMethodName()) != 0) {
-			return false;
-
-		}
-		if (method1.getReturnType().toString().compareTo(method2.getReturnType().toString()) != 0) {
-			return false;
-		}
-		List<Parameter> parameters1 = method1.getMethodParameters();
-		List<Parameter> parameters2 = method2.getMethodParameters();
-		if (parameters1.size() != parameters2.size()) {
-			return false;
-		}
-		boolean[] param2Matched = new boolean[parameters2.size()];
-		for (int i = 0; i < parameters1.size(); i++) {
-			boolean foundMatch = false;
-			for (int j = 0; j < parameters2.size(); j++) {
-				if (parameters1.get(i).getType().toString().compareTo(parameters2.get(j).toString()) == 0) {
-					if (!param2Matched[j]) {
-						param2Matched[j] = true;
-						foundMatch = true;
-					}
-
-				}
-			}
-			if (!foundMatch) {
-				return false;
-			}
-		}
-		return matchMethodNodes(method1, method2);
-
 	}
 
 }
