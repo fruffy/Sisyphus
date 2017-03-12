@@ -1756,8 +1756,8 @@ public class TestCodeV2 {
 	}
 	
 
-	public static void main(String[] args){
-		/*int val = -1;
+	/*public static void main(String[] args){
+		int val = -1;
 		System.out.println("Absolute value of "+ val +" is "+absoluteValue(val));
 		System.out.println("Minimum of 2 and 3 is "+minimum(2,3));
 		System.out.println("Maximum of 2 and 3 is "+maximum(2,3));
@@ -1781,7 +1781,7 @@ public class TestCodeV2 {
 		arrayCopy = returnPartialCopy(array1,0,3);
 		System.out.println("After copying array1 to arrayCopy paritally from index 0 to 3: "+arrToString(arrayCopy));
 		List<Integer> arrList = convertToList(array1);
-		System.out.println("ArrayList version of array1: "+ arrList);*/
+		System.out.println("ArrayList version of array1: "+ arrList);
 	
-	}
+	}*/
 }

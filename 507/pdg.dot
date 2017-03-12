@@ -1,17 +1,37 @@
 digraph G {
   1 [ label="" ];
-  2 [ label="(line 40,col 7)-(line 40,col 13): num < 0" ];
-  3 [ label="(line 41,col 4)-(line 41,col 17): num = num + 2;" ];
-  4 [ label="(line 43,col 4)-(line 43,col 17): num = num - 1;" ];
-  5 [ label="(line 45,col 3)-(line 45,col 27): System.out.print("exit");" ];
-  6 [ label="(line 46,col 3)-(line 46,col 13): return num;" ];
+  2 [ label="(line 6515,col 13)-(line 6515,col 21): a == null" ];
+  3 [ label="(line 6516,col 20)-(line 6516,col 20): 0" ];
+  4 [ label="(line 6518,col 9)-(line 6518,col 23): int result = 1;" ];
+  5 [ label="(line 6520,col 9)-(line 6544,col 9): for (Object element : a) {
+    int elementHash = 0;
+    if (element instanceof Object[])
+        elementHash = deepHashCode((Object[]) element);
+    else if (element instanceof byte[])
+        elementHash = hashCode((byte[]) element);
+    else if (element instanceof short[])
+        elementHash = hashCode((short[]) element);
+    else if (element instanceof int[])
+        elementHash = hashCode((int[]) element);
+    else if (element instanceof long[])
+        elementHash = hashCode((long[]) element);
+    else if (element instanceof char[])
+        elementHash = hashCode((char[]) element);
+    else if (element instanceof float[])
+        elementHash = hashCode((float[]) element);
+    else if (element instanceof double[])
+        elementHash = hashCode((double[]) element);
+    else if (element instanceof boolean[])
+        elementHash = hashCode((boolean[]) element);
+    else if (element != null)
+        elementHash = element.hashCode();
+    result = 31 * result + elementHash;
+}" ];
+  6 [ label="(line 6546,col 9)-(line 6546,col 22): return result;" ];
   1 -> 2;
   2 -> 3;
-  2 -> 4;
+  1 -> 4;
   1 -> 5;
   1 -> 6;
-  3 -> 3;
-  3 -> 6;
-  4 -> 6;
-  4 -> 4;
+  5 -> 5;
 }

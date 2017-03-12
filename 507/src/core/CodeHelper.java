@@ -22,14 +22,14 @@ public class CodeHelper {
 		System.out.println("Working Directory = " +
 	              System.getProperty("user.dir"));
 
-		String srcName = "src/examples/TestCode.java";
+		String srcName = "src/examples/TestCodeV2.java";
 
 		File libFile = new File("Library.java");
 		File srcfile = new File(srcName);
 
 		SyntaxParser libparser;
 		SyntaxParser srcparser;
-		ArrayList<Method> srcMethods;
+		ArrayList<Method> srcMethods, libMethods;
 
 		if (!(srcfile.exists()) || srcfile.isDirectory()) {
 			System.out.println("Input file does not exist or is not a valid input.");
@@ -57,15 +57,15 @@ public class CodeHelper {
 
 		// testing(srcparser, libparser);
 		srcMethods = srcparser.getMethods();
+		libMethods = libparser.getMethods();
 
-		ControlListParser cfg = new ControlListParser(srcMethods);
 		CloneDetector cloneDetect = new CloneDetector(libparser.getMethods());
 
-		// cloneDetect.findSimiliarMethods(srcMethods);
+		//cloneDetect.findSimiliarMethodsPDG(srcMethods);
 
 		// testing graph similarity algorithm
-		Method method1 = srcMethods.get(2);
-		Method method2 = srcMethods.get(2);
+		Method method1 = srcMethods.get(0);
+		Method method2 = libMethods.get(1);
 		System.out.println("Match between " + method1.getMethodName() + " and " + method2.getMethodName() + "?");
 		System.out.println(cloneDetect.matchMethodPDGs(method1, method2));
 
