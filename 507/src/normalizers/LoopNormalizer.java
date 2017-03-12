@@ -1,11 +1,14 @@
 package normalizers;
 
 import java.util.LinkedList;
+import java.util.Optional;
 
+import com.github.javaparser.Range;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.expr.AssignExpr;
+import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
@@ -25,6 +28,15 @@ import com.github.javaparser.ast.visitor.CloneVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
 
 public class LoopNormalizer extends Normalizer {
+	
+	private static Expression litTrueIfNull(Expression n){
+		if (n == null){
+			return new BooleanLiteralExpr(true);
+		}
+		else{
+			return n;
+		}
+	}
 
 	private static BlockStmt mergeBlocks(Statement s1, Statement s2){
 		NodeList<Statement> newStmts = new NodeList<Statement>();
@@ -69,20 +81,41 @@ public class LoopNormalizer extends Normalizer {
 		public Visitable visit(ForStmt n, Object arg) {
 			//Clone this like before
 			Statement body = cloneNode(n.getBody(), arg);
-			Expression compare = cloneNode(n.getCompare(), arg);
+			Expression compare = litTrueIfNull(cloneNode(n.getCompare(), arg));
 			NodeList<Expression> initialization = cloneList(n.getInitialization(), arg);
 			NodeList<Expression> update = cloneList(n.getUpdate(), arg);
 			Comment comment = cloneNode(n.getComment(), arg);
 
 			//While loop body is old body, plus the update at the end
-			Statement newBody = mergeBlocks(body, exprBlock(update));
-			WhileStmt loop = new WhileStmt(compare, newBody);
+			Statement newBody;
+			if (update != null){
+				newBody = mergeBlocks(body, exprBlock(update));
+			}
+			else {
+				newBody = body;
+			}
+			
+			Optional<Range> or = n.getRange();
+			WhileStmt loop;
+			if (or.isPresent()){
+				loop = new WhileStmt(or.get(), compare, newBody);
+			} else {
+				loop = new WhileStmt(compare, newBody);
+			}
+			
+			
+			System.err.println("COND:" + loop.getCondition());
+			
+			
 
 			//Finally, return a block with the initialization appended to the loop
 
 			BlockStmt r = new BlockStmt();
 			r.setStatements(mergeBlocks(exprBlock(initialization), loop).getStatements());
 			r.setComment(comment);
+			
+			System.err.println("Changed loop:\n" + n);
+			System.err.println("to:\n" + r);
 
 			return r;
 		}		
@@ -116,14 +149,17 @@ public class LoopNormalizer extends Normalizer {
 	        Type iterType = 
 	        		new TypeParameter("Iterable", 
 	        				new NodeList<ClassOrInterfaceType>(variable.getElementType()));
+	        
 	        VariableDeclarationExpr iterDecl = new VariableDeclarationExpr(iterType, "__iter");
+	        AssignExpr iterAssign = new AssignExpr(new NameExpr("__iter"), iterable, AssignExpr.Operator.ASSIGN);
 	        
 	        //New body: Create variable with iter.next() assigned to it
 	        Expression elemValue = new MethodCallExpr(new NameExpr("__iter"), "next");
 	        Expression elemDecl = 
 	        		new AssignExpr(variable, elemValue, AssignExpr.Operator.ASSIGN); 
 	        //Then do the normal loop body
-	        Statement newBody = mergeBlocks(new ExpressionStmt(elemDecl), body);
+	        Statement newBody = mergeBlocks(new ExpressionStmt(elemDecl), 
+	        		mergeBlocks(new ExpressionStmt(iterAssign), body));
 	        
 	        //End condition, check if iter has next
 	        Expression endCond = new MethodCallExpr(new NameExpr("__iter"), "hasNext");
