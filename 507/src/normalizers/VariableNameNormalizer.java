@@ -12,6 +12,7 @@ import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.SimpleName;
+import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.nodeTypes.NodeWithAnnotations;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.Statement;
@@ -24,7 +25,7 @@ import com.github.javaparser.utils.Pair;
 import datastructures.VariableEnv;
 
 public class VariableNameNormalizer extends Normalizer {
-	
+
 	static String cleanTypeName(Type type){
 		String ret = type.toString();
 		ret = ret.replaceAll("\\[\\]", "_arr_");
@@ -32,6 +33,8 @@ public class VariableNameNormalizer extends Normalizer {
 		//System.err.println("Cleaning string " + type + " to " + ret);
 		return ret;
 	}
+
+
 
 	/**
 	 * The arguments we pass down to the tree as we traverse it.
@@ -46,7 +49,7 @@ public class VariableNameNormalizer extends Normalizer {
 	 * when traversing the body.
 	 * 
 	 */
-	private class VisitInfo{
+	private static class VisitInfo{
 		public VariableEnv gamma;
 		public Collection<Pair<String, String>> declsForParent;
 
@@ -55,186 +58,128 @@ public class VariableNameNormalizer extends Normalizer {
 			declsForParent = decls;
 		}
 	}
-
-	private class VariableNameVisitor extends ModifierVisitor<VisitInfo>{
-		public VariableNameVisitor(){}
-
-		//We override this to change variable names to their normalized form
-		@Override
-		public Visitable visit(final VariableDeclarator n, final VisitInfo info) {
-
-			Type type = (Type) n.getType().accept(this, info);
-			if (type == null) {
-				return null;
-			}
-			n.setType(type);
-
-			//visitComment(n, info); //TODO need this?
-
-			//We don't visit the name for this variable, because we don't want to rename it yet
-			//i.e. we want to distinguish names in declarations from names in expressions
-			final SimpleName id = (SimpleName) n.getName();
-			if (id == null) {
-				return null;
-			}
-
-			//We generate a new, standardized name for this declaration, based on its type
-			String cleanTypeName = cleanTypeName(type);
-			String newName = info.gamma.freshKey("var_" + cleanTypeName);
-			n.setName(newName);
-
-			//Tell our parent that we declared a new name
-			info.declsForParent.add(new Pair<String, String>(id.getIdentifier(), newName));
-
-			if (n.getInitializer().isPresent()) {
-				n.setInitializer((Expression) n.getInitializer().get().accept(this, info));
-			}
-			return n;
+	
+	private static void visitAnnotations(NodeWithAnnotations<?> n, VisitInfo arg) {
+		visitList(n.getAnnotations(), arg);
+	}
+	
+	private static void visitList(NodeList<?> nlist, VisitInfo arg) {
+		for (Node n : nlist){
+			visit(n, arg);
 		}
+	}
 
-		//Similar to variable declarator, but for method params
-		@Override
-		public Visitable visit(final Parameter n, final VisitInfo info) {
-			//visitComment(n, info);
-			visitAnnotations(n, info);
-
-			final SimpleName id = (SimpleName) n.getName();
-
-			Type type = (Type) n.getType().accept(this, info);
-
-			//We generate a new, standardized name for this declaration, based on its type
-			String newName = info.gamma.freshKey("param_" + cleanTypeName(type));
-			//System.err.println("Choosing new name " + newName + " for param " + n);
-			n.setName(newName);
-
-			//Tell our parent that we declared a new name
-			info.declsForParent.add(new Pair<String, String>(id.getIdentifier(), newName));
-
-			n.setType(type);
-			return n;
-		}
-
-		//When we see a variable, we rename it to whatever we've stored in our Gamma
-		@Override
-		public Visitable visit(SimpleName n, VisitInfo info) {
+	private static void visit(Node n, VisitInfo info){
+		//Names get renamed to whatever fresh name we've generated and stored in the info
+		if (n instanceof SimpleName){
+			SimpleName sn = (SimpleName)n;
 			//System.err.println("Visiting SimpleName " + n);
-			String newIdent = info.gamma.lookup(n.getIdentifier());
+			String newIdent = info.gamma.lookup(sn.getIdentifier());
 			if (newIdent != null){
 				//System.err.println("Renaming " + n + " to " + newIdent);
-				n.setIdentifier(newIdent);
+				sn.setIdentifier(newIdent);
 			}
 			//Tell our parent that we declared a new name
-			info.declsForParent.add(new Pair<String, String>(n.getIdentifier(), newIdent));
-			return n;
+			info.declsForParent.add(new Pair<String, String>(sn.getIdentifier(), newIdent));
 		}
-
-		//Same as simple name
-		//TODO need both?
-		@Override
-		public Visitable visit(final NameExpr n, final VisitInfo info) {
+		//Same idea as SimpleName
+		else if (n instanceof NameExpr){
+			NameExpr name = (NameExpr)n;
 			//visitComment(n, info);
 			//System.err.println("Visiting NameExpr " + n);
-			String newIdent = info.gamma.lookup(n.getNameAsString());
+			String newIdent = info.gamma.lookup(name.getNameAsString());
 			if (newIdent != null){
 				//System.err.println("Renaming " + n + " to " + newIdent);
-				n.setName(newIdent);
+				name.setName(newIdent);
 			}
 			else {
 				//System.err.println("Couldn't find name " + n.getNameAsString() + " in gamma ");
 			}
-			return n;
 		}
+		//When a variable is declared, we have to inform our infoNode of the new declaration
+		//So it can add it to the environment and rename any occurrences that come after this
+		//This is where the fresh names are generated
+		else if (n instanceof VariableDeclarator){
 
-		//We need to process the statements of a BlockStmt in order
-		//So that we can know what variables were declared earlier
-		@Override
-		public Visitable visit(final BlockStmt n, final VisitInfo info) {
+			VariableDeclarator vd = (VariableDeclarator)n;
+
+			visit(vd.getType(), info);
+	
+			//visitComment(n, info); //TODO need this?
+
+			//We don't visit the name for this variable, because we don't want to rename it yet
+			//i.e. we want to distinguish names in declarations from names in expressions
+			final SimpleName id = (SimpleName) vd.getName();
+
+			//We generate a new, standardized name for this declaration, based on its type
+			String cleanTypeName = cleanTypeName(vd.getType());
+			String newName = info.gamma.freshKey("var_" + cleanTypeName);
+			vd.setName(newName);
+
+			//Tell our parent that we declared a new name
+			info.declsForParent.add(new Pair<String, String>(id.getIdentifier(), newName));
+
+			if (vd.getInitializer().isPresent()) {
+				visit(vd.getInitializer().get(), info);
+			}
+		}
+		//Similar to variable declarator, but for method params
+		else if (n instanceof Parameter) {
+
+			Parameter p = (Parameter) n;
 			//visitComment(n, info);
+			visitAnnotations(p, info);
+
+			final SimpleName id = (SimpleName) p.getName();
+
+			visit(p.getType(), info);
+
+			//We generate a new, standardized name for this declaration, based on its type
+			String newName = info.gamma.freshKey("param_" + cleanTypeName(p.getType()));
+			//System.err.println("Choosing new name " + newName + " for param " + n);
+			p.setName(newName);
+
+			//Tell our parent that we declared a new name
+			info.declsForParent.add(new Pair<String, String>(id.getIdentifier(), newName));
+
+		}
+		//Everything else: we assume children are in sequenced order
+		//And we process them in sequence, adding variables declared
+		//to the environments for the children that follow
+		else {
 
 			//The environment of variables declared after each statement
 			VariableEnv gammaCurrent = info.gamma;
 
 			//Where we'll store the modified statements from our list after we process them
-			NodeList<Statement> newStatementList = new NodeList<Statement>();
+			NodeList<Node> newStatementList = new NodeList<Node>();
 
-			for (Statement stmt : n.getStatements()){
+			for (Node stmt : n.getChildNodes()){
 				//Make the map where we store declarations from the statement, so we can use them later on
 				LinkedList<Pair<String, String>> childDecls = new LinkedList<Pair<String, String>>();
 
 				//Process the statement, receiving its declarations in a new list
-				Statement newStmt = (Statement) stmt.accept(this, new VisitInfo(gammaCurrent, childDecls) );
+				visit(stmt, new VisitInfo(gammaCurrent, childDecls) );
 
 				//Add all the declarations from inside that statement to our environemnt for future statements
 				gammaCurrent = gammaCurrent.appendFront(childDecls);
 				//System.err.println("DECLS appending: " + childDecls);
-				newStatementList.add(newStmt);
 			}
 
-			n.setStatements(newStatementList);
-			return n;
 		}
-
-		//We need to add the variables from a method declaration into our scope
-		@Override
-		public Visitable visit(final MethodDeclaration n, final VisitInfo info) {
-			//visitComment(n, info);
-			n.setAnnotations((NodeList<AnnotationExpr>) n.getAnnotations().accept(this, info));
-			n.setTypeParameters(modifyList(n.getTypeParameters(), info));
-			n.setType((Type) n.getType().accept(this, info));
-
-
-			//We process parameters manually so we can rename them
-			//and store their new names, to use when processing the body
-			NodeList<Parameter> newParams = new NodeList<Parameter>();
-			LinkedList<Pair<String, String>> childDecls = new LinkedList<Pair<String, String>>();
-			for (Parameter param : n.getParameters()){
-				Parameter newParam = (Parameter)param.accept(this, new VisitInfo(info.gamma, childDecls));
-				newParams.add(newParam);
-			}
-			n.setParameters(newParams);
-
-
-			n.setThrownExceptions((NodeList<ReferenceType>) n.getThrownExceptions().accept(this, info));
-
-			//Now, when processing the body, use an extended environment with the parameters' new names
-			VariableEnv newGamma = info.gamma.appendFront(childDecls);
-			if (n.getBody().isPresent()) {
-				n.setBody((BlockStmt) n.getBody().get().accept(this, new VisitInfo(newGamma, info.declsForParent)));
-			}
-			return n;
-		}
-		
-		public Visitable visit(final Node n, final VisitInfo info) {
-			return null;
-		}
-		
-
-		//Helpers copied from ModifyVisitor, they should really be protected
-		private <N extends Node> NodeList<N> modifyList(NodeList<N> list, VisitInfo arg) {
-			if (list == null) {
-				return null;
-			}
-			return (NodeList<N>) list.accept(this, arg);
-		}
-
-		private void visitAnnotations(NodeWithAnnotations<?> n, VisitInfo arg) {
-			n.setAnnotations((NodeList<AnnotationExpr>) n.getAnnotations().accept(this, arg));
-		}
-
-
-
-		//TODO: find all places where variables are defined
-		//So that we can carry their decls forwards
-		//i.e. for loops, functions, catch-blocks
 	}
 
-	@Override
-	public Node result() {
-		//System.err.println("Fixing names for " + this.startBlock);
-		VariableNameVisitor v = new VariableNameVisitor();
-		Visitable ret = this.startBlock.clone().accept(v, 
-				new VisitInfo(VariableEnv.empty(), new LinkedList<Pair<String, String>>()));
-		return (Node)ret;
-	}
+
+
+
+
+
+@Override
+public Node result() {
+	//System.err.println("Fixing names for " + this.startBlock);
+	Node ret = startBlock.clone();
+	visit(ret, new VisitInfo(VariableEnv.empty(), new LinkedList<Pair<String, String>>()));
+	return ret;
+}
 
 }
