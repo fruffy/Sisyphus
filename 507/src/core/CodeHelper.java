@@ -9,6 +9,7 @@ import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.type.Type;
 
 import datastructures.NodeWrapper;
+import datastructures.PDGGraphViz;
 import jgrapht.DirectedGraph;
 import jgrapht.graph.DefaultEdge;
 import jgrapht.graph.DirectedPseudograph;
@@ -89,6 +90,10 @@ public class CodeHelper {
 		Method method1 = srcMethods.get(46);
 		Method method2 = libMethods.get(1);
 		method1.constructPDG();
+		
+		PDGGraphViz.writeDot(method1.getCdg(), "cdg.dot");
+		PDGGraphViz.writeDot(method1.getDdg(), "ddg.dot");
+		method1.printComparison();
 
 	}
 

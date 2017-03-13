@@ -37,8 +37,11 @@ public class Method {
 	private List<Parameter> parameters;
 	private BlockStmt body;
 	private MethodDeclaration originalDecl;
-	private DirectedPseudograph<Node, DefaultEdge> pdg;
+	private DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg;
+	private DirectedPseudograph<NodeWrapper, DefaultEdge> ddg;
+	private DirectedPseudograph<Node, DefaultEdge>  pdg;
 	private NodeFeature nodeFeature;
+	private Method unNormalized;
 
 	public Method(MethodDeclaration methodDeclaration) {
 		this.originalDecl = methodDeclaration;
@@ -49,6 +52,20 @@ public class Method {
 		this.pdg = this.constructPDG();
 		this.nodeFeature = this.constructMethodFeature();
 		this.trimBody();
+	}
+	
+	public void printComparison(){
+		System.out.println("Method before normalizing:");
+		System.out.println(unNormalized.originalDecl);
+		System.out.println("Method after normalizing:");
+		System.out.println(this.originalDecl);
+	}
+	
+	public DirectedAcyclicGraph<NodeWrapper, DefaultEdge> getCdg(){
+		return cdg;
+	}
+	public DirectedPseudograph<NodeWrapper, DefaultEdge> getDdg(){
+		return ddg;
 	}
 
 	public String getMethodName() {
@@ -158,7 +175,9 @@ public class Method {
 	 * the given normalizer
 	 */
 	public Method normalize() {
-		return  new Method((MethodDeclaration)StandardForm.toStandardForm(this.originalDecl));
+		Method ret = new Method((MethodDeclaration)StandardForm.toStandardForm(this.originalDecl));
+		ret.unNormalized = this;
+		return ret;
 	}
 	
 	public DirectedPseudograph<Node, DefaultEdge> constructPDG(){
@@ -166,9 +185,9 @@ public class Method {
 		ControlFlowParser cfp = new ControlFlowParser(this);
 		DirectedPseudograph<NodeWrapper, DefaultEdge> cfg = cfp.getCFG();
 		ControlDependencyParser cdp = new ControlDependencyParser(cfg);
-		DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg = cdp.getCDG();
+		cdg = cdp.getCDG();
 		DataDependencyGraphFinder ddgf = new DataDependencyGraphFinder(cfg);
-		DirectedPseudograph<NodeWrapper, DefaultEdge> ddg = ddgf.findReachingDefs();
+		ddg = ddgf.findReachingDefs();
 		
 		//combine cdg and ddg to pdg with Nodes as vertices rather
 		//than NodeWrappers
