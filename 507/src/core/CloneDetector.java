@@ -302,13 +302,13 @@ public class CloneDetector {
 		NodeFeature feature1 = method1.getMethodFeature();
 		NodeFeature feature2 = method2.getMethodFeature();
 		feature1.makeComparableNodeFeatures(feature2);
-		HashMap<String,Integer> featureMap1 = feature1.getFeatureMap();
-		HashMap<String,Integer> featureMap2 = feature2.getFeatureMap();
+		HashMap<Node,Integer> featureMap1 = feature1.getFeatureMap();
+		HashMap<Node,Integer> featureMap2 = feature2.getFeatureMap();
 		
 		int[] featureArray1 = new int[feature1.getFeatureVectorSize()];
 		int[] featureArray2 = new int[feature2.getFeatureVectorSize()];
 		int count = 0;
-		for(String key:featureMap1.keySet()){
+		for(Node key:featureMap1.keySet()){
 			featureArray1[count] = featureMap1.get(key);
 			featureArray2[count] = featureMap2.get(key);
 			count++;
