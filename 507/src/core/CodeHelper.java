@@ -14,11 +14,7 @@ import parsers.SyntaxParser;
 public class CodeHelper {
 	public static void main(String[] args) {
 		
-		System.out.println("Working Directory = " +
-	              System.getProperty("user.dir"));
-
 		String srcName = "src/examples/TestCodeV2.java";
-
 		File libFile = new File("Library.java");
 		File srcfile = new File(srcName);
 
@@ -29,8 +25,8 @@ public class CodeHelper {
 		if (!(srcfile.exists()) || srcfile.isDirectory()) {
 			System.out.println("Input file does not exist or is not a valid input.");
 			// Debug
-			 System.out.println("Working Directory = " +
-			 System.getProperty("user.dir"));
+			/* System.out.println("Working Directory = " +
+			 System.getProperty("user.dir"));*/
 			return;
 		}
 		if (!(libFile.exists()) || libFile.isDirectory()) {

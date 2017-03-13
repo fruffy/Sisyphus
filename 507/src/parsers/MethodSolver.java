@@ -13,6 +13,7 @@ import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
+import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
 import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
@@ -65,14 +66,15 @@ public class MethodSolver {
 		SymbolReference<MethodDeclaration> methodRef = facade.solve(methodCallExpr);
 		Node attachmentBody = null;
 		Node methodCallParent = methodCallExpr.getParentNode().get();
-		Optional<BlockStmt> methodBdy = null;
+		Optional<BlockStmt> declarationBody = null;
 		if (methodRef.isSolved()) {
 			MethodDeclaration methodDecl = methodRef.getCorrespondingDeclaration();
 
 			for (MethodDeclaration matchingDeclaration : methodDecl.declaringType().getDeclaredMethods()) {
 				if (matchingDeclaration instanceof JavaParserMethodDeclaration) {
 					if (matchingDeclaration.getSignature().equals(methodDecl.getSignature())) {
-						methodBdy = ((JavaParserMethodDeclaration) matchingDeclaration).getWrappedNode().getBody();
+						declarationBody = ((JavaParserMethodDeclaration) matchingDeclaration).getWrappedNode()
+								.getBody();
 						List<Expression> methodArguments = methodCallExpr.getArguments();
 						List<Parameter> matchArguments = ((JavaParserMethodDeclaration) matchingDeclaration)
 								.getWrappedNode().getParameters();
@@ -91,25 +93,22 @@ public class MethodSolver {
 
 						methodCallParent = methodCallExpr.getParentNode().get();
 						attachmentBody = methodCallExpr;
-						// methodCallExpr.removeScope();
-						//this.methodBody.accept(new RemoveVisitor(), methodCallExpr);
-						while (!(attachmentBody.remove())) {
-							attachmentBody = methodCallParent;
-							methodCallParent = methodCallParent.getParentNode().get();
-							
-						}
-						
-						/*Optional<com.github.javaparser.ast.body.MethodDeclaration> methodCallAncestor = methodCallExpr
-								.getAncestorOfType(com.github.javaparser.ast.body.MethodDeclaration.class);*/
+
+						/*
+						 * Optional<com.github.javaparser.ast.body.
+						 * MethodDeclaration> methodCallAncestor =
+						 * methodCallExpr
+						 * .getAncestorOfType(com.github.javaparser.ast.body.
+						 * MethodDeclaration.class);
+						 */
 						// methodCallExpr.removeScope();
 						// methodCallExpr.setName(methodDecl.getQualifiedName());
-						if (methodBdy != null && methodBdy.isPresent()) {
-							/*System.out.println(methodBdy.get());
-							System.out.println(methodDecl.getQualifiedSignature());
-							System.out.println(this.methodBody);*/
-							if (methodCallParent instanceof ExpressionStmt) {
-								methodBdy.get().accept(new MethodResolveVisitor(), JavaParserFacade.get(typeSolver));
-							}
+						if (declarationBody != null && declarationBody.isPresent()) {
+							/*
+							 * System.out.println(methodBdy.get());
+							 * System.out.println(methodDecl.
+							 * getQualifiedSignature());
+							 * System.out.println(this.methodBody);
 							/*
 							 * if (!(methodCallAncestor.isPresent() &&
 							 * methodDecl.getName().equals(methodCallAncestor.
@@ -118,27 +117,34 @@ public class MethodSolver {
 							 * MethodResolveVisitor(),
 							 * JavaParserFacade.get(typeSolver)); }
 							 */
-							BlockStmt newBody = methodBdy.get().clone();
-							methodCallParent.setAsParentNodeOf(newBody);
-							/*
-							 * while (!(methodCallParent instanceof BlockStmt))
-							 * { attachmentBody = methodCallParent;
-							 * methodCallParent =
-							 * methodCallParent.getParentNode().get(); }
-							 */
-							// int childIndex =
-							// methodCallParent.getChildNodes().indexOf(attachmentBody);
+							BlockStmt newBody = declarationBody.get().clone();
+							if (methodCallParent instanceof BlockStmt) {
+								for (Node n : newBody.getChildNodes()) {
+									int childIndex = methodCallParent.getChildNodes().indexOf(methodCallExpr);
+									if (n instanceof Statement) {
+										((BlockStmt) methodCallParent).addStatement(childIndex, (Statement) n);
+										childIndex++;
+									} else if (n instanceof Expression) {
+										((BlockStmt) methodCallParent).addStatement(childIndex, (Expression) n);
+										childIndex++;
+									}
+								}
+								// methodCallExpr.removeScope();
+								// this.methodBody.accept(new RemoveVisitor(),
+								// methodCallExpr);
+								while (!(attachmentBody.remove())) {
+									attachmentBody = methodCallParent;
+									methodCallParent = methodCallParent.getParentNode().get();
 
-							/*
-							 * for (Node n : newBody.getChildNodes()) {
-							 * ASTHelper if (n instanceof Statement) {
-							 * ((BlockStmt)
-							 * methodCallParent).addStatement(childIndex,(
-							 * Statement) n); childIndex++; } else if (n
-							 * instanceof Expression) { ((BlockStmt)
-							 * methodCallParent).addStatement(childIndex,(
-							 * Expression )n); childIndex++; } }
-							 */
+								}
+							} else {
+								methodCallExpr.removeScope();
+								methodCallExpr.setName(methodDecl.getQualifiedName());
+							}
+						/*	if (methodCallParent instanceof ExpressionStmt) {
+								declarationBody.get().accept(new MethodResolveVisitor(),
+										JavaParserFacade.get(typeSolver));
+							}*/
 							return true;
 						}
 					}
