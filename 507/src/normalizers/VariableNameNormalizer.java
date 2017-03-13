@@ -2,6 +2,7 @@ package normalizers;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
@@ -15,7 +16,13 @@ import com.github.javaparser.ast.expr.SimpleName;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.nodeTypes.NodeWithAnnotations;
 import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.stmt.DoStmt;
+import com.github.javaparser.ast.stmt.ForStmt;
+import com.github.javaparser.ast.stmt.ForeachStmt;
+import com.github.javaparser.ast.stmt.IfStmt;
 import com.github.javaparser.ast.stmt.Statement;
+import com.github.javaparser.ast.stmt.SwitchStmt;
+import com.github.javaparser.ast.stmt.WhileStmt;
 import com.github.javaparser.ast.type.ReferenceType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
@@ -58,11 +65,11 @@ public class VariableNameNormalizer extends Normalizer {
 			declsForParent = decls;
 		}
 	}
-	
+
 	private static void visitAnnotations(NodeWithAnnotations<?> n, VisitInfo arg) {
 		visitList(n.getAnnotations(), arg);
 	}
-	
+
 	private static void visitList(NodeList<?> nlist, VisitInfo arg) {
 		for (Node n : nlist){
 			visit(n, arg);
@@ -104,7 +111,7 @@ public class VariableNameNormalizer extends Normalizer {
 			VariableDeclarator vd = (VariableDeclarator)n;
 
 			visit(vd.getType(), info);
-	
+
 			//visitComment(n, info); //TODO need this?
 
 			//We don't visit the name for this variable, because we don't want to rename it yet
@@ -152,9 +159,11 @@ public class VariableNameNormalizer extends Normalizer {
 			VariableEnv gammaCurrent = info.gamma;
 
 			//Where we'll store the modified statements from our list after we process them
-			NodeList<Node> newStatementList = new NodeList<Node>();
 
-			for (Node stmt : n.getChildNodes()){
+
+			for (Node stmt : orderedChildNodes(n)){
+				System.err.println("Block node before: " + n.toString());
+
 				//Make the map where we store declarations from the statement, so we can use them later on
 				LinkedList<Pair<String, String>> childDecls = new LinkedList<Pair<String, String>>();
 
@@ -163,9 +172,70 @@ public class VariableNameNormalizer extends Normalizer {
 
 				//Add all the declarations from inside that statement to our environemnt for future statements
 				gammaCurrent = gammaCurrent.appendFront(childDecls);
-				//System.err.println("DECLS appending: " + childDecls);
+				//Tell our parents who we declared
+				info.declsForParent.addAll(childDecls);
+				System.err.println("Block node after: " + n.toString());
 			}
 
+		}
+	}
+
+	//Make sure the child nodes list is in the correct order
+	// i.e. the order matching variable scoping
+	//May not cover all cases, but we cover the common ones
+	private static List<Node> orderedChildNodes(Node n){
+		NodeList<Node> ret = new NodeList<Node>();
+
+		if (n instanceof ForStmt){
+			ForStmt fs = (ForStmt)n;
+			ret.addAll(fs.getInitialization());
+			if (fs.getCompare().isPresent()){
+				ret.add(fs.getCompare().get());
+			}
+			ret.addAll(fs.getUpdate());
+			ret.add(fs.getBody());
+			return ret;
+		}
+		if (n instanceof ForeachStmt){
+			ForeachStmt fs = (ForeachStmt)n;
+			ret.add(fs.getIterable());
+			ret.add(fs.getBody());
+			return ret;
+		}
+		else if (n instanceof IfStmt){
+			IfStmt is = (IfStmt)n;
+			ret.add(is.getCondition());
+			ret.add(is.getThenStmt());
+			if (is.getElseStmt().isPresent()){
+				ret.add(is.getElseStmt().get());
+			}
+			return ret;
+		}
+		else if (n instanceof WhileStmt){
+			WhileStmt ws = (WhileStmt)n;
+			ret.add(ws.getCondition());
+			ret.add(ws.getBody());
+			return ret;
+		}
+		else if (n instanceof DoStmt){
+			DoStmt ws = (DoStmt)n;
+			ret.add(ws.getBody());
+			ret.add(ws.getCondition());
+			return ret;
+		}
+		else if (n instanceof SwitchStmt){
+			SwitchStmt ss = (SwitchStmt)n;
+			ret.add(ss.getSelector());
+			ret.addAll(ss.getEntries());
+			return ret;
+		}
+		else if (n instanceof BlockStmt){
+			BlockStmt bs = (BlockStmt)n;
+			ret.addAll(bs.getStatements());
+			return ret;
+		}
+		else {
+			return n.getChildNodes();
 		}
 	}
 
@@ -174,12 +244,14 @@ public class VariableNameNormalizer extends Normalizer {
 
 
 
-@Override
-public Node result() {
-	//System.err.println("Fixing names for " + this.startBlock);
-	Node ret = startBlock.clone();
-	visit(ret, new VisitInfo(VariableEnv.empty(), new LinkedList<Pair<String, String>>()));
-	return ret;
-}
+	@Override
+	public Node result() {
+		//System.err.println("Fixing names for " + this.startBlock);
+		Node ret = startBlock.clone();
+		visit(ret, new VisitInfo(VariableEnv.empty(), new LinkedList<Pair<String, String>>()));
+		System.err.println("Changed body:\n" + startBlock);
+		System.err.println("to:\n" + ret);
+		return ret;
+	}
 
 }
