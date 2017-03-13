@@ -66,6 +66,13 @@ public class CodeHelper {
 			System.out.println("Match! " + match[0].getMethodName() + " with return type " + match[0].getReturnType() + 
 			" can be replaced by " + match[1].getMethodName()+ " with return type " + match[1].getReturnType());
 		}
+		System.out.println("ANALYSIS");
+		Analysis analysis = new Analysis(matches);
+		int[] tpFp = analysis.tpfp();
+		System.out.println("Number of test code functions = "+ srcMethods.size());
+		System.out.println("Number of matches = "+matches.size());
+		System.out.println("Number of true positives = "+tpFp[0]);
+		System.out.println("Number of false positives = "+tpFp[1]);
 
 		// testing graph similarity algorithm
 		/*Method method1 = srcMethods.get(0);
