@@ -85,9 +85,10 @@ public class VariableNameNormalizer extends Normalizer {
 			if (newIdent != null){
 				//System.err.println("Renaming " + n + " to " + newIdent);
 				sn.setIdentifier(newIdent);
+				//Tell our parent that we declared a new name
+				//info.declsForParent.add(new Pair<String, String>(sn.getIdentifier(), newIdent));
 			}
-			//Tell our parent that we declared a new name
-			info.declsForParent.add(new Pair<String, String>(sn.getIdentifier(), newIdent));
+			
 		}
 		//Same idea as SimpleName
 		else if (n instanceof NameExpr){
@@ -150,6 +151,31 @@ public class VariableNameNormalizer extends Normalizer {
 			info.declsForParent.add(new Pair<String, String>(id.getIdentifier(), newName));
 
 		}
+		//Block stmt is just like everything else
+		//Except variables have scope limited to the block statement
+		else if (n instanceof BlockStmt) {
+
+			//The environment of variables declared after each statement
+			VariableEnv gammaCurrent = info.gamma;
+
+			//Where we'll store the modified statements from our list after we process them
+
+
+			for (Node stmt : orderedChildNodes(n)){
+
+				//Make the map where we store declarations from the statement, so we can use them later on
+				LinkedList<Pair<String, String>> childDecls = new LinkedList<Pair<String, String>>();
+
+				//Process the statement, receiving its declarations in a new list
+				visit(stmt, new VisitInfo(gammaCurrent, childDecls) );
+
+				//Add all the declarations from inside that statement to our environemnt for future statements
+				gammaCurrent = gammaCurrent.appendFront(childDecls);
+				//Don't tell our parents who we declared
+				//since they were limited to the scope of this block
+			}
+
+		}
 		//Everything else: we assume children are in sequenced order
 		//And we process them in sequence, adding variables declared
 		//to the environments for the children that follow
@@ -162,7 +188,6 @@ public class VariableNameNormalizer extends Normalizer {
 
 
 			for (Node stmt : orderedChildNodes(n)){
-				System.err.println("Block node before: " + n.toString());
 
 				//Make the map where we store declarations from the statement, so we can use them later on
 				LinkedList<Pair<String, String>> childDecls = new LinkedList<Pair<String, String>>();
@@ -174,7 +199,6 @@ public class VariableNameNormalizer extends Normalizer {
 				gammaCurrent = gammaCurrent.appendFront(childDecls);
 				//Tell our parents who we declared
 				info.declsForParent.addAll(childDecls);
-				System.err.println("Block node after: " + n.toString());
 			}
 
 		}
