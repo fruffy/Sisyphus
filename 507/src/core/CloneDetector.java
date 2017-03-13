@@ -205,6 +205,12 @@ public class CloneDetector {
 	public boolean matchMethodPDGs(Method method1, Method method2){
 		/*System.out.println("Checking match: "+method1.getMethodName()+
 							" "+method2.getMethodName());*/
+		if(!method1.getReturnType().equals(method2.getReturnType())){
+			return false;
+		}
+		if(method1.getMethodParameters().size()!=method2.getMethodParameters().size()){
+			return false;
+		}
 		DirectedPseudograph<Node, DefaultEdge> method1pdg = method1.getPDG();
 		DirectedPseudograph<Node, DefaultEdge> method2pdg = method2.getPDG();
 		

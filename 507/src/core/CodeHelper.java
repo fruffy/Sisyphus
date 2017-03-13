@@ -63,11 +63,11 @@ public class CodeHelper {
 
 		System.out.println("ANALYSIS: PDG");
 		ArrayList<Method[]> matchesPDG = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsPDG(srcMethods);
-		for(Method[] match:matchesPDG){
+		/*for(Method[] match:matchesPDG){
 			System.out.println("All matches: "+match[0].getReturnType()+
 								" "+match[0].getMethodName()+", "+
 								match[1].getReturnType()+" "+match[1].getMethodName());
-		}
+		}*/
 		Analysis analysisPDG = new Analysis(matchesPDG);
 		int[] tpFp = analysisPDG.tpfp();
 		System.out.println("Number of test code functions = "+ srcMethods.size());
