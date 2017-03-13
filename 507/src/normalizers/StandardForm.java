@@ -11,6 +11,7 @@ public class StandardForm {
 		LinkedList<Normalizer> norms = new LinkedList<Normalizer>();
 		norms.addLast(new VariableNameNormalizer());
 		norms.addLast(new LoopNormalizer());
+		norms.addLast(new VariableNameNormalizer());
 		ListNormalizer norm = new ListNormalizer(norms);
 		norm.initialize(node);
 		return norm.result();
