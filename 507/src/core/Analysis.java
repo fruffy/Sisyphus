@@ -54,17 +54,17 @@ public class Analysis {
 				}
 				else if(srcName.contains("equals") && 
 					libName.equals("equals") && 
-					libParams.get(0).getType() == srcParams.get(0).getType()){
+					libParams.get(0).getType().equals(srcParams.get(0).getType())){
 					trueMatch = true;
 				}
 				else if(srcName.contains("fillArray") && 
 					libName.equals("fill") && 
-					libParams.get(0).getType() == srcParams.get(0).getType()){
+					libParams.get(0).getType().equals(srcParams.get(0).getType())){
 					trueMatch = true;
 				}
 				else if(srcName.contains("fillArrayPartially") && 
 					libName.equals("fill") && 
-					libParams.get(0).getType() == srcParams.get(0).getType()){
+					libParams.get(0).getType().equals(srcParams.get(0).getType())){
 					trueMatch = true;
 				}
 				else if(srcName.contains("returnCopy") && 
@@ -81,7 +81,7 @@ public class Analysis {
 				}
 				else if(srcName.contains("arrToString") && 
 					libName.equals("toString") && 
-					libParams.get(0).getType() == srcParams.get(0).getType()){
+					libParams.get(0).getType().equals(srcParams.get(0).getType())){
 					trueMatch = true;
 				}
 				if(trueMatch){
