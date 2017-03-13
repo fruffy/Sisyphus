@@ -9,23 +9,23 @@ import com.github.javaparser.ast.Node;
  */
 public class NodeFeature {
 	private int featureVectorSize;
-	private HashMap<Node,Integer> featureMap;
+	private HashMap<String,Integer> featureMap;
 	
 	public NodeFeature(){
 		featureVectorSize = 0;
-		featureMap =  new HashMap<Node,Integer>();
+		featureMap =  new HashMap<String,Integer>();
 	}
 	
 	/*
 	 * increase the count of class in the feature vector.
 	 * If it does not exist add it to the hashmap
 	 */
-	public void addNode(Node node){
-		if(featureMap.containsKey(node)){
-			featureMap.put(node, featureMap.get(node)+1);
+	public void addNode(String nodeClass){
+		if(featureMap.containsKey(nodeClass)){
+			featureMap.put(nodeClass, featureMap.get(nodeClass)+1);
 		}
 		else{
-			featureMap.put(node, 1);
+			featureMap.put(nodeClass, 1);
 			featureVectorSize++;
 		}
 	}
@@ -34,8 +34,8 @@ public class NodeFeature {
 	 * Add nodeClass as a dummy class with a count of zero
 	 * just for the sake of comparison purposes later
 	 */
-	public void addDummyNode(Node node){
-		featureMap.put(node, 0);
+	public void addDummyNode(String nodeClass){
+		featureMap.put(nodeClass, 0);
 		featureVectorSize++;
 	}
 	
@@ -43,7 +43,7 @@ public class NodeFeature {
 		return featureVectorSize;
 	}
 	
-	public HashMap<Node,Integer> getFeatureMap(){
+	public HashMap<String,Integer> getFeatureMap(){
 		return featureMap;
 	}
 	
@@ -52,12 +52,12 @@ public class NodeFeature {
 	 * both of them (this and n) are comparable
 	 */
 	public void makeComparableNodeFeatures(NodeFeature n){
-		for(Node key: n.getFeatureMap().keySet()){
+		for(String key: n.getFeatureMap().keySet()){
 			if(!featureMap.containsKey(key)){
 				addDummyNode(key);
 			}
 		}
-		for(Node key:this.featureMap.keySet()){
+		for(String key:this.featureMap.keySet()){
 			if(!n.getFeatureMap().containsKey(key)){
 				n.addDummyNode(key);
 			}
@@ -69,7 +69,7 @@ public class NodeFeature {
 	 * does not contain those elements
 	 */
 	public void combineNodeFeatures(NodeFeature n){
-		for(Node key: n.getFeatureMap().keySet()){
+		for(String key: n.getFeatureMap().keySet()){
 			addNode(key);
 		}
 		

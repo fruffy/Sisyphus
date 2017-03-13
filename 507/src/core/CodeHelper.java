@@ -61,9 +61,13 @@ public class CodeHelper {
 
 		CloneDetector cloneDetect = new CloneDetector(libparser.getMethods());
 
-		ArrayList<Method[]> matchesPDG = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsPDG(srcMethods);
-	
 		System.out.println("ANALYSIS: PDG");
+		ArrayList<Method[]> matchesPDG = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsPDG(srcMethods);
+		for(Method[] match:matchesPDG){
+			System.out.println("All matches: "+match[0].getReturnType()+
+								" "+match[0].getMethodName()+", "+
+								match[1].getReturnType()+" "+match[1].getMethodName());
+		}
 		Analysis analysisPDG = new Analysis(matchesPDG);
 		int[] tpFp = analysisPDG.tpfp();
 		System.out.println("Number of test code functions = "+ srcMethods.size());
@@ -71,11 +75,20 @@ public class CodeHelper {
 		System.out.println("Number of true positives = "+tpFp[0]);
 		System.out.println("Number of false positives = "+tpFp[1]);
 		
-		// testing graph similarity algorithm
+		System.out.println("ANALYSIS: AST");
+		ArrayList<Method> srcTest = new ArrayList<Method>();
+		srcTest.add(srcMethods.get(57));
+		ArrayList<Method[]> matchesAST = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsAST(srcMethods);
+		Analysis analysisAST = new Analysis(matchesAST);
+		tpFp = analysisAST.tpfp();
+		System.out.println("Number of test code functions = "+ srcMethods.size());
+		System.out.println("Number of matches = "+matchesAST.size());
+		System.out.println("Number of true positives = "+tpFp[0]);
+		System.out.println("Number of false positives = "+tpFp[1]);
+
 		Method method1 = srcMethods.get(46);
 		Method method2 = libMethods.get(1);
 		method1.constructPDG();
-		
 
 	}
 
