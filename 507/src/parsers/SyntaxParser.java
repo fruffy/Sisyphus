@@ -122,7 +122,7 @@ public class SyntaxParser {
 		for (MethodDeclaration n : this.methodDeclarationList) {
 			Method nMethod = new Method(n);
 			//System.out.println("normalizing method: "+nMethod.getMethodName());
-			methodList.add(nMethod);
+			methodList.add(nMethod.normalize());
 		}
 		return methodList;
 	}

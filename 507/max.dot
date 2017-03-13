@@ -1,7 +1,5 @@
 digraph G {
   1 [ label="" ];
-  2 [ label="(line 2142,col 7)-(line 2142,col 15): int i = 0" ];
-  3 [ label="(line 2142,col 18)-(line 2142,col 31): i < array.length" ];
+  2 [ label="(line 922,col 3)-(line 922,col 14): return true;" ];
   1 -> 2;
-  1 -> 3;
 }
