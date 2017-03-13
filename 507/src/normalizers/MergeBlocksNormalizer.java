@@ -32,6 +32,13 @@ public class MergeBlocksNormalizer extends Normalizer {
 
 
 	private class MergeBlocksVisitor extends CloneVisitor{
+		
+		int freshNum = 0;
+		
+		private String freshPrefix(){
+			freshNum++;
+			return "____fresh" + freshNum;
+		}
 
 		public MergeBlocksVisitor(){
 
@@ -46,7 +53,10 @@ public class MergeBlocksNormalizer extends Normalizer {
 					//Merge if we have nested blocks
 					//Because we've already called accept, we know it has no nested blocks inside it
 					if (newStmt instanceof BlockStmt){
-						for (Statement subStmt : ((BlockStmt)newStmt).getStatements() ){
+						VariableNameNormalizer freshener = new VariableNameNormalizer(freshPrefix());
+						freshener.initialize(newStmt);
+						BlockStmt freshened = (BlockStmt)(freshener.result());
+						for (Statement subStmt : freshened.getStatements() ){
 							newStatementList.add(subStmt);
 						}
 					}

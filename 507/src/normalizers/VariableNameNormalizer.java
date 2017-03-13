@@ -33,12 +33,30 @@ import datastructures.VariableEnv;
 
 public class VariableNameNormalizer extends Normalizer {
 
+	private String prefix = "";
+
 	static String cleanTypeName(Type type){
 		String ret = type.toString();
 		ret = ret.replaceAll("\\[\\]", "_arr_");
 		ret = ret.replaceAll("[^A-Za-z0-9_\\-]", "__");
 		//System.err.println("Cleaning string " + type + " to " + ret);
 		return ret;
+	}
+
+	/**
+	 * Create a new variable name normalizer, appending the given prefix to all strings
+	 * @param prefix
+	 */
+	public VariableNameNormalizer(String prefix){
+		this.prefix = prefix;
+	}
+
+	/**
+	 * Create a new variable name normalizer, renaming variables to a standard form
+	 * similar to DeBruijn indices
+	 */
+	public VariableNameNormalizer(){
+
 	}
 
 
@@ -56,7 +74,7 @@ public class VariableNameNormalizer extends Normalizer {
 	 * when traversing the body.
 	 * 
 	 */
-	private static class VisitInfo{
+	private  class VisitInfo{
 		public VariableEnv gamma;
 		public Collection<Pair<String, String>> declsForParent;
 
@@ -66,17 +84,17 @@ public class VariableNameNormalizer extends Normalizer {
 		}
 	}
 
-	private static void visitAnnotations(NodeWithAnnotations<?> n, VisitInfo arg) {
+	private  void visitAnnotations(NodeWithAnnotations<?> n, VisitInfo arg) {
 		visitList(n.getAnnotations(), arg);
 	}
 
-	private static void visitList(NodeList<?> nlist, VisitInfo arg) {
+	private  void visitList(NodeList<?> nlist, VisitInfo arg) {
 		for (Node n : nlist){
 			visit(n, arg);
 		}
 	}
 
-	private static void visit(Node n, VisitInfo info){
+	private  void visit(Node n, VisitInfo info){
 		//Names get renamed to whatever fresh name we've generated and stored in the info
 		if (n instanceof SimpleName){
 			SimpleName sn = (SimpleName)n;
@@ -88,7 +106,7 @@ public class VariableNameNormalizer extends Normalizer {
 				//Tell our parent that we declared a new name
 				//info.declsForParent.add(new Pair<String, String>(sn.getIdentifier(), newIdent));
 			}
-			
+
 		}
 		//Same idea as SimpleName
 		else if (n instanceof NameExpr){
@@ -121,7 +139,7 @@ public class VariableNameNormalizer extends Normalizer {
 
 			//We generate a new, standardized name for this declaration, based on its type
 			String cleanTypeName = cleanTypeName(vd.getType());
-			String newName = info.gamma.freshKey("var_" + cleanTypeName);
+			String newName = info.gamma.freshKey(prefix + "_var_" + cleanTypeName);
 			vd.setName(newName);
 
 			//Tell our parent that we declared a new name
@@ -143,7 +161,7 @@ public class VariableNameNormalizer extends Normalizer {
 			visit(p.getType(), info);
 
 			//We generate a new, standardized name for this declaration, based on its type
-			String newName = info.gamma.freshKey("param_" + cleanTypeName(p.getType()));
+			String newName = info.gamma.freshKey(prefix + "_param_" + cleanTypeName(p.getType()));
 			//System.err.println("Choosing new name " + newName + " for param " + n);
 			p.setName(newName);
 

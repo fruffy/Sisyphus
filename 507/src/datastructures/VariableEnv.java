@@ -124,7 +124,7 @@ public class VariableEnv implements Iterable<Pair<String, String>> {
 		for(int i = 0; i < length + 1; i++){
 			String candidate = base + "_" + (length + i);
 			if (!matching.contains(candidate)){
-				System.err.println("NAME::: Found name " + candidate + " for env " + this.toString());
+				//System.err.println("NAME::: Found name " + candidate + " for env " + this.toString());
 				return candidate;
 			}
 		}
