@@ -13,6 +13,14 @@ import com.github.javaparser.utils.Pair;
  */
 public class VariableEnv implements Iterable<Pair<String, String>> {
 	
+	private static int nextInt = 0;
+	
+	private int getNextInt(){
+		int ret = VariableEnv.nextInt;
+		VariableEnv.nextInt++;
+		return ret;
+	}
+	
 	class VarEnvIter implements Iterator<Pair<String, String>>{
 
 		private VarEnvIter(VariableEnv init){
@@ -80,25 +88,28 @@ public class VariableEnv implements Iterable<Pair<String, String>> {
 	}
 	
 	public String freshKey(String base){
+		return base + "_" + getNextInt();
+		
 		//Find all strings matching the prefix
-		HashSet<String> matching = new HashSet<String>();
-		for (Pair<String, String> entry : this){
-			if (entry.a.startsWith(base)){
-				matching.add(entry.a);
-			}
-		}
-		//Our fresh key is our base, plus the lowest number
-		//that's greater >= the length of all matching
-		//that isn't in the matching list,
-		//Usually this should succeed after one try, but we want to be defensive
-		int length = matching.size();
-		for(int i = 0; i < length + 1; i++){
-			String candidate = base + (length + i);
-			if (!matching.contains(candidate)){
-				return candidate;
-			}
-		}
-		throw new RuntimeException("Impossible, matching must contain a finine number of strings, can't match more than its length");
+//		HashSet<String> matching = new HashSet<String>();
+//		for (Pair<String, String> entry : this){
+//			if (entry.a.startsWith(base)){
+//				matching.add(entry.a);
+//			}
+//		}
+//		//Our fresh key is our base, plus the lowest number
+//		//that's greater >= the length of all matching
+//		//that isn't in the matching list,
+//		//Usually this should succeed after one try, but we want to be defensive
+//		int length = matching.size();
+//		for(int i = 0; i < length + 1; i++){
+//			String candidate = base + (length + i);
+//			if (!matching.contains(candidate)){
+//				System.err.println("NAME::: Found name " + candidate + " for env " + this.toString());
+//				return candidate;
+//			}
+//		}
+//		throw new RuntimeException("Impossible, matching must contain a finine number of strings, can't match more than its length");
 	}
 	
 	/**
@@ -111,6 +122,15 @@ public class VariableEnv implements Iterable<Pair<String, String>> {
 			ret = ret.cons(pair.a, pair.b);
 		}
 		return ret;
+	}
+	
+	public String toString(){
+		StringBuffer ret = new StringBuffer();
+		for (Pair<String, String> pair : this )
+		{
+			ret.append("(" + pair.a + ", " + pair.b + ")");
+		}
+		return ret.toString();
 	}
 	
 	

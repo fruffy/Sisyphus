@@ -289,6 +289,9 @@ public class ControlFlowParser {
 	 *            The node the newly created edge will point to.
 	 */
 	private void addGraphElements(NodeWrapper targetNode) {
+		if(targetNode == null){
+			return;
+		}
 		this.cfg.addVertex(targetNode);
 		for (NodeWrapper srcNode : this.previousNodes) {
 			if (srcNode != null) {

@@ -1,29 +1,31 @@
 package core;
 import java.util.HashMap;
 
+import com.github.javaparser.ast.Node;
+
 /*
  * A class to hold counts of different node types in
  * a hashmap
  */
 public class NodeFeature {
 	private int featureVectorSize;
-	private HashMap<String,Integer> featureMap;
+	private HashMap<Node,Integer> featureMap;
 	
 	public NodeFeature(){
 		featureVectorSize = 0;
-		featureMap =  new HashMap<String,Integer>();
+		featureMap =  new HashMap<Node,Integer>();
 	}
 	
 	/*
 	 * increase the count of class in the feature vector.
 	 * If it does not exist add it to the hashmap
 	 */
-	public void addClasses(String nodeClass){
-		if(featureMap.containsKey(nodeClass)){
-			featureMap.put(nodeClass, featureMap.get(nodeClass)+1);
+	public void addNode(Node node){
+		if(featureMap.containsKey(node)){
+			featureMap.put(node, featureMap.get(node)+1);
 		}
 		else{
-			featureMap.put(nodeClass, 1);
+			featureMap.put(node, 1);
 			featureVectorSize++;
 		}
 	}
@@ -32,8 +34,8 @@ public class NodeFeature {
 	 * Add nodeClass as a dummy class with a count of zero
 	 * just for the sake of comparison purposes later
 	 */
-	public void addDummyClass(String nodeClass){
-		featureMap.put(nodeClass, 0);
+	public void addDummyNode(Node node){
+		featureMap.put(node, 0);
 		featureVectorSize++;
 	}
 	
@@ -41,7 +43,7 @@ public class NodeFeature {
 		return featureVectorSize;
 	}
 	
-	public HashMap<String,Integer> getFeatureMap(){
+	public HashMap<Node,Integer> getFeatureMap(){
 		return featureMap;
 	}
 	
@@ -50,14 +52,14 @@ public class NodeFeature {
 	 * both of them (this and n) are comparable
 	 */
 	public void makeComparableNodeFeatures(NodeFeature n){
-		for(String key: n.getFeatureMap().keySet()){
+		for(Node key: n.getFeatureMap().keySet()){
 			if(!featureMap.containsKey(key)){
-				addDummyClass(key);
+				addDummyNode(key);
 			}
 		}
-		for(String key:featureMap.keySet()){
+		for(Node key:this.featureMap.keySet()){
 			if(!n.getFeatureMap().containsKey(key)){
-				n.addDummyClass(key);
+				n.addDummyNode(key);
 			}
 		}
 	}
@@ -67,8 +69,8 @@ public class NodeFeature {
 	 * does not contain those elements
 	 */
 	public void combineNodeFeatures(NodeFeature n){
-		for(String key: n.getFeatureMap().keySet()){
-			addClasses(key);
+		for(Node key: n.getFeatureMap().keySet()){
+			addNode(key);
 		}
 		
 	}
