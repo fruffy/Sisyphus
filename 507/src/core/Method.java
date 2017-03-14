@@ -15,7 +15,6 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.Type;
 
 import datastructures.NodeWrapper;
-import datastructures.PDGGraphViz;
 import dfg.DataDependencyGraphFinder;
 import normalizers.StandardForm;
 import parsers.ControlDependencyParser;
@@ -34,6 +33,7 @@ public class Method {
 	private BlockStmt body;
 	private MethodDeclaration originalDecl;
 	private DirectedPseudograph<Node, DefaultEdge> pdg;
+	private NodeFeature nodeFeature;
 
 	public Method(MethodDeclaration methodDeclaration) {
 		this.originalDecl = methodDeclaration;
@@ -42,11 +42,12 @@ public class Method {
 		this.returnType = methodDeclaration.getType();
 		this.body = methodDeclaration.getBody().get();
 		this.pdg = this.constructPDG();
+		this.nodeFeature = this.constructMethodFeature();
 		this.trimBody();
-		//System.out.println("BEFORE " +methodDeclaration);
+		System.out.println("BEFORE " +methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
 		resolveMethodCalls(methodDeclaration);
-		//System.out.println("AFTER " + methodDeclaration);
+		System.out.println("AFTER " + methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
 	}
 
@@ -126,7 +127,9 @@ public class Method {
 		// is an int or double) rather than the fact that it is a Primitive type
 		// because that information is more useful.
 		// Do the same for MethodCallExpression.
-		nodeFeature.addNode(current);
+		nodeFeature.addNode(current.getClass().toString());
+		//System.out.println("current "+current);
+		//System.out.println("nodeFeature: "+nodeFeature.getFeatureMap());
 		if (current.getChildNodes().size() == 0) {
 			return nodeFeature;
 		}
@@ -139,10 +142,14 @@ public class Method {
 
 	}
 
-	public NodeFeature getMethodFeature() {
-		List<Node> methodNodes = getMethodNodes();
-		NodeFeature methodFeature = getMethodFeature(methodNodes.get(0));
+	public NodeFeature constructMethodFeature() {
+		MethodDeclaration root = this.getFilteredMethod();
+		NodeFeature methodFeature = getMethodFeature(root);
 		return methodFeature;
+	}
+	
+	public NodeFeature getMethodFeature(){
+		return this.nodeFeature;
 	}
 
 	/**
@@ -192,10 +199,10 @@ public class Method {
 			System.out.println(ddg.getEdgeSource(e)+"-->"+ddg.getEdgeTarget(e));
 		}*/
 		
-		PDGGraphViz.writeDot(cdg, "cdg.dot");
+		/*PDGGraphViz.writeDot(cdg, "cdg.dot");
 		PDGGraphViz.writeDot(ddg, "ddg.dot");
 		PDGGraphViz.writeDotNode(pdgNode, "pdg.dot");
-		
+		*/
 		return pdgNode;
 	
 	}

@@ -49,7 +49,7 @@ public class CloneDetector {
 		}
 		for (Method src : srcMethods) {
 			for (Method ref : methodLibrary) {
-				if (matchMethodNodeFeatures(src, ref,4)) {
+				if (matchMethodNodeFeatures(src, ref,1)) {
 					Method[] matched = {src,ref};
 					/*System.out.println("Match! " + src.getMethodName() + " with return type " + src.getReturnType() + 
 							" can be replaced by " + ref.getMethodName()+ " with return type " + ref.getReturnType());*/
@@ -176,10 +176,7 @@ public class CloneDetector {
 	}
 	
 	/**
-	 * Calculate the height of graph g from root
-	 * @param root
-	 * @param g
-	 * @return
+	 * Calculate the height
 	 */
 	private int height(Node root, DirectedPseudograph<Node, DefaultEdge> g){
 		if(root==null){
@@ -205,6 +202,12 @@ public class CloneDetector {
 	public boolean matchMethodPDGs(Method method1, Method method2){
 		/*System.out.println("Checking match: "+method1.getMethodName()+
 							" "+method2.getMethodName());*/
+		if(!method1.getReturnType().equals(method2.getReturnType())){
+			return false;
+		}
+		if(method1.getMethodParameters().size()!=method2.getMethodParameters().size()){
+			return false;
+		}
 		DirectedPseudograph<Node, DefaultEdge> method1pdg = method1.getPDG();
 		DirectedPseudograph<Node, DefaultEdge> method2pdg = method2.getPDG();
 		
@@ -299,13 +302,13 @@ public class CloneDetector {
 		NodeFeature feature1 = method1.getMethodFeature();
 		NodeFeature feature2 = method2.getMethodFeature();
 		feature1.makeComparableNodeFeatures(feature2);
-		HashMap<Node,Integer> featureMap1 = feature1.getFeatureMap();
-		HashMap<Node,Integer> featureMap2 = feature2.getFeatureMap();
+		HashMap<String,Integer> featureMap1 = feature1.getFeatureMap();
+		HashMap<String,Integer> featureMap2 = feature2.getFeatureMap();
 		
 		int[] featureArray1 = new int[feature1.getFeatureVectorSize()];
 		int[] featureArray2 = new int[feature2.getFeatureVectorSize()];
 		int count = 0;
-		for(Node key:featureMap1.keySet()){
+		for(String key:featureMap1.keySet()){
 			featureArray1[count] = featureMap1.get(key);
 			featureArray2[count] = featureMap2.get(key);
 			count++;

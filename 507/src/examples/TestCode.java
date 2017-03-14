@@ -4,7 +4,10 @@ import java.util.List;
 import core.Method;
 
 public class TestCode {
-
+	
+	public int absoluteLib(int num) {
+		return num;
+	}
 	public int absoluteLib(int num) {
 		return Math.abs(num);
 	}
