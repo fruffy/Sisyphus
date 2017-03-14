@@ -145,7 +145,7 @@ public class Method {
 		// is an int or double) rather than the fact that it is a Primitive type
 		// because that information is more useful.
 		// Do the same for MethodCallExpression.
-		nodeFeature.addNode(current.getClass().toString());
+		nodeFeature.addNode(current);
 		//System.out.println("current "+current);
 		//System.out.println("nodeFeature: "+nodeFeature.getFeatureMap());
 		if (current.getChildNodes().size() == 0) {

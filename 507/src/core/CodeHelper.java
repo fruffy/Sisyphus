@@ -75,10 +75,10 @@ public class CodeHelper {
 		System.out.println("Number of matches = "+matchesPDG.size());
 		System.out.println("Number of true positives = "+tpFp[0]);
 		System.out.println("Number of false positives = "+tpFp[1]);
+		System.out.println("Ratiof of true positives to false positives "+ tpFp[0]/(tpFp[1]*1.0));
+		
 		
 		System.out.println("ANALYSIS: AST");
-		ArrayList<Method> srcTest = new ArrayList<Method>();
-		srcTest.add(srcMethods.get(57));
 		ArrayList<Method[]> matchesAST = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsAST(srcMethods);
 		Analysis analysisAST = new Analysis(matchesAST);
 		tpFp = analysisAST.tpfp();
@@ -86,14 +86,15 @@ public class CodeHelper {
 		System.out.println("Number of matches = "+matchesAST.size());
 		System.out.println("Number of true positives = "+tpFp[0]);
 		System.out.println("Number of false positives = "+tpFp[1]);
+		System.out.println("Ratiof of true positives to false positives "+ tpFp[0]/(tpFp[1]*1.0));
 
-		Method method1 = srcMethods.get(46);
+		/*Method method1 = srcMethods.get(46);
 		Method method2 = libMethods.get(1);
 		method1.constructPDG();
 		
 		PDGGraphViz.writeDot(method1.getCdg(), "cdg.dot");
 		PDGGraphViz.writeDot(method1.getDdg(), "ddg.dot");
-		method1.printComparison();
+		method1.printComparison();*/
 
 	}
 

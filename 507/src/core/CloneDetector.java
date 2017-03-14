@@ -52,7 +52,7 @@ public class CloneDetector {
 		}
 		for (Method src : srcMethods) {
 			for (Method ref : methodLibrary) {
-				if (matchMethodNodeFeatures(src, ref,1)) {
+				if (matchMethodNodeFeatures(src, ref,6)) {
 					Method[] matched = {src,ref};
 					/*System.out.println("Match! " + src.getMethodName() + " with return type " + src.getReturnType() + 
 							" can be replaced by " + ref.getMethodName()+ " with return type " + ref.getReturnType());*/
@@ -93,7 +93,7 @@ public class CloneDetector {
 		return matchedMethods;
 
 	}
-
+	
 	
 	private boolean compareEdgeAttributes(DirectedGraph<Node, DefaultEdge> method1pdg, 
 										DirectedGraph<Node, DefaultEdge> method2pdg,
@@ -265,7 +265,6 @@ public class CloneDetector {
 		return matched;
 	}
 	
-	
 
 	/*
 	 * Checks if the abstract syntax tree of the body of method 1 is the same as
@@ -292,7 +291,7 @@ public class CloneDetector {
 	private double calculateDistance(int[] vec1, int[] vec2) {
 		double distance = 0.0;
 		for (int i = 0; i < vec1.length; i++) {
-			distance += (vec1[i] - vec2[i]) * (vec1[i] - vec2[i]);
+			distance += Math.abs(vec1[i] - vec2[i]);
 		}
 		return distance;
 	}
@@ -302,8 +301,90 @@ public class CloneDetector {
 	 * below the threshold
 	 */
 	public boolean matchMethodNodeFeatures(Method method1, Method method2, double threshold) {
+		//System.out.println("Considering "+method1.getMethodName()+" "+method2.getMethodName());
 		NodeFeature feature1 = method1.getMethodFeature();
 		NodeFeature feature2 = method2.getMethodFeature();
+		feature1.makeComparableNodeFeatures(feature2);
+		HashMap<Node,Integer> featureMap1 = feature1.getFeatureMap();
+		HashMap<Node,Integer> featureMap2 = feature2.getFeatureMap();
+		
+		int[] featureArray1 = new int[feature1.getFeatureVectorSize()];
+		int[] featureArray2 = new int[feature2.getFeatureVectorSize()];
+		int count = 0;
+		for(Node key:featureMap1.keySet()){
+			featureArray1[count] = featureMap1.get(key);
+			featureArray2[count] = featureMap2.get(key);
+			count++;
+		}
+		
+		double dist = calculateDistance(featureArray1, featureArray2);
+		//System.out.println("dist "+dist);
+		if (dist <= threshold) {
+			return true;
+		}
+		return false;
+	}
+	
+	//USELESS STUFF THAT WE MIGHT NEED LATER
+	
+	/*
+	public List<Method[]> findSimiliarMethodsPDGDeckard(List<Method> srcMethods) {
+
+		List<Method[]> matchedMethods = new ArrayList<Method[]>();
+		if (methodLibrary == null) {
+			System.out.println("Warning: Method library not initialised, nothing to compare to!");
+			return matchedMethods;
+		}
+		for (Method src : srcMethods) {
+			for (Method ref : methodLibrary) {
+				if (matchMethodPDGsDeckard(src, ref,1)) {
+					Method[] matched = {src,ref};
+					matchedMethods.add(matched);
+				}
+
+			}
+		}
+		return matchedMethods;
+
+	}
+	
+	private NodeFeature getNodeFeature(Node current) {
+		NodeFeature nodeFeature = new NodeFeature();
+		// If a node is of Primitive type then we want to store its
+		// value(whether it
+		// is an int or double) rather than the fact that it is a Primitive type
+		// because that information is more useful.
+		// Do the same for MethodCallExpression.
+		nodeFeature.addNode(current.getClass().toString());
+		//System.out.println("current "+current);
+		//System.out.println("nodeFeature: "+nodeFeature.getFeatureMap());
+		if (current.getChildNodes().size() == 0) {
+			return nodeFeature;
+		}
+		List<Node> currentChildren = current.getChildNodes();
+		for (Node child : currentChildren) {
+			NodeFeature childMethodFeature = getNodeFeature(child);
+			nodeFeature.combineNodeFeatures(childMethodFeature);
+		}
+		return nodeFeature;
+
+	}
+	
+	
+	public boolean matchMethodPDGsDeckard(Method method1, Method method2, double threshold){
+		DirectedPseudograph<Node, DefaultEdge> method1pdg = method1.getPDG();
+		DirectedPseudograph<Node, DefaultEdge> method2pdg = method2.getPDG();
+		
+		//Get the root nodes of the method pdg's
+		Iterator<Node> iter1 = method1pdg.vertexSet().iterator();
+		Iterator<Node> iter2 = method2pdg.vertexSet().iterator();
+		
+		Node v1 = iter1.next();
+		Node v2 = iter2.next();
+		
+		NodeFeature feature1 = getNodeFeature(v1);
+		NodeFeature feature2 = getNodeFeature(v2);
+		
 		feature1.makeComparableNodeFeatures(feature2);
 		HashMap<String,Integer> featureMap1 = feature1.getFeatureMap();
 		HashMap<String,Integer> featureMap2 = feature2.getFeatureMap();
@@ -317,23 +398,13 @@ public class CloneDetector {
 			count++;
 		}
 		
-		/*System.out.println("After comparison: ");
-		System.out.println(method1.getMethodName());
-		System.out.println(feature1.getFeatureMap());
-		for(Integer val: featureArray1){
-			System.out.print(val+" ");
-		}
-		System.out.println(method2.getMethodName());
-		System.out.println(feature2.getFeatureMap());
-		for(Integer val: featureArray2){
-			System.out.print(val+" ");
-		}*/
-		
 		double dist = calculateDistance(featureArray1, featureArray2);
 		if (dist <= threshold) {
 			return true;
 		}
 		return false;
-	}
+		
+	}*/
+
 
 }
