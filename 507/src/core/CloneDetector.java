@@ -327,7 +327,7 @@ public class CloneDetector {
 	
 	//USELESS STUFF THAT WE MIGHT NEED LATER
 	
-	/*
+	
 	public List<Method[]> findSimiliarMethodsPDGDeckard(List<Method> srcMethods) {
 
 		List<Method[]> matchedMethods = new ArrayList<Method[]>();
@@ -337,7 +337,7 @@ public class CloneDetector {
 		}
 		for (Method src : srcMethods) {
 			for (Method ref : methodLibrary) {
-				if (matchMethodPDGsDeckard(src, ref,1)) {
+				if (matchMethodPDGsDeckard(src, ref,4)) {
 					Method[] matched = {src,ref};
 					matchedMethods.add(matched);
 				}
@@ -348,23 +348,24 @@ public class CloneDetector {
 
 	}
 	
-	private NodeFeature getNodeFeature(Node current) {
+	private NodeFeature getNodeFeature(DirectedPseudograph<Node, DefaultEdge> pdg,Node current,DirectedPseudograph<Node, DefaultEdge> visited) {
 		NodeFeature nodeFeature = new NodeFeature();
-		// If a node is of Primitive type then we want to store its
-		// value(whether it
-		// is an int or double) rather than the fact that it is a Primitive type
-		// because that information is more useful.
-		// Do the same for MethodCallExpression.
-		nodeFeature.addNode(current.getClass().toString());
-		//System.out.println("current "+current);
-		//System.out.println("nodeFeature: "+nodeFeature.getFeatureMap());
-		if (current.getChildNodes().size() == 0) {
+		if(!(current instanceof EntryStmt)){
+			nodeFeature.addNode(current);
+		}
+		Set<DefaultEdge> edges1Set = pdg.outgoingEdgesOf(current);
+		if (edges1Set.size() == 0) {
 			return nodeFeature;
 		}
-		List<Node> currentChildren = current.getChildNodes();
-		for (Node child : currentChildren) {
-			NodeFeature childMethodFeature = getNodeFeature(child);
-			nodeFeature.combineNodeFeatures(childMethodFeature);
+		for (DefaultEdge edge: edges1Set){
+			Node target = pdg.getEdgeTarget(edge);
+			//System.out.println("target "+target);
+			visited.addVertex(target);
+			if(!visited.containsEdge(current,target)){
+				visited.addEdge(current, target);
+				NodeFeature childMethodFeature = getNodeFeature(pdg,target,visited);
+				nodeFeature.combineNodeFeatures(childMethodFeature);
+			}
 		}
 		return nodeFeature;
 
@@ -372,8 +373,11 @@ public class CloneDetector {
 	
 	
 	public boolean matchMethodPDGsDeckard(Method method1, Method method2, double threshold){
+		//System.out.println("Considering "+method1.getMethodName()+" "+method2.getMethodName());
 		DirectedPseudograph<Node, DefaultEdge> method1pdg = method1.getPDG();
 		DirectedPseudograph<Node, DefaultEdge> method2pdg = method2.getPDG();
+		DirectedPseudograph<Node, DefaultEdge> visited1 = new DirectedPseudograph<>(DefaultEdge.class);
+		DirectedPseudograph<Node, DefaultEdge> visited2 = new DirectedPseudograph<>(DefaultEdge.class);
 		
 		//Get the root nodes of the method pdg's
 		Iterator<Node> iter1 = method1pdg.vertexSet().iterator();
@@ -382,29 +386,35 @@ public class CloneDetector {
 		Node v1 = iter1.next();
 		Node v2 = iter2.next();
 		
-		NodeFeature feature1 = getNodeFeature(v1);
-		NodeFeature feature2 = getNodeFeature(v2);
+		visited1.addVertex(v1);
+		visited2.addVertex(v2);
+		
+		NodeFeature feature1 = getNodeFeature(method1pdg,v1,visited1);
+		NodeFeature feature2 = getNodeFeature(method2pdg,v2,visited2);
+		//System.out.println("feature1: "+feature1.getFeatureMap());
+		//System.out.println("feature2: "+feature2.getFeatureMap());
 		
 		feature1.makeComparableNodeFeatures(feature2);
-		HashMap<String,Integer> featureMap1 = feature1.getFeatureMap();
-		HashMap<String,Integer> featureMap2 = feature2.getFeatureMap();
+		HashMap<Node,Integer> featureMap1 = feature1.getFeatureMap();
+		HashMap<Node,Integer> featureMap2 = feature2.getFeatureMap();
 		
 		int[] featureArray1 = new int[feature1.getFeatureVectorSize()];
 		int[] featureArray2 = new int[feature2.getFeatureVectorSize()];
 		int count = 0;
-		for(String key:featureMap1.keySet()){
+		for(Node key:featureMap1.keySet()){
 			featureArray1[count] = featureMap1.get(key);
 			featureArray2[count] = featureMap2.get(key);
 			count++;
 		}
 		
 		double dist = calculateDistance(featureArray1, featureArray2);
+		//System.out.println("distance "+dist);
 		if (dist <= threshold) {
 			return true;
 		}
 		return false;
 		
-	}*/
+	}
 
 
 }

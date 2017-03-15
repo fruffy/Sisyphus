@@ -64,11 +64,11 @@ public class CodeHelper {
 
 		System.out.println("ANALYSIS: PDG");
 		ArrayList<Method[]> matchesPDG = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsPDG(srcMethods);
-		/*for(Method[] match:matchesPDG){
-			System.out.println("All matches: "+match[0].getReturnType()+
-								" "+match[0].getMethodName()+", "+
-								match[1].getReturnType()+" "+match[1].getMethodName());
-		}*/
+		//for(Method[] match:matchesPDG){
+		//	System.out.println("All matches: "+match[0].getReturnType()+
+		//						" "+match[0].getMethodName()+", "+
+		//						match[1].getReturnType()+" "+match[1].getMethodName());
+		//}
 		Analysis analysisPDG = new Analysis(matchesPDG);
 		int[] tpFp = analysisPDG.tpfp();
 		System.out.println("Number of test code functions = "+ srcMethods.size());
@@ -78,7 +78,7 @@ public class CodeHelper {
 		System.out.println("Ratiof of true positives to false positives "+ tpFp[0]/(tpFp[1]*1.0));
 		
 		
-		System.out.println("ANALYSIS: AST");
+		System.out.println("ANALYSIS: AST Deckard");
 		ArrayList<Method[]> matchesAST = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsAST(srcMethods);
 		Analysis analysisAST = new Analysis(matchesAST);
 		tpFp = analysisAST.tpfp();
@@ -87,7 +87,17 @@ public class CodeHelper {
 		System.out.println("Number of true positives = "+tpFp[0]);
 		System.out.println("Number of false positives = "+tpFp[1]);
 		System.out.println("Ratiof of true positives to false positives "+ tpFp[0]/(tpFp[1]*1.0));
-
+		
+		/*System.out.println("ANALYSIS: PDG Deckard");
+		ArrayList<Method[]> matchesPDGDeckard = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsPDGDeckard(srcMethods);
+		Analysis analysisPDGDeckard = new Analysis(matchesPDGDeckard);
+		int[] tpFp = analysisPDGDeckard.tpfp();
+		System.out.println("Number of test code functions = "+ srcMethods.size());
+		System.out.println("Number of matches = "+matchesPDGDeckard.size());
+		System.out.println("Number of true positives = "+tpFp[0]);
+		System.out.println("Number of false positives = "+tpFp[1]);
+		System.out.println("Ratiof of true positives to false positives "+ tpFp[0]/(tpFp[1]*1.0));*/
+		
 		/*Method method1 = srcMethods.get(46);
 		Method method2 = libMethods.get(1);
 		method1.constructPDG();
