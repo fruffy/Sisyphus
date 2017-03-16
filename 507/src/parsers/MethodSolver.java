@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
-import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.expr.AssignExpr;
@@ -12,10 +11,7 @@ import com.github.javaparser.ast.expr.AssignExpr.Operator;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
-import com.github.javaparser.ast.expr.SimpleName;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
-import com.github.javaparser.ast.nodeTypes.NodeWithBlockStmt;
-import com.github.javaparser.ast.nodeTypes.NodeWithExpression;
 import com.github.javaparser.ast.nodeTypes.NodeWithStatements;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
@@ -25,21 +21,20 @@ import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.type.PrimitiveType;
 import com.github.javaparser.ast.type.PrimitiveType.Primitive;
-import com.github.javaparser.ast.type.Type;
-import com.github.javaparser.ast.type.WildcardType;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
 import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
 import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserMethodDeclaration;
 import com.github.javaparser.symbolsolver.model.declarations.MethodDeclaration;
 import com.github.javaparser.symbolsolver.model.resolution.SymbolReference;
+import com.github.javaparser.symbolsolver.model.resolution.UnsolvedSymbolException;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
 
 public class MethodSolver {
 	CombinedTypeSolver typeSolver;
 	BlockStmt methodBody;
-	int loopCanary = 0;
+	int maxDepth;
 
 	public MethodSolver(BlockStmt methodBody) {
 		this.methodBody = methodBody;
@@ -47,6 +42,7 @@ public class MethodSolver {
 		this.typeSolver.add(new JavaParserTypeSolver(new File("../jre_library")));
 		this.typeSolver.add(new JavaParserTypeSolver(new File("./")));
 		// this.typeSolver.add(new ReflectionTypeSolver());
+		this.maxDepth = 0;
 		processMethod();
 	}
 
@@ -57,8 +53,10 @@ public class MethodSolver {
 
 			try {
 				return modifyMethodName(methodCallExpr, facade);
-			} catch (RuntimeException e) {
+			} catch (UnsolvedSymbolException e) {
 				System.out.println("ERROR " + e.getMessage());
+			} catch (RuntimeException e) {
+				e.printStackTrace();
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}
@@ -87,74 +85,73 @@ public class MethodSolver {
 			Expression argumentAssignment;
 			AssignExpr methodCallAssignment = null;
 			Expression callExtractor = null;
-			int tracker = 0;
 			for (MethodDeclaration matchingDeclaration : methodDecl.declaringType().getDeclaredMethods()) {
 				if (matchingDeclaration instanceof JavaParserMethodDeclaration) {
 					if (matchingDeclaration.getSignature().equals(methodDecl.getSignature())) {
+						System.out.println("matchingDeclaration: "+matchingDeclaration.getQualifiedName());
 						declarationBody = ((JavaParserMethodDeclaration) matchingDeclaration).getWrappedNode()
 								.getBody();
 						List<Expression> methodArguments = methodCallExpr.getArguments();
 						List<Parameter> matchArguments = ((JavaParserMethodDeclaration) matchingDeclaration)
 								.getWrappedNode().getParameters();
-						for (int i = 0; i < methodArguments.size(); i++) {
-							argumentAssignment = new AssignExpr(new NameExpr(matchArguments.get(i).toString()),
-									methodArguments.get(i), Operator.ASSIGN);
 
-							while (!(methodCallParent instanceof BlockStmt)) {
+						while (!(methodCallParent instanceof BlockStmt)) {
 
-								if (methodCallParent instanceof IfStmt) {
-									callExtractor = ((IfStmt) methodCallParent).getCondition();
-									if (callExtractor.equals(methodCallExpr)) {
-										NameExpr replacementVariable = new NameExpr("output");
-										((IfStmt) methodCallParent).setCondition(replacementVariable);
-										methodCallAssignment = new AssignExpr(
-												new VariableDeclarationExpr(new PrimitiveType(Primitive.BOOLEAN),
-														replacementVariable.getNameAsString()),
-												callExtractor, Operator.ASSIGN);
-										returnNode = replacementVariable;
-									}
-								}
-								if (methodCallParent instanceof ReturnStmt) {
+							if (methodCallParent instanceof IfStmt) {
+								callExtractor = ((IfStmt) methodCallParent).getCondition();
+								if (callExtractor.equals(methodCallExpr)) {
 									NameExpr replacementVariable = new NameExpr("output");
-									callExtractor = ((ReturnStmt) methodCallParent).getExpression().get();
-									((ReturnStmt) methodCallParent).setExpression(replacementVariable);
-
+									((IfStmt) methodCallParent).setCondition(replacementVariable);
 									methodCallAssignment = new AssignExpr(
-											new VariableDeclarationExpr(methodCallParent
-													.getAncestorOfType(
-															com.github.javaparser.ast.body.MethodDeclaration.class)
-													.get().getType(), replacementVariable.getNameAsString()),
+											new VariableDeclarationExpr(new PrimitiveType(Primitive.BOOLEAN),
+													replacementVariable.getNameAsString()),
 											callExtractor, Operator.ASSIGN);
 									returnNode = replacementVariable;
 								}
-								attachmentBody = methodCallParent;
-								methodCallParent = methodCallParent.getParentNode().get();
 							}
-							int childIndex = methodCallParent.getChildNodes().indexOf(attachmentBody);
+							if (methodCallParent instanceof ReturnStmt) {
+								NameExpr replacementVariable = new NameExpr("output");
+								callExtractor = ((ReturnStmt) methodCallParent).getExpression().get();
+								((ReturnStmt) methodCallParent).setExpression(replacementVariable);
+
+								methodCallAssignment = new AssignExpr(
+										new VariableDeclarationExpr(methodCallParent
+												.getAncestorOfType(
+														com.github.javaparser.ast.body.MethodDeclaration.class)
+												.get().getType(), replacementVariable.getNameAsString()),
+										callExtractor, Operator.ASSIGN);
+								returnNode = replacementVariable;
+							}
+							attachmentBody = methodCallParent;
+							methodCallParent = methodCallParent.getParentNode().get();
+						}
+						int childIndex = methodCallParent.getChildNodes().indexOf(attachmentBody);
+						for (int i = 0; i < methodArguments.size(); i++) {
+							argumentAssignment = new AssignExpr(new NameExpr(matchArguments.get(i).toString()),
+									methodArguments.get(i), Operator.ASSIGN);
+							childIndex = methodCallParent.getChildNodes().indexOf(attachmentBody);
 							((BlockStmt) methodCallParent).addStatement(childIndex++,
 									new ExpressionStmt(argumentAssignment));
-							if (methodCallAssignment != null) {
-								((BlockStmt) methodCallParent).addStatement(childIndex, methodCallAssignment);
-							}
 						}
-
+						if (methodCallAssignment != null) {
+							((BlockStmt) methodCallParent).addStatement(childIndex, methodCallAssignment);
+						}
 						methodCallParent = methodCallExpr.getParentNode().get();
 						attachmentBody = methodCallExpr;
 
 						// methodCallExpr.removeScope();
 						// methodCallExpr.setName(methodDecl.getQualifiedName());
 						if (declarationBody != null && declarationBody.isPresent()) {
-							
-							if (loopCanary <100) {
-								System.out.println(loopCanary);
-								loopCanary++;
-								declarationBody.get().accept(new MethodResolveVisitor(), JavaParserFacade.get(typeSolver));
-							} else {
-								attachmentBody = methodCallExpr;
-								while(attachmentBody.remove()) {
-									attachmentBody = attachmentBody.getParentNode().get();
-								}
-							}
+
+							/*
+							 * if (this.maxDepth <50) { this.maxDepth++;
+							 * declarationBody.get().accept(new
+							 * MethodResolveVisitor(),
+							 * JavaParserFacade.get(typeSolver)); this.maxDepth
+							 * = 0; } else { attachmentBody = methodCallExpr;
+							 * while(attachmentBody.remove()) { attachmentBody =
+							 * attachmentBody.getParentNode().get(); } }
+							 */
 							methodCallParent = methodCallExpr.getParentNode().get();
 							attachmentBody = methodCallExpr;
 							BlockStmt newBody = declarationBody.get().clone();
@@ -169,7 +166,8 @@ public class MethodSolver {
 								methodCallParent = methodCallParent.getParentNode().get();
 								replaceMethod(attachmentBody, methodCallParent, methodCallAssignment, newBody);
 							} else {
-								System.out.println(methodCallParent.getClass());
+								System.out
+										.println("ALERT: METHOD CALL IS NOT RESOLVED: " + methodCallParent.getClass());
 								// methodCallExpr.removeScope();
 								// methodCallExpr.setName(methodDecl.getQualifiedName());
 							}
@@ -177,9 +175,7 @@ public class MethodSolver {
 						}
 					}
 				}
-
 			}
-
 		} else
 
 		{
@@ -199,7 +195,9 @@ public class MethodSolver {
 			for (Node n : newBody.getChildNodes()) {
 				n = n.clone();
 				if (n instanceof ReturnStmt) {
-					methodCallAssignment.setValue(((ReturnStmt) n).getExpression().get());
+					if (methodCallAssignment != null) {
+						methodCallAssignment.setValue(((ReturnStmt) n).getExpression().get());
+					}
 					break;
 				} else if (n instanceof Statement) {
 					((NodeWithStatements<?>) methodCallParent).addStatement(childIndex, (Statement) n);
