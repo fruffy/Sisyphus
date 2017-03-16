@@ -56,7 +56,8 @@ public class MethodSolver {
 			} catch (UnsolvedSymbolException e) {
 				System.out.println("ERROR " + e.getMessage());
 			} catch (RuntimeException e) {
-				e.printStackTrace();
+				//System.out.println("ERROR " + e.getMessage());
+				//e.printStackTrace();
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}
@@ -78,6 +79,11 @@ public class MethodSolver {
 		SymbolReference<MethodDeclaration> methodRef = facade.solve(methodCallExpr);
 		Node attachmentBody = null;
 		Node methodCallParent = methodCallExpr.getParentNode().get();
+		Optional<com.github.javaparser.ast.body.MethodDeclaration> methodCallAncestor = methodCallExpr
+										.getAncestorOfType(com.github.javaparser.ast.body.MethodDeclaration.class);	
+		if (methodCallAncestor.get().getNameAsString().equals(methodCallExpr.getNameAsString())) {
+			return methodCallExpr ;
+		}
 		Optional<BlockStmt> declarationBody = null;
 		Node returnNode = null;
 		if (methodRef.isSolved()) {
