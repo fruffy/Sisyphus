@@ -61,14 +61,27 @@ public class CodeHelper {
 		libMethods = libparser.getMethods();
 
 		CloneDetector cloneDetect = new CloneDetector(libparser.getMethods());
+		//matchSrcWithLib(srcMethods,cloneDetect);
+		
+		int numParticipants = 10;
+		int numMethods = srcMethods.size()/numParticipants;
+		testCodeMatches(srcMethods,cloneDetect,numParticipants,numMethods);
 
+	}
+	
+	/**
+	 * Find matches between src and library functions
+	 * @param srcMethods
+	 * @param cloneDetect
+	 */
+	public static void matchSrcWithLib(ArrayList<Method> srcMethods, CloneDetector cloneDetect){
 		System.out.println("ANALYSIS: PDG");
 		ArrayList<Method[]> matchesPDG = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsPDG(srcMethods);
-		/*for(Method[] match:matchesPDG){
-			System.out.println("All matches: "+match[0].getReturnType()+
-								" "+match[0].getMethodName()+", "+
-								match[1].getReturnType()+" "+match[1].getMethodName());
-		}*/
+		//for(Method[] match:matchesPDG){
+		//	System.out.println("All matches: "+match[0].getReturnType()+
+		//						" "+match[0].getMethodName()+", "+
+		//						match[1].getReturnType()+" "+match[1].getMethodName());
+		//}
 		Analysis analysisPDG = new Analysis(matchesPDG);
 		int[] tpFp = analysisPDG.tpfp();
 		System.out.println("Number of test code functions = "+ srcMethods.size());
@@ -78,7 +91,17 @@ public class CodeHelper {
 		System.out.println("Ratiof of true positives to false positives "+ tpFp[0]/(tpFp[1]*1.0));
 		
 		
-		System.out.println("ANALYSIS: AST");
+		System.out.println("ANALYSIS: AST Deckard");
+		ArrayList<Method[]> matchesDeckard = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsNodeFeatures(srcMethods);
+		Analysis analysisDeckard = new Analysis(matchesDeckard);
+		tpFp = analysisDeckard.tpfp();
+		System.out.println("Number of test code functions = "+ srcMethods.size());
+		System.out.println("Number of matches = "+matchesDeckard.size());
+		System.out.println("Number of true positives = "+tpFp[0]);
+		System.out.println("Number of false positives = "+tpFp[1]);
+		System.out.println("Ratiof of true positives to false positives "+ tpFp[0]/(tpFp[1]*1.0));
+		
+		/*System.out.println("ANALYSIS: AST Simple Matching");
 		ArrayList<Method[]> matchesAST = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsAST(srcMethods);
 		Analysis analysisAST = new Analysis(matchesAST);
 		tpFp = analysisAST.tpfp();
@@ -86,16 +109,72 @@ public class CodeHelper {
 		System.out.println("Number of matches = "+matchesAST.size());
 		System.out.println("Number of true positives = "+tpFp[0]);
 		System.out.println("Number of false positives = "+tpFp[1]);
-		System.out.println("Ratiof of true positives to false positives "+ tpFp[0]/(tpFp[1]*1.0));
-
-		/*Method method1 = srcMethods.get(46);
-		Method method2 = libMethods.get(1);
-		method1.constructPDG();
+		System.out.println("Ratiof of true positives to false positives "+ tpFp[0]/(tpFp[1]*1.0));*/
+	}
+	
+	/**
+	 * Find matches between methods implemented by different participants
+	 * @param srcMethods
+	 * @param cloneDetect
+	 * @param numParticipants
+	 * @param numMethods
+	 */
+	public static void testCodeMatches(ArrayList<Method> srcMethods, CloneDetector cloneDetect, int numParticipants, int numMethods){
 		
-		PDGGraphViz.writeDot(method1.getCdg(), "cdg.dot");
-		PDGGraphViz.writeDot(method1.getDdg(), "ddg.dot");
-		method1.printComparison();*/
-
+		int pIndex = numParticipants;
+		int totalPossibleMatches = 0;
+		while(pIndex!=0){
+			totalPossibleMatches += pIndex;
+			pIndex--;
+		}
+		System.out.println("Testing PDG matching between participants' code");
+		float[] tpProportion = new float[numMethods];
+		for(int n = 0; n<numMethods; n++){
+			for(int i = n*numParticipants; i<n*numParticipants + numParticipants; i++){
+				for(int j = i+1; j<n*numParticipants + numParticipants; j++){
+					/*System.out.println("i "+i+" j "+j);
+					System.out.println("Trying match between "+
+				srcMethods.get(i).getMethodName()+" "+srcMethods.get(j).getMethodName());*/
+					boolean match = cloneDetect.matchMethodPDGs(srcMethods.get(i), srcMethods.get(j));
+					//System.out.println("match "+match);
+					if(match){
+						tpProportion[n]++;
+					}
+				}
+			}
+			tpProportion[n] = tpProportion[n]/totalPossibleMatches;
+		}
+	
+		System.out.println("Proportion of true positives for each method:");
+		for (int i = 0; i<tpProportion.length; i++){
+			System.out.print(tpProportion[i]+" ");
+		}
+		System.out.print("\n");
+		
+		System.out.println("Testing AST Deckard between participants' code");
+		tpProportion = new float[numMethods];
+		for(int n = 0; n<numMethods; n++){
+			for(int i = n*numParticipants; i<n*numParticipants + numParticipants; i++){
+				for(int j = i+1; j<n*numParticipants + numParticipants; j++){
+					/*System.out.println("i "+i+" j "+j);
+					System.out.println("Trying match between "+
+				srcMethods.get(i).getMethodName()+" "+srcMethods.get(j).getMethodName());*/
+					boolean match = cloneDetect.matchMethodNodeFeatures(srcMethods.get(i), srcMethods.get(j),6.0);
+					//System.out.println("match "+match);
+					if(match){
+						tpProportion[n]++;
+					}
+				}
+			}
+			tpProportion[n] = tpProportion[n]/totalPossibleMatches;
+		}
+	
+		System.out.println("Proportion of true positives for each method:");
+		for (int i = 0; i<tpProportion.length; i++){
+			System.out.print(tpProportion[i]+" ");
+		}
+		System.out.print("\n");
+	
 	}
 
 	/**
@@ -190,6 +269,24 @@ public class CodeHelper {
 		 * System.out.println(cloneDetect.matchMethodNodeFeatures(srcMethod1,
 		 * srcMethod2, 0.0));
 		 */
+		
+		/*System.out.println("ANALYSIS: PDG Deckard");
+		ArrayList<Method[]> matchesPDGDeckard = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsPDGDeckard(srcMethods);
+		Analysis analysisPDGDeckard = new Analysis(matchesPDGDeckard);
+		int[] tpFp = analysisPDGDeckard.tpfp();
+		System.out.println("Number of test code functions = "+ srcMethods.size());
+		System.out.println("Number of matches = "+matchesPDGDeckard.size());
+		System.out.println("Number of true positives = "+tpFp[0]);
+		System.out.println("Number of false positives = "+tpFp[1]);
+		System.out.println("Ratiof of true positives to false positives "+ tpFp[0]/(tpFp[1]*1.0));*/
+		
+		/*Method method1 = srcMethods.get(46);
+		Method method2 = libMethods.get(1);
+		method1.constructPDG();
+		
+		PDGGraphViz.writeDot(method1.getCdg(), "cdg.dot");
+		PDGGraphViz.writeDot(method1.getDdg(), "ddg.dot");
+		method1.printComparison();*/
 	}
 
 }

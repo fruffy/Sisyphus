@@ -123,18 +123,16 @@ public class TestCodeV2 {
 	
 	
 	/**
-	 * @author Itrat
-	 * Returns the absolute value of val
+	 * @author Al-Shahna
+	 * Returns the absolute value an int value
 	 * @param val
-	 * @return
+	 * @return the absolute value of val.
 	 */
-	public static int absoluteValueI(int val){
-		if(val < 0){
-			return -val;
-		}
-		return val;
+	public int absoluteValueAJ(int val){
+		//YOUR CODE HERE
+		if (val < 0) return val * -1;
+		else return val;
 	}
-	
 	
 /******************************************************************/
 	
@@ -270,17 +268,17 @@ public class TestCodeV2 {
 	
 	
 	/**
-	 * @author Itrat
+	 * @author Al-Shahna
 	 * Returns the maximum of val1 and val2
 	 * @param val1
 	 * @param val2
 	 * @return
 	 */
-	public static int maximumI(int val1, int val2){
-		if(val1 < val2){
-			return val2;
-		}
-		return val1;
+	public static int maximumAJ(int val1, int val2){
+		//YOUR CODE HERE
+		if (val1 > val2) return val1;
+		else if (val2 > val1) return val2;
+		else return val1; // if they are equal just return the first number
 	}
 	
 	
@@ -411,17 +409,17 @@ public class TestCodeV2 {
 	}
 	
 	/**
-	 * @author Itrat
+	 * @author Al-Shahna
 	 * Returns the minimum of val1 and val2
 	 * @param val1
 	 * @param val2
 	 * @return
 	 */
-	public static int minimumI(int val1, int val2){
-		if(val1 < val2){
-			return val1;
-		}
-		return val2;
+	public static int minimumAJ(int val1, int val2){
+		//YOUR CODE HERE
+		if (val1 < val2) return val1;
+		else if (val2 < val1) return val2;
+		else return val1; // if they are equal just return the first number
 	}
 	
 	
@@ -572,6 +570,39 @@ public class TestCodeV2 {
 	}
 	
 	
+	/**
+	 * @author Al-Shahna
+	 * Returns the value of the first argument raised to the power
+	 * of the second argument
+	 * @param val1 - the base
+	 * @param val2 - the exponent
+	 * @return val1^val2
+	 */
+	public static double powerAJ(double val1, double val2){
+		//YOUR CODE HERE
+		double result = 1;
+		// check if exponent is 0
+		if (val2 == 0) return result;
+			
+		result = val1;
+				
+		if (val2 > 0) {
+			// if val2 is positive
+			for (int i = 0; i < val2; i++) {
+				result = result*val1;
+			}
+		} else {
+			// if val2 is negative then return 1/result
+			val2 = val2*-1.0;
+			for (int i = 0; i < val2; i++) {
+				result = result*val1;
+			}
+			result = 1.0/result;
+		}
+		return result;
+
+	}
+	
 	/**************************************************************/
 	
 
@@ -687,6 +718,20 @@ public class TestCodeV2 {
 	 * @param array - the array where the elements are swapped
 	 */
 	public static void swapA(int pos1, int pos2, int[] array){
+		int temp = array[pos1];
+		array[pos1] = array[pos2];
+		array[pos2] = temp;
+	}
+	
+	/**
+	 * @author Al-Shahna
+	 * Swaps the element at pos1 with element at pos2 in array
+	 * @param pos1 - the position of one element to be swapped
+	 * @param pos2 - the position of another element to be swapped
+	 * @param array - the array where the elements are swapped
+	 */
+	public static void swapAJ(int pos1, int pos2, int[] array){
+		//YOUR CODE HERE
 		int temp = array[pos1];
 		array[pos1] = array[pos2];
 		array[pos2] = temp;
@@ -904,22 +949,31 @@ public class TestCodeV2 {
 	}
 	
 	/**
-	 * @author Itrat
-	 * Check if array1 equals array2
-	 * @param array1
-	 * @param array2
-	 * @return 
+	 * @author Al-Shahna
+	 * Returns true if the two specified arrays of ints
+	 * are equal to one another. Two arrays are considered equal 
+	 * if both arrays contain the same number of elements, and all 
+	 * corresponding pairs of elements in the two arrays are equal. 
+	 * @param array1 -  one array to be tested for equality
+	 * @param array2 - the other array to be tested for equality
+	 * @return true if the two arrays are equal
 	 */
-	public static boolean equalsI(int[] array1, int[] array2){
-		if(array1.length != array2.length){
-			return false;
-		}
-		for(int i = 0; i<array1.length; i++){
-			if(array1[i]!=array2[i]){
-				return false;
+	public static boolean equalsAJ(int[] array1, int[] array2){
+		//YOUR CODE HERE
+		boolean result = false;
+		
+		// first check the arrays are of the same size
+		if(array1.size() != array2.size()) return result;
+		
+		result = true;
+		for (int i = 0; i < array1.size(); i++) {
+			if (array1[i] != array2[i]) {
+				result = false;
+				break;
 			}
 		}
-		return true;
+		
+		return result;		
 	}
 	
 	
@@ -1050,17 +1104,20 @@ public class TestCodeV2 {
 	}
 	
 	/**
-	 * @author Itrat
-	 * Fill array  with val
-	 * @param array
-	 * @param val
+	 * @author Al-Shahna
+	 * Assigns the specified int value to each element of the specified 
+	 * array of ints.
+	 * @param array - the array to be filled
+	 * @param val - the value to be stored in all elements of the array
 	 */
-	public static void fillArrayI(int[] array, int val){
-		for(int i = 0; i<array.length; i++){
+	public static void fillArrayAJ(int[] array, int val){
+		//YOUR CODE HERE
+		assert(array.size() != 0);
+		
+		for (int i = 0; i<array.size(); i++) {
 			array[i] = val;
 		}
 	}
-	
 	
 	/*************************************************************/
 	
@@ -1241,22 +1298,28 @@ public class TestCodeV2 {
 	}
 	
 	/**
-	 * @author Itrat
-	 * Fill array with val from startIndex to endIndex(not inclusive)
-	 * @param array
-	 * @param val
-	 * @param startIndex
-	 * @param endIndex
+	 * @author Al-Shahna
+	 * Assigns the specified int value to each element of the specified 
+	 * range of the specified array of ints. The range to be filled 
+	 * extends from index startIndex, inclusive, to index endIndex, 
+	 * exclusive.
+	 * @param array - the array to be filled
+	 * @param val - the value to be stored in all elements of the array
+	 * @param startIndex - the index of the first element (inclusive) to be filled with the specified value
+	 * @param endIndex - the index of the last element (exclusive) to be filled with the specified value
 	 */
 	
-	public static void fillArrayPartiallyI(int[] array, int val, int startIndex, int endIndex){
-		if(startIndex < 0 || startIndex >= array.length || endIndex <0 || endIndex >= array.length){
-			return;
-		}
-		for(int i = startIndex; i<endIndex; i++){
+	public static void fillArrayPartiallyAJ(int[] array, int val, int startIndex, int endIndex){
+		//YOUR CODE HERE
+		
+		assert (startIndex < endIndex); // since exclusive
+		assert (array.size() != 0);
+		assert (array.size() >= endIndex);
+		for (int i = startIndex; i < endIndex; i++) {
 			array[i] = val;
 		}
 	}
+
 	
 	
 	/*************************************************************/
@@ -1492,18 +1555,33 @@ public class TestCodeV2 {
 	}
 	
 	/**
-	 * @author Itrat
-	 * Returns a copy of array
-	 * @param array
-	 * @return
+	 * @author Al-Shahna
+	 * Copies the specified array, truncating or padding with zeros (if necessary) 
+	 * so the copy has the specified length. For all indices that are valid in both
+	 * the original array and the copy, the two arrays will contain identical values.
+	 * For any indices that are valid in the copy but not the original, the copy will 
+	 * contain 0. Such indices will exist if and only if the specified length is greater 
+	 * than that of the original array.
+	 * @param array - the array to be copied
+	 * @param newLength - the length of the copy to be returned
+	 * @return a copy of the original array, truncated or padded with zeros to obtain the specified length
 	 */
-	public static int[] returnCopyI(int[] array){
-		int[] newArray = new int[array.length];
-		for(int i = 0; i<newArray.length; i++){
-			newArray[i] = array[i];
+	public static int[] returnCopyAJ(int[] array, int newLength){
+		//YOUR CODE HERE
+		assert (array.size() != 0);
+		
+		int[] newArray = new int[newLength];
+		
+		for (int i = 0; i < newLength; i++) {
+			if (i <= array.length) {
+				newArray[i] = array[i]; // this will auto truncate if newLength < original size
+			} else {
+				newArray[i] = 0; // add padding
+			}
 		}
 		return newArray;
 	}
+
 	
 	/*************************************************************/
 	
