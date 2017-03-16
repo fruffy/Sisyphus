@@ -36,14 +36,44 @@ public class CloneDetector {
 	public CloneDetector() {
 	}
 
+	
 	/**
 	 * Takes a list of Method objects and matches it against a reference library
-	 * Returns a list of matched methods
+	 * Returns a list of matched methods. Compare AST's of methods
 	 * 
 	 * @param srcMethods
 	 * @return
 	 */
 	public List<Method[]> findSimiliarMethodsAST(List<Method> srcMethods) {
+
+		List<Method[]> matchedMethods = new ArrayList<Method[]>();
+		if (methodLibrary == null) {
+			System.out.println("Warning: Method library not initialised, nothing to compare to!");
+			return matchedMethods;
+		}
+		for (Method src : srcMethods) {
+			for (Method ref : methodLibrary) {
+				if (matchMethodDeclaration(src, ref)) {
+					Method[] matched = {src,ref};
+					/*System.out.println("Match! " + src.getMethodName() + " with return type " + src.getReturnType() + 
+							" can be replaced by " + ref.getMethodName()+ " with return type " + ref.getReturnType());*/
+					matchedMethods.add(matched);
+				}
+
+			}
+		}
+		return matchedMethods;
+
+	}
+	
+	/**
+	 * Takes a list of Method objects and matches it against a reference library
+	 * Returns a list of matched methods. Compare NodeFeatures of Methods
+	 * 
+	 * @param srcMethods
+	 * @return
+	 */
+	public List<Method[]> findSimiliarMethodsNodeFeatures(List<Method> srcMethods) {
 
 		List<Method[]> matchedMethods = new ArrayList<Method[]>();
 		if (methodLibrary == null) {
@@ -67,7 +97,7 @@ public class CloneDetector {
 	
 	/**
 	 * Takes a list of Method objects and matches it against a reference library
-	 * Returns a list of matched methods
+	 * Returns a list of matched methods. Compare PDGs
 	 * 
 	 * @param srcMethods
 	 * @return
@@ -94,7 +124,15 @@ public class CloneDetector {
 
 	}
 	
-	
+	/**
+	 * Compares edges edges edge1 and edge2 from method1pdg and method2pdf
+	 * respectively
+	 * @param method1pdg
+	 * @param method2pdg
+	 * @param edge1
+	 * @param edge2
+	 * @return
+	 */
 	private boolean compareEdgeAttributes(DirectedGraph<Node, DefaultEdge> method1pdg, 
 										DirectedGraph<Node, DefaultEdge> method2pdg,
 										DefaultEdge edge1, DefaultEdge edge2){
@@ -110,6 +148,7 @@ public class CloneDetector {
 	}
 	
 	/**
+	 * 
 	 * Check if there exists a path of size k in g1 for which there is a
 	 * similar path (with the same vertex and edge attributes) in g2
 	 * Store the respective similar subgraphs in maxGraph.
@@ -119,6 +158,16 @@ public class CloneDetector {
 	 * Return false otherwise
 	 * Algorithm taken from the krinke paper 
 	 * http://www.eecs.yorku.ca/course_archive/2004-05/F/6431/ResearchPapers/Krinke.pdf
+	 * l stores the height of the maxGraph
+	 * lastMatched1, lastMatched2 store the nodes in method1pdg and
+	 * method2 pdg respectively to store the nodes that last matched
+	 * with each other. 
+	 * matchedPdgHeight stores the maximum height of method1Pdg and
+	 * method2Pdg from lastMatched1 and lastMatched2 respectively plus
+	 * the height of maxGraph. lastMatched1, lastMatched2 and matchedPdgHeight
+	 * are used to calculate max height of PDG's so that we can get
+	 * an idea of how much more we needed to get if the function returns
+	 * false
 	 * @param v1
 	 * @param v2
 	 * @param method1pdg
@@ -126,9 +175,9 @@ public class CloneDetector {
 	 * @param maxGraph
 	 * @param l
 	 * @param k
-	 * @param lastMatched1, lastMatched2 and matchedPdgHeight are 
-	 * helper variables to calculate height of maximal graph and pdg
-	 * for comparison purposes
+	 * @param lastMatched1
+	 * @param lastMatched2
+	 * @param matchedPdgHeight
 	 * @return
 	 */
 	private boolean maximalPathSimilar(Node v1, Node v2,
@@ -179,7 +228,10 @@ public class CloneDetector {
 	}
 	
 	/**
-	 * Calculate the height
+	 * Calculate the height of Node root in graph g
+	 * @param root
+	 * @param g
+	 * @return
 	 */
 	private int height(Node root, DirectedPseudograph<Node, DefaultEdge> g){
 		if(root==null){
@@ -202,6 +254,14 @@ public class CloneDetector {
 		}
 		return 1 + maxHeight;
 	}
+	
+	/**
+	 * Use graph similarity algorithm to match pdgs of method1
+	 * and method2
+	 * @param method1
+	 * @param method2
+	 * @return
+	 */
 	public boolean matchMethodPDGs(Method method1, Method method2){
 		/*System.out.println("Checking match: "+method1.getMethodName()+
 							" "+method2.getMethodName());*/
@@ -236,28 +296,6 @@ public class CloneDetector {
 		
 	
 		if(matched){
-			/*System.out.println("Checking match: "+method1.getMethodName()+
-					" "+method2.getMethodName());
-			System.out.println("\n+++++++++++++++++method1pdg++++++++++++++++++++++++++++++++");
-			for (DefaultEdge e : method1pdg.edgeSet()) {
-				System.out.println(method1pdg.getEdgeSource(e) + " --> " + method1pdg.getEdgeTarget(e));
-			}
-			System.out.println("***************");
-			
-			System.out.println("+++++++++++++++++method2pdg++++++++++++++++++++++++++++++++");
-			for (DefaultEdge e : method2pdg.edgeSet()) {
-				System.out.println(method2pdg.getEdgeSource(e) + " --> " + method2pdg.getEdgeTarget(e));
-			}
-			System.out.println("***************");
-			System.out.println("+++++++++++++++++maximalSimilarGraph++++++++++++++++++++++++++++++++");
-			for (DefaultEdge e : maxGraph.edgeSet()) {
-				System.out.println(maxGraph.getEdgeSource(e) + " --> " + maxGraph.getEdgeTarget(e));
-			}
-			System.out.println("lastMatched "+ lastMatched1[0]);
-			System.out.println("maxGraphHeight " + l[0]);
-			System.out.println("maxPDGHeight "+ matchedPdgHeight[0]);
-			System.out.println("ifMatched "+matched);
-			System.out.println("\n***************");*/
 			PDGGraphViz.writeDotNode(method1pdg, "pdg1.dot");
 			PDGGraphViz.writeDotNode(method2pdg, "pdg2.dot");
 			PDGGraphViz.writeDotNode(maxGraph, "max.dot");
@@ -270,19 +308,11 @@ public class CloneDetector {
 	 * Checks if the abstract syntax tree of the body of method 1 is the same as
 	 * that of method2
 	 */
-	public boolean matchMethodNodes(Method method1, Method method2) {
-		List<Node> nodes1 = method1.getMethodNodes();
-		List<Node> nodes2 = method2.getMethodNodes();
-		if (nodes1.size() != nodes2.size()) {
-			return false;
+	public boolean matchMethodDeclaration(Method method1, Method method2) {
+		if(method1.getFilteredMethod().equals(method2.getFilteredMethod())){
+			return true;
 		}
-
-		for (int i = 0; i < nodes1.size(); i++) {
-			if (!nodes1.get(i).getClass().equals(nodes2.get(i).getClass())) {
-				return false;
-			}
-		}
-		return true;
+		return false;
 	}
 
 	/*
@@ -328,7 +358,7 @@ public class CloneDetector {
 	//USELESS STUFF THAT WE MIGHT NEED LATER
 	
 	
-	public List<Method[]> findSimiliarMethodsPDGDeckard(List<Method> srcMethods) {
+/*	public List<Method[]> findSimiliarMethodsPDGDeckard(List<Method> srcMethods) {
 
 		List<Method[]> matchedMethods = new ArrayList<Method[]>();
 		if (methodLibrary == null) {
@@ -414,7 +444,7 @@ public class CloneDetector {
 		}
 		return false;
 		
-	}
+	}*/
 
 
 }

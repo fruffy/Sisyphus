@@ -140,14 +140,7 @@ public class Method {
 	 */
 	private NodeFeature getMethodFeature(Node current) {
 		NodeFeature nodeFeature = new NodeFeature();
-		// If a node is of Primitive type then we want to store its
-		// value(whether it
-		// is an int or double) rather than the fact that it is a Primitive type
-		// because that information is more useful.
-		// Do the same for MethodCallExpression.
 		nodeFeature.addNode(current);
-		//System.out.println("current "+current);
-		//System.out.println("nodeFeature: "+nodeFeature.getFeatureMap());
 		if (current.getChildNodes().size() == 0) {
 			return nodeFeature;
 		}
@@ -202,20 +195,6 @@ public class Method {
 			pdgNode.addEdge(ddg.getEdgeSource(e).NODE, ddg.getEdgeTarget(e).NODE);
 		}
 		
-		/*System.out.println("\n+++++++++++++++++cdg edges++++++++++++++++++++++++++++++++");
-		for (DefaultEdge e : cdg.edgeSet()) {
-			System.out.println(cdg.getEdgeSource(e).NODE+"-->"+cdg.getEdgeTarget(e).NODE);
-		}
-		
-		System.out.println("\n+++++++++++++++++ddg edges++++++++++++++++++++++++++++++++");
-		for (DefaultEdge e : ddg.edgeSet()) {
-			System.out.println(ddg.getEdgeSource(e).NODE+"-->"+ddg.getEdgeTarget(e).NODE);
-		}
-		
-		System.out.println("\n+++++++++++++++++pdg edges++++++++++++++++++++++++++++++++");
-		for (DefaultEdge e : pdgNode.edgeSet()) {
-			System.out.println(ddg.getEdgeSource(e)+"-->"+ddg.getEdgeTarget(e));
-		}*/
 		
 		PDGGraphViz.writeDot(cdg, "cdg.dot");
 		PDGGraphViz.writeDot(ddg, "ddg.dot");
