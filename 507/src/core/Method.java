@@ -25,6 +25,7 @@ import normalizers.Normalizer;
 import normalizers.StandardForm;
 import parsers.ControlDependencyParser;
 import parsers.ControlFlowParser;
+import visitors.ASTUtil;
 
 /*
  * Method class that holds information about a particular method
@@ -171,6 +172,14 @@ public class Method {
 		Method ret = new Method((MethodDeclaration)StandardForm.toStandardForm(this.originalDecl));
 		ret.unNormalized = this;
 		return ret;
+	}
+	
+	public boolean isRecursive(){
+		return containsCallTo(this.methodName);
+	}
+	
+	public boolean containsCallTo(String function){
+		return ASTUtil.occursFree(this.body, function);
 	}
 	
 	public DirectedPseudograph<Node, DefaultEdge> constructPDG(){
