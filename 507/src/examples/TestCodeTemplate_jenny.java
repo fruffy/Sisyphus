@@ -43,6 +43,22 @@ public class TestCodeTemplate {
         return (val1 <= val2) ? val1 : val2;
     }
     
+    public static double power(double val1, double val2){
+    	//YOUR CODE HERE
+    	 double result = 1;
+    	 for(int i = 1; i < val2; i++){
+               result = result * result;
+  	      }
+          return result;
+   	}
+    
+    public static void swap(int pos1, int pos2, int[] array){
+    	 if(pos1 < array.length && pos2 < array.length && pos1 >= 0 && pos2 >= 0){
+    		     int temp = array[pos1];
+    	         array[pos1] = array[pos2];
+    	         array[pos2] = temp;
+    	  }
+    }
     /**
      * Returns true if the two specified arrays of ints
      * are equal to one another. Two arrays are considered equal

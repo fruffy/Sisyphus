@@ -543,6 +543,22 @@ public class TestCodeV2 {
         return temp;
 	}
 
+	/**
+     * @author Jenny
+     * Returns the value of the first argument raised to the power
+     * of the second argument
+     * @param val1 - the base
+     * @param val2 - the exponent
+     * @return val1^val2
+     */
+	public static double powerJ(double val1, double val2){
+    	//YOUR CODE HERE
+    	 double result = 1;
+    	 for(int i = 1; i < val2; i++){
+               result = result * result;
+  	      }
+          return result;
+   	}
 	
 	/**
      * @author Candace
@@ -694,6 +710,21 @@ public class TestCodeV2 {
         array[pos2] = temp;
 	}
 
+	/**
+     * @author Jenny
+     * Swaps the element at pos1 with element at pos2 in array
+     * @param pos1 - the position of one element to be swapped
+     * @param pos2 - the position of another element to be swapped
+     * @param array - the array where the elements are swapped
+     */
+	public static void swapJ(int pos1, int pos2, int[] array){
+    	 if(pos1 < array.length && pos2 < array.length && pos1 >= 0 && pos2 >= 0){
+    		     int temp = array[pos1];
+    	         array[pos1] = array[pos2];
+    	         array[pos2] = temp;
+    	  }
+    }
+	
 	
 	/**
      * @author Candace
