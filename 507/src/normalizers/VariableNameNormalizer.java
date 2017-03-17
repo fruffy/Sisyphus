@@ -30,6 +30,7 @@ import com.github.javaparser.ast.visitor.Visitable;
 import com.github.javaparser.utils.Pair;
 
 import datastructures.VariableEnv;
+import visitors.ASTUtil;
 
 public class VariableNameNormalizer extends Normalizer {
 
@@ -179,7 +180,7 @@ public class VariableNameNormalizer extends Normalizer {
 			//Where we'll store the modified statements from our list after we process them
 
 
-			for (Node stmt : orderedChildNodes(n)){
+			for (Node stmt : ASTUtil.orderedChildNodes(n)){
 
 				//Make the map where we store declarations from the statement, so we can use them later on
 				LinkedList<Pair<String, String>> childDecls = new LinkedList<Pair<String, String>>();
@@ -205,7 +206,7 @@ public class VariableNameNormalizer extends Normalizer {
 			//Where we'll store the modified statements from our list after we process them
 
 
-			for (Node stmt : orderedChildNodes(n)){
+			for (Node stmt : ASTUtil.orderedChildNodes(n)){
 
 				//Make the map where we store declarations from the statement, so we can use them later on
 				LinkedList<Pair<String, String>> childDecls = new LinkedList<Pair<String, String>>();
@@ -222,64 +223,7 @@ public class VariableNameNormalizer extends Normalizer {
 		}
 	}
 
-	//Make sure the child nodes list is in the correct order
-	// i.e. the order matching variable scoping
-	//May not cover all cases, but we cover the common ones
-	private static List<Node> orderedChildNodes(Node n){
-		NodeList<Node> ret = new NodeList<Node>();
-
-		if (n instanceof ForStmt){
-			ForStmt fs = (ForStmt)n;
-			ret.addAll(fs.getInitialization());
-			if (fs.getCompare().isPresent()){
-				ret.add(fs.getCompare().get());
-			}
-			ret.addAll(fs.getUpdate());
-			ret.add(fs.getBody());
-			return ret;
-		}
-		if (n instanceof ForeachStmt){
-			ForeachStmt fs = (ForeachStmt)n;
-			ret.add(fs.getIterable());
-			ret.add(fs.getBody());
-			return ret;
-		}
-		else if (n instanceof IfStmt){
-			IfStmt is = (IfStmt)n;
-			ret.add(is.getCondition());
-			ret.add(is.getThenStmt());
-			if (is.getElseStmt().isPresent()){
-				ret.add(is.getElseStmt().get());
-			}
-			return ret;
-		}
-		else if (n instanceof WhileStmt){
-			WhileStmt ws = (WhileStmt)n;
-			ret.add(ws.getCondition());
-			ret.add(ws.getBody());
-			return ret;
-		}
-		else if (n instanceof DoStmt){
-			DoStmt ws = (DoStmt)n;
-			ret.add(ws.getBody());
-			ret.add(ws.getCondition());
-			return ret;
-		}
-		else if (n instanceof SwitchStmt){
-			SwitchStmt ss = (SwitchStmt)n;
-			ret.add(ss.getSelector());
-			ret.addAll(ss.getEntries());
-			return ret;
-		}
-		else if (n instanceof BlockStmt){
-			BlockStmt bs = (BlockStmt)n;
-			ret.addAll(bs.getStatements());
-			return ret;
-		}
-		else {
-			return n.getChildNodes();
-		}
-	}
+	
 
 
 
