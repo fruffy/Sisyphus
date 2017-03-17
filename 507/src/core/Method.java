@@ -50,7 +50,7 @@ public class Method {
 		this.returnType = methodDeclaration.getType();
 		this.body = methodDeclaration.getBody().get();
 		this.pdg = this.constructPDG();
-		this.nodeFeature = this.constructMethodFeature();
+		//this.nodeFeature = this.constructMethodFeature();
 		this.trimBody();
 	}
 	
@@ -140,12 +140,14 @@ public class Method {
 	 */
 	private NodeFeature getMethodFeature(Node current) {
 		NodeFeature nodeFeature = new NodeFeature();
-		nodeFeature.addNode(current);
+		nodeFeature.addNode(current.getClass().toString());
 		if (current.getChildNodes().size() == 0) {
 			return nodeFeature;
 		}
 		List<Node> currentChildren = current.getChildNodes();
 		for (Node child : currentChildren) {
+			//System.out.println("parent class "+current.getClass().toString());
+			//System.out.println("child class "+child.getClass().toString());
 			NodeFeature childMethodFeature = getMethodFeature(child);
 			nodeFeature.combineNodeFeatures(childMethodFeature);
 		}
@@ -153,15 +155,16 @@ public class Method {
 
 	}
 
-	public NodeFeature constructMethodFeature() {
-		MethodDeclaration root = this.getFilteredMethod();
+	public NodeFeature getMethodFeature() {
+		//System.out.println("considering method name "+this.getMethodName());
+		BlockStmt root = this.getFilteredBody();
 		NodeFeature methodFeature = getMethodFeature(root);
 		return methodFeature;
 	}
 	
-	public NodeFeature getMethodFeature(){
+	/*public NodeFeature getMethodFeature(){
 		return this.nodeFeature;
-	}
+	}*/
 
 	/**
 	 * Return a new method that is equivalent to this method, but normalized by

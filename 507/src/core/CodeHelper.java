@@ -59,13 +59,16 @@ public class CodeHelper {
 		// testing(srcparser, libparser);
 		srcMethods = srcparser.getMethods();
 		libMethods = libparser.getMethods();
+		
+		//ArrayList<Method> libTest = new ArrayList<Method>();
+		//libTest.add(libMethods.get(223));
 
-		CloneDetector cloneDetect = new CloneDetector(libparser.getMethods());
-		//matchSrcWithLib(srcMethods,cloneDetect);
+		CloneDetector cloneDetect = new CloneDetector(libMethods);
+		matchSrcWithLib(srcMethods,cloneDetect);
 		
 		int numParticipants = 10;
 		int numMethods = srcMethods.size()/numParticipants;
-		testCodeMatches(srcMethods,cloneDetect,numParticipants,numMethods);
+		//testCodeMatches(srcMethods,cloneDetect,numParticipants,numMethods);
 
 	}
 	
@@ -92,6 +95,8 @@ public class CodeHelper {
 		
 		
 		System.out.println("ANALYSIS: AST Deckard");
+		//ArrayList<Method> srcTest = new ArrayList<Method>();
+		//srcTest.add(srcMethods.get(0));
 		ArrayList<Method[]> matchesDeckard = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsNodeFeatures(srcMethods);
 		Analysis analysisDeckard = new Analysis(matchesDeckard);
 		tpFp = analysisDeckard.tpfp();

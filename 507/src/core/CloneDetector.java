@@ -81,13 +81,15 @@ public class CloneDetector {
 			return matchedMethods;
 		}
 		for (Method src : srcMethods) {
+			int count = 0;
 			for (Method ref : methodLibrary) {
-				if (matchMethodNodeFeatures(src, ref,6)) {
+				if (matchMethodNodeFeatures(src, ref,4)) {
 					Method[] matched = {src,ref};
 					/*System.out.println("Match! " + src.getMethodName() + " with return type " + src.getReturnType() + 
 							" can be replaced by " + ref.getMethodName()+ " with return type " + ref.getReturnType());*/
 					matchedMethods.add(matched);
 				}
+				count++;
 
 			}
 		}
@@ -331,21 +333,31 @@ public class CloneDetector {
 	 * below the threshold
 	 */
 	public boolean matchMethodNodeFeatures(Method method1, Method method2, double threshold) {
+		if(!method1.getReturnType().equals(method2.getReturnType())){
+			return false;
+		}
+		if(method1.getMethodParameters().size()!=method2.getMethodParameters().size()){
+			return false;
+		}
+		
 		//System.out.println("Considering "+method1.getMethodName()+" "+method2.getMethodName());
 		NodeFeature feature1 = method1.getMethodFeature();
 		NodeFeature feature2 = method2.getMethodFeature();
+
 		feature1.makeComparableNodeFeatures(feature2);
-		HashMap<Node,Integer> featureMap1 = feature1.getFeatureMap();
-		HashMap<Node,Integer> featureMap2 = feature2.getFeatureMap();
+		HashMap<String,Integer> featureMap1 = feature1.getFeatureMap();
+		HashMap<String,Integer> featureMap2 = feature2.getFeatureMap();
 		
 		int[] featureArray1 = new int[feature1.getFeatureVectorSize()];
 		int[] featureArray2 = new int[feature2.getFeatureVectorSize()];
+
 		int count = 0;
-		for(Node key:featureMap1.keySet()){
+		for(String key:featureMap1.keySet()){
 			featureArray1[count] = featureMap1.get(key);
 			featureArray2[count] = featureMap2.get(key);
 			count++;
 		}
+		
 		
 		double dist = calculateDistance(featureArray1, featureArray2);
 		//System.out.println("dist "+dist);

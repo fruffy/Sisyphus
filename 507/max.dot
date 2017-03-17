@@ -1,13 +1,5 @@
 digraph G {
   1 [ label="" ];
-  2 [ label="int _var_int_0 = 0;" ];
-  3 [ label="(line 1919,col 25)-(line 1919,col 40): _var_int_0 < _param_int_arr__0.length" ];
-  4 [ label="(line 1920,col 13)-(line 1920,col 34): _var_List__Integer___0.add(_param_int_arr__0[_var_int_0]);" ];
-  5 [ label="_var_int_0++;" ];
-  6 [ label="(line 1921,col 9)-(line 1921,col 23): return _var_List__Integer___0;" ];
+  2 [ label="(line 2208,col 3)-(line 2208,col 22): return _var_StringBuilder_0.toString();" ];
   1 -> 2;
-  1 -> 3;
-  1 -> 4;
-  4 -> 5;
-  1 -> 6;
 }
