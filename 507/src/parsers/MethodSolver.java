@@ -12,6 +12,7 @@ import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
+import com.github.javaparser.ast.nodeTypes.NodeWithExpression;
 import com.github.javaparser.ast.nodeTypes.NodeWithStatements;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
@@ -35,6 +36,7 @@ public class MethodSolver {
 	CombinedTypeSolver typeSolver;
 	BlockStmt methodBody;
 	int maxDepth;
+	String canaryMethod;
 
 	public MethodSolver(BlockStmt methodBody) {
 		this.methodBody = methodBody;
@@ -56,8 +58,8 @@ public class MethodSolver {
 			} catch (UnsolvedSymbolException e) {
 				System.out.println("ERROR " + e.getMessage());
 			} catch (RuntimeException e) {
-				//System.out.println("ERROR " + e.getMessage());
-				//e.printStackTrace();
+				// System.out.println("ERROR " + e.getMessage());
+				// e.printStackTrace();
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}
@@ -80,9 +82,9 @@ public class MethodSolver {
 		Node attachmentBody = null;
 		Node methodCallParent = methodCallExpr.getParentNode().get();
 		Optional<com.github.javaparser.ast.body.MethodDeclaration> methodCallAncestor = methodCallExpr
-										.getAncestorOfType(com.github.javaparser.ast.body.MethodDeclaration.class);	
+				.getAncestorOfType(com.github.javaparser.ast.body.MethodDeclaration.class);
 		if (methodCallAncestor.get().getNameAsString().equals(methodCallExpr.getNameAsString())) {
-			return methodCallExpr ;
+			return methodCallExpr;
 		}
 		Optional<BlockStmt> declarationBody = null;
 		Node returnNode = null;
@@ -94,7 +96,7 @@ public class MethodSolver {
 			for (MethodDeclaration matchingDeclaration : methodDecl.declaringType().getDeclaredMethods()) {
 				if (matchingDeclaration instanceof JavaParserMethodDeclaration) {
 					if (matchingDeclaration.getSignature().equals(methodDecl.getSignature())) {
-						System.out.println("matchingDeclaration: "+matchingDeclaration.getQualifiedName());
+						System.out.println("matchingDeclaration: " + matchingDeclaration.getQualifiedName());
 						declarationBody = ((JavaParserMethodDeclaration) matchingDeclaration).getWrappedNode()
 								.getBody();
 						List<Expression> methodArguments = methodCallExpr.getArguments();
@@ -149,15 +151,16 @@ public class MethodSolver {
 						// methodCallExpr.setName(methodDecl.getQualifiedName());
 						if (declarationBody != null && declarationBody.isPresent()) {
 
-							/*
-							 * if (this.maxDepth <50) { this.maxDepth++;
-							 * declarationBody.get().accept(new
-							 * MethodResolveVisitor(),
-							 * JavaParserFacade.get(typeSolver)); this.maxDepth
-							 * = 0; } else { attachmentBody = methodCallExpr;
-							 * while(attachmentBody.remove()) { attachmentBody =
-							 * attachmentBody.getParentNode().get(); } }
-							 */
+							if (methodDecl.getQualifiedSignature().equals(this.canaryMethod)) {
+								((NodeWithExpression) methodCallExpr.getParentNode().get())
+										.setExpression(new NameExpr(methodDecl.getQualifiedName()));
+							} else {
+								canaryMethod = methodDecl.getQualifiedSignature();
+								//declarationBody.get().accept(new MethodResolveVisitor(),
+								//		JavaParserFacade.get(typeSolver));
+								canaryMethod = "";
+							}
+
 							methodCallParent = methodCallExpr.getParentNode().get();
 							attachmentBody = methodCallExpr;
 							BlockStmt newBody = declarationBody.get().clone();
