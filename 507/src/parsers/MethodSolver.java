@@ -151,14 +151,26 @@ public class MethodSolver {
 						// methodCallExpr.setName(methodDecl.getQualifiedName());
 						if (declarationBody != null && declarationBody.isPresent()) {
 
-							if (methodDecl.getQualifiedSignature().equals(this.canaryMethod)) {
-								((NodeWithExpression) methodCallExpr.getParentNode().get())
-										.setExpression(new NameExpr(methodDecl.getQualifiedName()));
+							if (methodDecl.getQualifiedSignature().equals(this.canaryMethod) || maxDepth > 2) {
+								return null;
+/*								try {
+									((NodeWithExpression<?>) methodCallExpr.getParentNode().get())
+											.setExpression(new NameExpr(methodDecl.getQualifiedName()));
+								} catch (Exception e) {
+									attachmentBody = methodCallExpr;
+									while (attachmentBody.remove()) {
+										attachmentBody = attachmentBody.getParentNode().get();
+									}
+								}*/
+
 							} else {
 								canaryMethod = methodDecl.getQualifiedSignature();
-								//declarationBody.get().accept(new MethodResolveVisitor(),
-								//		JavaParserFacade.get(typeSolver));
+								maxDepth++;
+								System.out.println(maxDepth);
+								declarationBody.get().accept(new MethodResolveVisitor(),
+										JavaParserFacade.get(typeSolver));
 								canaryMethod = "";
+								// maxDepth = 0;
 							}
 
 							methodCallParent = methodCallExpr.getParentNode().get();

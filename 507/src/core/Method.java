@@ -20,6 +20,7 @@ import normalizers.StandardForm;
 import parsers.ControlDependencyParser;
 import parsers.ControlFlowParser;
 import parsers.MethodSolver;
+import visitors.ASTUtil;
 
 /*
  * Method class that holds information about a particular method
@@ -32,23 +33,40 @@ public class Method {
 	private List<Parameter> parameters;
 	private BlockStmt body;
 	private MethodDeclaration originalDecl;
-	private DirectedPseudograph<Node, DefaultEdge> pdg;
+	private DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg;
+	private DirectedPseudograph<NodeWrapper, DefaultEdge> ddg;
+	private DirectedPseudograph<Node, DefaultEdge>  pdg;
 	private NodeFeature nodeFeature;
+	private Method unNormalized;
 
 	public Method(MethodDeclaration methodDeclaration) {
-		this.originalDecl = methodDeclaration;
+		this.originalDecl = methodDeclaration.clone();
 		this.methodName = methodDeclaration.getNameAsString();
 		this.parameters = methodDeclaration.getParameters();
 		this.returnType = methodDeclaration.getType();
 		this.body = methodDeclaration.getBody().get();
 		this.pdg = this.constructPDG();
-		this.nodeFeature = this.constructMethodFeature();
+		//this.nodeFeature = this.constructMethodFeature();
 		this.trimBody();
 		//System.out.println("BEFORE " +methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
 		resolveMethodCalls(methodDeclaration);
 		//System.out.println("AFTER " + methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
+	}
+	
+	public void printComparison(){
+		System.out.println("Method before normalizing:");
+		System.out.println(this.originalDecl);
+		System.out.println("Method after normalizing:");
+		System.out.println(this.body.getParentNode().get());
+	}
+	
+	public DirectedAcyclicGraph<NodeWrapper, DefaultEdge> getCdg(){
+		return cdg;
+	}
+	public DirectedPseudograph<NodeWrapper, DefaultEdge> getDdg(){
+		return ddg;
 	}
 
 	public String getMethodName() {
@@ -72,12 +90,10 @@ public class Method {
 		for (Comment co : filteredBody.getAllContainedComments()) {
 			co.remove();
 		}
-
 		return filteredBody;
 	}
 
 	public void trimBody() {
-		//BlockStmt filteredBody = (BlockStmt) this.body.clone();
 		for (Comment co : this.body.getAllContainedComments()) {
 			co.remove();
 		}
@@ -88,9 +104,12 @@ public class Method {
 		for (Comment co : methodDeclaration.getAllContainedComments()) {
 			co.remove();
 		}
+
 		return methodDeclaration;
 	}
-
+	private void resolveMethodCalls(MethodDeclaration methodDecl) {
+		new MethodSolver(methodDecl.getBody().get());
+	}
 	/*
 	 * Do a traversal of the nodes of the method body without comments and
 	 * return the list
@@ -122,19 +141,14 @@ public class Method {
 	 */
 	private NodeFeature getMethodFeature(Node current) {
 		NodeFeature nodeFeature = new NodeFeature();
-		// If a node is of Primitive type then we want to store its
-		// value(whether it
-		// is an int or double) rather than the fact that it is a Primitive type
-		// because that information is more useful.
-		// Do the same for MethodCallExpression.
 		nodeFeature.addNode(current.getClass().toString());
-		//System.out.println("current "+current);
-		//System.out.println("nodeFeature: "+nodeFeature.getFeatureMap());
 		if (current.getChildNodes().size() == 0) {
 			return nodeFeature;
 		}
 		List<Node> currentChildren = current.getChildNodes();
 		for (Node child : currentChildren) {
+			//System.out.println("parent class "+current.getClass().toString());
+			//System.out.println("child class "+child.getClass().toString());
 			NodeFeature childMethodFeature = getMethodFeature(child);
 			nodeFeature.combineNodeFeatures(childMethodFeature);
 		}
@@ -142,34 +156,42 @@ public class Method {
 
 	}
 
-	public NodeFeature constructMethodFeature() {
-		MethodDeclaration root = this.getFilteredMethod();
-		NodeFeature methodFeature = getMethodFeature(root);
+	public NodeFeature getMethodFeature() {
+		//System.out.println("considering method name "+this.getMethodName());
+		//BlockStmt root = this.getFilteredBody();
+		NodeFeature methodFeature = getMethodFeature(this.body);
 		return methodFeature;
 	}
 	
-	public NodeFeature getMethodFeature(){
+	/*public NodeFeature getMethodFeature(){
 		return this.nodeFeature;
-	}
+	}*/
 
 	/**
 	 * Return a new method that is equivalent to this method, but normalized by
 	 * the given normalizer
 	 */
-	public Method normalize() {
-		return  new Method((MethodDeclaration)StandardForm.toStandardForm(this.originalDecl));
+	public void normalize(MethodDeclaration methodDecl) {
+		Method ret = new Method((MethodDeclaration)StandardForm.toStandardForm(methodDecl));
+		ret.unNormalized = this;
 	}
-
-	private void resolveMethodCalls(MethodDeclaration methodDecl) {
-		new MethodSolver(methodDecl.getBody().get());
+	
+	public boolean isRecursive(){
+		return containsCallTo(this.methodName);
 	}
+	
+	public boolean containsCallTo(String function){
+		return ASTUtil.occursFree(this.body, function);
+	}
+	
 	public DirectedPseudograph<Node, DefaultEdge> constructPDG(){
+		//System.out.println("Building pdg for method: "+this.getMethodName());
 		ControlFlowParser cfp = new ControlFlowParser(this);
 		DirectedPseudograph<NodeWrapper, DefaultEdge> cfg = cfp.getCFG();
 		ControlDependencyParser cdp = new ControlDependencyParser(cfg);
-		DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg = cdp.getCDG();
+		cdg = cdp.getCDG();
 		DataDependencyGraphFinder ddgf = new DataDependencyGraphFinder(cfg);
-		DirectedPseudograph<NodeWrapper, DefaultEdge> ddg = ddgf.findReachingDefs();
+		ddg = ddgf.findReachingDefs();
 		
 		//combine cdg and ddg to pdg with Nodes as vertices rather
 		//than NodeWrappers
@@ -184,25 +206,11 @@ public class Method {
 			pdgNode.addEdge(ddg.getEdgeSource(e).NODE, ddg.getEdgeTarget(e).NODE);
 		}
 		
-		/*System.out.println("\n+++++++++++++++++cdg edges++++++++++++++++++++++++++++++++");
-		for (DefaultEdge e : cdg.edgeSet()) {
-			System.out.println(cdg.getEdgeSource(e).NODE+"-->"+cdg.getEdgeTarget(e).NODE);
-		}
-		
-		System.out.println("\n+++++++++++++++++ddg edges++++++++++++++++++++++++++++++++");
-		for (DefaultEdge e : ddg.edgeSet()) {
-			System.out.println(ddg.getEdgeSource(e).NODE+"-->"+ddg.getEdgeTarget(e).NODE);
-		}
-		
-		System.out.println("\n+++++++++++++++++pdg edges++++++++++++++++++++++++++++++++");
-		for (DefaultEdge e : pdgNode.edgeSet()) {
-			System.out.println(ddg.getEdgeSource(e)+"-->"+ddg.getEdgeTarget(e));
-		}*/
-		
-		/*PDGGraphViz.writeDot(cdg, "cdg.dot");
+/*		
+		PDGGraphViz.writeDot(cdg, "cdg.dot");
 		PDGGraphViz.writeDot(ddg, "ddg.dot");
-		PDGGraphViz.writeDotNode(pdgNode, "pdg.dot");
-		*/
+		PDGGraphViz.writeDotNode(pdgNode, "pdg.dot");*/
+		
 		return pdgNode;
 	
 	}
@@ -210,4 +218,5 @@ public class Method {
 	public DirectedPseudograph<Node, DefaultEdge> getPDG(){
 		return this.pdg;
 	}
+	
 }

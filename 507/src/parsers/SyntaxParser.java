@@ -85,6 +85,7 @@ public class SyntaxParser {
 		ArrayList<Method> methodList = new ArrayList<Method>();
 		for (MethodDeclaration n : this.methodDeclarationList) {
 			Method nMethod = new Method(n);
+			methodList.add(nMethod);
 			//System.out.println("normalizing method: "+nMethod.getMethodName());
 			//methodList.add(nMethod.normalize());
 		}
