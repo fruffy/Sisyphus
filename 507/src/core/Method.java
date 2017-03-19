@@ -45,20 +45,14 @@ public class Method {
 	private Method unNormalized;
 
 	public Method(MethodDeclaration methodDeclaration) {
-		this.originalDecl = (MethodDeclaration) methodDeclaration.clone();
-		this.body = methodDeclaration.getBody().get();
-		this.trimBody();
-		try {
-			methodDeclaration = normalize(methodDeclaration);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		this.body = methodDeclaration.getBody().get();
+		this.originalDecl = methodDeclaration;
 		this.methodName = methodDeclaration.getNameAsString();
 		this.parameters = methodDeclaration.getParameters();
 		this.returnType = methodDeclaration.getType();
+		this.body = methodDeclaration.getBody().get();
 		this.pdg = this.constructPDG();
 		//this.nodeFeature = this.constructMethodFeature();
+		this.trimBody();
 	}
 	
 	public void printComparison(){
@@ -182,15 +176,10 @@ public class Method {
 	 * Return a new method that is equivalent to this method, but normalized by
 	 * the given normalizer
 	 */
-	/*public Method normalize() {
+	public Method normalize() {
 		Method ret = new Method((MethodDeclaration)StandardForm.toStandardForm(this.originalDecl));
 		ret.unNormalized = this;
 		return ret;
-	}*/
-	
-	public MethodDeclaration normalize(MethodDeclaration methodDecl) {
-		return ((MethodDeclaration) StandardForm.toStandardForm(methodDecl));
-		//ret.unNormalized = this;
 	}
 	
 	public boolean isRecursive(){
