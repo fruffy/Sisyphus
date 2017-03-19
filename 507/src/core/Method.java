@@ -48,10 +48,10 @@ public class Method {
 		this.pdg = this.constructPDG();
 		//this.nodeFeature = this.constructMethodFeature();
 		this.trimBody();
-		//System.out.println("BEFORE " +methodDeclaration);
+		System.out.println("BEFORE " +methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
 		resolveMethodCalls(methodDeclaration);
-		//System.out.println("AFTER " + methodDeclaration);
+		System.out.println("AFTER " + methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
 	}
 
