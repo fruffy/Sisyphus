@@ -17,9 +17,10 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/java-symbol-solver-parent"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/java-symbol-solver-core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/java-symbol-solver-examples"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/java-symbol-solver-logic"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/java-symbol-solver-model"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/java-symbol-solver-parent"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

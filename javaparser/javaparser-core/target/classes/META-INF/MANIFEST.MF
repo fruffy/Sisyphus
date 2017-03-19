@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1489099966628
+Bnd-LastModified: 1489879289293
 Bundle-ManifestVersion: 2
 Bundle-Name: javaparser-core
 Bundle-SymbolicName: com.github.javaparser.javaparser-core
