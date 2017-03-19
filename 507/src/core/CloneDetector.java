@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.Parameter;
+import com.github.javaparser.ast.type.Type;
 
 import datastructures.BackEdge;
 import datastructures.EntryStmt;
@@ -273,6 +274,10 @@ public class CloneDetector {
 		if(method1.getMethodParameters().size()!=method2.getMethodParameters().size()){
 			return false;
 		}
+		if(!checkParameters(method1.getMethodParameters(),method2.getMethodParameters())){
+			return false;
+		}
+		
 		DirectedPseudograph<Node, DefaultEdge> method1pdg = method1.getPDG();
 		DirectedPseudograph<Node, DefaultEdge> method2pdg = method2.getPDG();
 		
@@ -327,6 +332,39 @@ public class CloneDetector {
 		}
 		return distance;
 	}
+	
+	public boolean checkParameters(List<Parameter> params1, List<Parameter> params2){
+		HashMap<Type, Integer> map1 = new HashMap<Type, Integer>();
+		HashMap<Type, Integer> map2 = new HashMap<Type, Integer>();
+		
+		for(Parameter p1: params1){
+			if(map1.containsKey(p1.getType())){
+				map1.put(p1.getType(),map1.get(p1.getType())+1);
+			}
+			map1.put(p1.getType(),0);
+		}
+		
+		for(Parameter p2: params2){
+			if(map2.containsKey(p2.getType())){
+				map2.put(p2.getType(),map2.get(p2.getType())+1);
+			}
+			map2.put(p2.getType(),0);
+		}
+		
+		if(map1.size()!=map2.size()){
+			return false;
+		}
+		
+		for(Type key1: map1.keySet()){
+			if(!map2.containsKey(key1)){
+				return false;
+			}
+			if(map1.get(key1)!=map2.get(key1)){
+				return false;
+			}
+		}
+		return true;
+	}
 
 	/*
 	 * Check if distance between method1 NodeFeature and method2 NodeFeature is
@@ -340,14 +378,16 @@ public class CloneDetector {
 			return false;
 		}
 		
-		//System.out.println("Considering "+method1.getMethodName()+" "+method2.getMethodName());
+		if(!checkParameters(method1.getMethodParameters(),method2.getMethodParameters())){
+			return false;
+		}
+		
 		NodeFeature feature1 = method1.getMethodFeature();
 		NodeFeature feature2 = method2.getMethodFeature();
 
 		feature1.makeComparableNodeFeatures(feature2);
 		HashMap<String,Integer> featureMap1 = feature1.getFeatureMap();
 		HashMap<String,Integer> featureMap2 = feature2.getFeatureMap();
-		
 		int[] featureArray1 = new int[feature1.getFeatureVectorSize()];
 		int[] featureArray2 = new int[feature2.getFeatureVectorSize()];
 
@@ -362,6 +402,21 @@ public class CloneDetector {
 		double dist = calculateDistance(featureArray1, featureArray2);
 		//System.out.println("dist "+dist);
 		if (dist <= threshold) {
+			/*System.out.println("Considering "+method1.getMethodName()+" "+method2.getMethodName());
+			System.out.println("Method1 parameters");
+			List<Parameter> params1 = method1.getMethodParameters();
+			for(Parameter p: params1){
+				System.out.println(p.getType());
+			}
+			System.out.println("Method2 parameters");
+			List<Parameter> params2 = method2.getMethodParameters();
+			for(Parameter p: params2){
+				System.out.println(p.getType());
+			}
+			System.out.println("Return "+method1+" "+method2.getReturnType());
+			System.out.println("featureMap1 "+featureMap1);
+			System.out.println("featureMap2 "+featureMap2);
+			System.out.println("dist "+dist);*/
 			return true;
 		}
 		return false;

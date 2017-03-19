@@ -140,7 +140,12 @@ public class Method {
 	 */
 	private NodeFeature getMethodFeature(Node current) {
 		NodeFeature nodeFeature = new NodeFeature();
-		nodeFeature.addNode(current.getClass().toString());
+		if(current.getClass().toString().equals("com.github.javaparser.ast.expr.MethodCallExpr")){
+			nodeFeature.addNode(current.toString());
+		}
+		else{
+			nodeFeature.addNode(current.getClass().toString());
+		}
 		if (current.getChildNodes().size() == 0) {
 			return nodeFeature;
 		}
