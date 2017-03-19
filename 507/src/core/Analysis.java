@@ -85,8 +85,8 @@ public class Analysis {
 					trueMatch = true;
 				}
 				if(trueMatch){
-					System.out.println("True Match: "+ srcReturnType+" " +srcName +", "+
-										libReturnType+" "+libName);
+/*					System.out.println("True Match: "+ srcReturnType+" " +srcName +", "+
+										libReturnType+" "+libName);*/
 					countTP++;
 				}
 				else{

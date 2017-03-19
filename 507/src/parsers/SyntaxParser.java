@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
@@ -86,7 +87,13 @@ public class SyntaxParser {
 		for (MethodDeclaration n : this.methodDeclarationList) {
 			try {
 				Method nMethod = new Method(n);
+				System.out.print("Added: "+nMethod.getReturnType() + " " + nMethod.getMethodName() + " ( ");
+				for (Parameter par : nMethod.getMethodParameters()) {
+					System.out.print(par +" ");
+				}
+				System.out.println(")" + " "+ nMethod.getBody());
 				methodList.add(nMethod);
+				
 				}
 				catch (Exception e) { 
 					e.printStackTrace();

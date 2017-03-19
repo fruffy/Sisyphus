@@ -11,10 +11,12 @@ public class CodeHelper {
 	public static void main(String[] args) {
 		
 		String srcName = "src/examples/TestCodeV2.java";
-		File libFile = new File("Library.java");
+		File libFile1 = new File("Math.java");
+		File libFile2 = new File("Arrays.java");
+
 		File srcfile = new File(srcName);
 
-		SyntaxParser libparser;
+		SyntaxParser libparser1, libparser2;
 		SyntaxParser srcparser;
 		ArrayList<Method> srcMethods, libMethods;
 
@@ -25,7 +27,7 @@ public class CodeHelper {
 			 System.getProperty("user.dir"));*/
 			return;
 		}
-		if (!(libFile.exists()) || libFile.isDirectory()) {
+		if (!(libFile1.exists()) || libFile1.isDirectory()) {
 			System.out.println("Error reading reference library.");
 			// Debug
 			// System.out.println("Working Directory = " +
@@ -35,7 +37,9 @@ public class CodeHelper {
 
 		// initialize java parser for both library and source code.
 		try {
-			libparser = new SyntaxParser(libFile);
+			libparser1 = new SyntaxParser(libFile1);
+			libparser2 = new SyntaxParser(libFile2);
+
 			srcparser = new SyntaxParser(srcfile);
 		} catch (IOException e) {
 			new RuntimeException(e);
@@ -44,8 +48,12 @@ public class CodeHelper {
 
 		// testing(srcparser, libparser);
 		srcMethods = srcparser.getMethods();
-		libMethods = libparser.getMethods();
+		libMethods = libparser1.getMethods();
+		libMethods.addAll(libparser2.getMethods());
 		
+		for (Method method : libMethods) {
+			System.out.println(method.getMethodName());
+		}
 		//ArrayList<Method> libTest = new ArrayList<Method>();
 		//libTest.add(libMethods.get(223));
 

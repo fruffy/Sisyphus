@@ -46,7 +46,7 @@ public class Method {
 		this.trimBody();
 		System.out.println("BEFORE " +methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
-		resolveMethodCalls(methodDeclaration);
+		//resolveMethodCalls(methodDeclaration);
 		try {
 			methodDeclaration = normalize(methodDeclaration);
 		} catch (Exception e) {
@@ -57,7 +57,7 @@ public class Method {
 		this.parameters = methodDeclaration.getParameters();
 		this.returnType = methodDeclaration.getType();
 		this.pdg = this.constructPDG();
-		System.out.println("AFTER " + methodDeclaration);
+		//System.out.println("AFTER " + methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
 	}
 
@@ -163,7 +163,6 @@ public class Method {
 			nodeFeature.combineNodeFeatures(childMethodFeature);
 		}
 		return nodeFeature;
-
 	}
 
 	public NodeFeature getMethodFeature() {
@@ -172,7 +171,7 @@ public class Method {
 		NodeFeature methodFeature = getMethodFeature(this.body);
 		return methodFeature;
 	}
-
+	
 	/*
 	 * public NodeFeature getMethodFeature(){ return this.nodeFeature; }
 	 */

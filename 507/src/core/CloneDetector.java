@@ -81,10 +81,10 @@ public class CloneDetector {
 		for (Method src : srcMethods) {
 			int count = 0;
 			for (Method ref : methodLibrary) {
-				if (matchMethodNodeFeatures(src, ref,10)) {
+				if (matchMethodNodeFeatures(src, ref,4)) {
 					Method[] matched = {src,ref};
-					System.out.println("Match! " + src.getMethodName() + " with return type " + src.getReturnType() + 
-							" can be replaced by " + ref.getMethodName()+ " with return type " + ref.getReturnType());
+					/*System.out.println("Match! " + src.getMethodName() + " with return type " + src.getReturnType() + 
+							" can be replaced by " + ref.getMethodName()+ " with return type " + ref.getReturnType());*/
 					matchedMethods.add(matched);
 				}
 				count++;
@@ -113,8 +113,8 @@ public class CloneDetector {
 			for (Method ref : methodLibrary) {
 				if (matchMethodPDGs(src, ref)) {
 					Method[] matched = {src,ref};
-					System.out.println("Match! " + src.getMethodName() + " with return type " + src.getReturnType() + 
-							" can be replaced by " + ref.getMethodName()+ " with return type " + ref.getReturnType());
+					/*System.out.println("Match! " + src.getMethodName() + " with return type " + src.getReturnType() + 
+							" can be replaced by " + ref.getMethodName()+ " with return type " + ref.getReturnType());*/
 					matchedMethods.add(matched);
 				}
 
