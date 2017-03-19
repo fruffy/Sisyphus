@@ -17,10 +17,7 @@
 package com.github.javaparser.symbolsolver.logic;
 
 import com.github.javaparser.symbolsolver.model.declarations.TypeParameterDeclaration;
-import com.github.javaparser.symbolsolver.model.typesystem.ArrayType;
-import com.github.javaparser.symbolsolver.model.typesystem.ReferenceType;
-import com.github.javaparser.symbolsolver.model.typesystem.Type;
-import com.github.javaparser.symbolsolver.model.typesystem.Wildcard;
+import com.github.javaparser.symbolsolver.model.typesystem.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,16 +38,16 @@ public class InferenceContext {
         this.objectProvider = objectProvider;
     }
 
-    private Map<TypeParameterDeclaration, InferenceVariableType> inferenceVariableTypeMap = new HashMap<>();
+    private Map<String, InferenceVariableType> inferenceVariableTypeMap = new HashMap<>();
 
     private InferenceVariableType inferenceVariableTypeForTp(TypeParameterDeclaration tp) {
-        if (!inferenceVariableTypeMap.containsKey(tp)) {
+        if (!inferenceVariableTypeMap.containsKey(tp.getName())) {
             InferenceVariableType inferenceVariableType = new InferenceVariableType(nextInferenceVariableId++, objectProvider);
             inferenceVariableTypes.add(inferenceVariableType);
             inferenceVariableType.setCorrespondingTp(tp);
-            inferenceVariableTypeMap.put(tp, inferenceVariableType);
+            inferenceVariableTypeMap.put(tp.getName(), inferenceVariableType);
         }
-        return inferenceVariableTypeMap.get(tp);
+        return inferenceVariableTypeMap.get(tp.getName());
     }
 
     /**
@@ -78,7 +75,14 @@ public class InferenceContext {
                 final String formalParamTypeQName = formalTypeAsReference.getQualifiedName();
                 List<Type> correspondingFormalType = ancestors.stream().filter((a) -> a.getQualifiedName().equals(formalParamTypeQName)).collect(Collectors.toList());
                 if (correspondingFormalType.isEmpty()) {
-                    throw new ConfilictingGenericTypesException(formalType, actualType);
+                    ancestors = formalTypeAsReference.getAllAncestors();
+                    final String actualParamTypeQname = actualTypeAsReference.getQualifiedName();
+                    List<Type> correspondingActualType = ancestors.stream().filter(a -> a.getQualifiedName().equals(actualParamTypeQname)).collect(Collectors.toList());
+                    if (correspondingActualType.isEmpty()){
+                        throw new ConfilictingGenericTypesException(formalType, actualType);
+                    }
+                    correspondingFormalType = correspondingActualType;
+
                 }
                 actualTypeAsReference = correspondingFormalType.get(0).asReferenceType();
             }
@@ -99,7 +103,7 @@ public class InferenceContext {
         } else if (formalType instanceof InferenceVariableType) {
             ((InferenceVariableType) formalType).registerEquivalentType(actualType);
             if (actualType instanceof InferenceVariableType) {
-                ((InferenceVariableType)actualType).registerEquivalentType(formalType);
+                ((InferenceVariableType) actualType).registerEquivalentType(formalType);
             }
         } else if (actualType.isNull()) {
             // nothing to do
@@ -114,6 +118,28 @@ public class InferenceContext {
                 if (formalType.asWildcard().getBoundedType() instanceof InferenceVariableType) {
                     ((InferenceVariableType) formalType.asWildcard().getBoundedType()).registerEquivalentType(actualType);
                 }
+            }
+            if (actualType.isWildcard()) {
+                Wildcard formalWildcard = formalType.asWildcard();
+                Wildcard actualWildcard = actualType.asWildcard();
+                if (formalWildcard.isBounded() && formalWildcard.getBoundedType() instanceof InferenceVariableType) {
+                    if (formalWildcard.isSuper() && actualWildcard.isSuper()) {
+                        ((InferenceVariableType) formalType.asWildcard().getBoundedType()).registerEquivalentType(actualWildcard.getBoundedType());
+                    } else if (formalWildcard.isExtends() && actualWildcard.isExtends()) {
+                        ((InferenceVariableType) formalType.asWildcard().getBoundedType()).registerEquivalentType(actualWildcard.getBoundedType());
+                    }
+                }
+            }
+        } else if (actualType instanceof InferenceVariableType){
+            if (formalType instanceof ReferenceType){
+                ((InferenceVariableType) actualType).registerEquivalentType(formalType);
+            } else if (formalType instanceof InferenceVariableType){
+                ((InferenceVariableType) actualType).registerEquivalentType(formalType);
+            }
+        } else if (actualType.isConstraint()){
+            LambdaConstraintType constraintType = actualType.asConstraintType();
+            if (constraintType.getBound() instanceof InferenceVariableType){
+                ((InferenceVariableType) constraintType.getBound()).registerEquivalentType(formalType);
             }
         } else if (actualType.isPrimitive()) {
             registerCorrespondance(formalType, objectProvider.byName(actualType.asPrimitive().getBoxTypeQName()));
@@ -139,6 +165,8 @@ public class InferenceContext {
             return new ArrayType(placeInferenceVariables(type.asArrayType().getComponentType()));
         } else if (type.isNull() || type.isPrimitive() || type.isVoid()) {
             return type;
+        } else if (type.isConstraint()){
+            return LambdaConstraintType.bound(placeInferenceVariables(type.asConstraintType().getBound()));
         } else if (type instanceof InferenceVariableType) {
             return type;
         } else {

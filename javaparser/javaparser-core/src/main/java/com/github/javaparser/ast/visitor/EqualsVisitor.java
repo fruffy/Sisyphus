@@ -340,8 +340,6 @@ public class EqualsVisitor implements GenericVisitor<Boolean, Visitable> {
         final MethodDeclaration n2 = (MethodDeclaration) arg;
         if (!nodeEquals(n.getBody(), n2.getBody()))
             return false;
-        if (!objEquals(n.isDefault(), n2.isDefault()))
-            return false;
         if (!nodeEquals(n.getType(), n2.getType()))
             return false;
         if (!objEquals(n.getModifiers(), n2.getModifiers()))
@@ -373,6 +371,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, Visitable> {
         if (!nodeEquals(n.getName(), n2.getName()))
             return false;
         if (!nodeEquals(n.getType(), n2.getType()))
+            return false;
+        if (!nodesEquals(n.getVarArgsAnnotations(), n2.getVarArgsAnnotations()))
             return false;
         if (!nodeEquals(n.getComment(), n2.getComment()))
             return false;
@@ -774,6 +774,8 @@ public class EqualsVisitor implements GenericVisitor<Boolean, Visitable> {
     @Override
     public Boolean visit(final Name n, final Visitable arg) {
         final Name n2 = (Name) arg;
+        if (!nodesEquals(n.getAnnotations(), n2.getAnnotations()))
+            return false;
         if (!objEquals(n.getIdentifier(), n2.getIdentifier()))
             return false;
         if (!nodeEquals(n.getQualifier(), n2.getQualifier()))
@@ -1266,4 +1268,3 @@ public class EqualsVisitor implements GenericVisitor<Boolean, Visitable> {
         return true;
     }
 }
-

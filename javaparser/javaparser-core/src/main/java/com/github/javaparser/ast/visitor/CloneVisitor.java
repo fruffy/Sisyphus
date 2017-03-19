@@ -171,7 +171,7 @@ public class CloneVisitor implements GenericVisitor<Visitable, Object> {
         BlockStmt body = cloneNode(n.getBody(), arg);
         SimpleName name = cloneNode(n.getName(), arg);
         NodeList<Parameter> parameters = cloneList(n.getParameters(), arg);
-        NodeList<ReferenceType> thrownExceptions = cloneList(n.getThrownExceptions(), arg);
+        NodeList<ReferenceType<?>> thrownExceptions = cloneList(n.getThrownExceptions(), arg);
         NodeList<TypeParameter> typeParameters = cloneList(n.getTypeParameters(), arg);
         NodeList<AnnotationExpr> annotations = cloneList(n.getAnnotations(), arg);
         Comment comment = cloneNode(n.getComment(), arg);
@@ -186,11 +186,11 @@ public class CloneVisitor implements GenericVisitor<Visitable, Object> {
         Type type = cloneNode(n.getType(), arg);
         SimpleName name = cloneNode(n.getName(), arg);
         NodeList<Parameter> parameters = cloneList(n.getParameters(), arg);
-        NodeList<ReferenceType> thrownExceptions = cloneList(n.getThrownExceptions(), arg);
+        NodeList<ReferenceType<?>> thrownExceptions = cloneList(n.getThrownExceptions(), arg);
         NodeList<TypeParameter> typeParameters = cloneList(n.getTypeParameters(), arg);
         NodeList<AnnotationExpr> annotations = cloneList(n.getAnnotations(), arg);
         Comment comment = cloneNode(n.getComment(), arg);
-        MethodDeclaration r = new MethodDeclaration(n.getRange().orElse(null), n.getModifiers(), annotations, typeParameters, type, name, n.isDefault(), parameters, thrownExceptions, body);
+        MethodDeclaration r = new MethodDeclaration(n.getRange().orElse(null), n.getModifiers(), annotations, typeParameters, type, name, parameters, thrownExceptions, body);
         r.setComment(comment);
         return r;
     }
@@ -200,8 +200,9 @@ public class CloneVisitor implements GenericVisitor<Visitable, Object> {
         NodeList<AnnotationExpr> annotations = cloneList(n.getAnnotations(), arg);
         SimpleName name = cloneNode(n.getName(), arg);
         Type type = cloneNode(n.getType(), arg);
+        NodeList<AnnotationExpr> varArgsAnnotations = cloneList(n.getVarArgsAnnotations(), arg);
         Comment comment = cloneNode(n.getComment(), arg);
-        Parameter r = new Parameter(n.getRange().orElse(null), n.getModifiers(), annotations, type, n.isVarArgs(), name);
+        Parameter r = new Parameter(n.getRange().orElse(null), n.getModifiers(), annotations, type, n.isVarArgs(), varArgsAnnotations, name);
         r.setComment(comment);
         return r;
     }
@@ -276,7 +277,7 @@ public class CloneVisitor implements GenericVisitor<Visitable, Object> {
 
     @Override
     public Visitable visit(IntersectionType n, Object arg) {
-        NodeList<ReferenceType> elements = cloneList(n.getElements(), arg);
+        NodeList<ReferenceType<?>> elements = cloneList(n.getElements(), arg);
         NodeList<AnnotationExpr> annotations = cloneList(n.getAnnotations(), arg);
         Comment comment = cloneNode(n.getComment(), arg);
         IntersectionType r = new IntersectionType(n.getRange().orElse(null), elements);
@@ -286,7 +287,7 @@ public class CloneVisitor implements GenericVisitor<Visitable, Object> {
 
     @Override
     public Visitable visit(UnionType n, Object arg) {
-        NodeList<ReferenceType> elements = cloneList(n.getElements(), arg);
+        NodeList<ReferenceType<?>> elements = cloneList(n.getElements(), arg);
         NodeList<AnnotationExpr> annotations = cloneList(n.getAnnotations(), arg);
         Comment comment = cloneNode(n.getComment(), arg);
         UnionType r = new UnionType(n.getRange().orElse(null), elements);
@@ -525,9 +526,10 @@ public class CloneVisitor implements GenericVisitor<Visitable, Object> {
 
     @Override
     public Visitable visit(Name n, Object arg) {
+        NodeList<AnnotationExpr> annotations = cloneList(n.getAnnotations(), arg);
         Name qualifier = cloneNode(n.getQualifier(), arg);
         Comment comment = cloneNode(n.getComment(), arg);
-        Name r = new Name(n.getRange().orElse(null), qualifier, n.getIdentifier());
+        Name r = new Name(n.getRange().orElse(null), qualifier, n.getIdentifier(), annotations);
         r.setComment(comment);
         return r;
     }
@@ -964,4 +966,3 @@ public class CloneVisitor implements GenericVisitor<Visitable, Object> {
         return r;
     }
 }
-

@@ -23,30 +23,34 @@ package com.github.javaparser.ast.body;
 import com.github.javaparser.Range;
 import com.github.javaparser.ast.AllFieldsConstructor;
 import com.github.javaparser.ast.Modifier;
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.AssignExpr.Operator;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.nodeTypes.NodeWithJavadoc;
-import com.github.javaparser.ast.nodeTypes.NodeWithModifiers;
 import com.github.javaparser.ast.nodeTypes.NodeWithVariables;
+import com.github.javaparser.ast.nodeTypes.modifiers.NodeWithAccessModifiers;
+import com.github.javaparser.ast.nodeTypes.modifiers.NodeWithFinalModifier;
+import com.github.javaparser.ast.nodeTypes.modifiers.NodeWithStaticModifier;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
-import com.github.javaparser.ast.type.ArrayType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.type.VoidType;
+import com.github.javaparser.ast.visitor.CloneVisitor;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-import java.util.*;
-import static com.github.javaparser.ast.Modifier.PUBLIC;
-import static com.github.javaparser.ast.NodeList.nodeList;
-import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.visitor.CloneVisitor;
 import com.github.javaparser.metamodel.FieldDeclarationMetaModel;
 import com.github.javaparser.metamodel.JavaParserMetaModel;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
+import static com.github.javaparser.ast.Modifier.*;
+import static com.github.javaparser.ast.NodeList.nodeList;
+import static com.github.javaparser.utils.Utils.assertNotNull;
 
 /**
  * The declaration of a field in a class. "private static int a=15*15;" in this example: <code>class X { private static
@@ -54,7 +58,7 @@ import com.github.javaparser.metamodel.JavaParserMetaModel;
  *
  * @author Julio Vilmar Gesser
  */
-public final class FieldDeclaration extends BodyDeclaration<FieldDeclaration> implements NodeWithJavadoc<FieldDeclaration>, NodeWithModifiers<FieldDeclaration>, NodeWithVariables<FieldDeclaration> {
+public final class FieldDeclaration extends BodyDeclaration<FieldDeclaration> implements NodeWithJavadoc<FieldDeclaration>, NodeWithVariables<FieldDeclaration>, NodeWithAccessModifiers<FieldDeclaration>, NodeWithStaticModifier<FieldDeclaration>, NodeWithFinalModifier<FieldDeclaration> {
 
     private EnumSet<Modifier> modifiers;
 
@@ -158,7 +162,7 @@ public final class FieldDeclaration extends BodyDeclaration<FieldDeclaration> im
         String fieldName = variable.getNameAsString();
         String fieldNameUpper = fieldName.toUpperCase().substring(0, 1) + fieldName.substring(1, fieldName.length());
         final MethodDeclaration getter;
-        getter = parentClass.map( clazz -> clazz.addMethod("get" + fieldNameUpper, PUBLIC)).orElseGet(() -> parentEnum.get().addMethod("get" + fieldNameUpper, PUBLIC));
+        getter = parentClass.map(clazz -> clazz.addMethod("get" + fieldNameUpper, PUBLIC)).orElseGet(() -> parentEnum.get().addMethod("get" + fieldNameUpper, PUBLIC));
         getter.setType(variable.getType());
         BlockStmt blockStmt = new BlockStmt();
         getter.setBody(blockStmt);
@@ -185,13 +189,29 @@ public final class FieldDeclaration extends BodyDeclaration<FieldDeclaration> im
         String fieldName = variable.getNameAsString();
         String fieldNameUpper = fieldName.toUpperCase().substring(0, 1) + fieldName.substring(1, fieldName.length());
         final MethodDeclaration setter;
-        setter = parentClass.map( clazz -> clazz.addMethod("set" + fieldNameUpper, PUBLIC)).orElseGet(() -> parentEnum.get().addMethod("set" + fieldNameUpper, PUBLIC));
+        setter = parentClass.map(clazz -> clazz.addMethod("set" + fieldNameUpper, PUBLIC)).orElseGet(() -> parentEnum.get().addMethod("set" + fieldNameUpper, PUBLIC));
         setter.setType(new VoidType());
         setter.getParameters().add(new Parameter(variable.getType(), fieldName));
         BlockStmt blockStmt2 = new BlockStmt();
         setter.setBody(blockStmt2);
         blockStmt2.addStatement(new AssignExpr(new NameExpr("this." + fieldName), new NameExpr(fieldName), Operator.ASSIGN));
         return setter;
+    }
+
+    public boolean isTransient() {
+        return getModifiers().contains(TRANSIENT);
+    }
+
+    public boolean isVolatile() {
+        return getModifiers().contains(VOLATILE);
+    }
+
+    public FieldDeclaration setTransient(boolean set) {
+        return setModifier(TRANSIENT, set);
+    }
+
+    public FieldDeclaration setVolatile(boolean set) {
+        return setModifier(VOLATILE, set);
     }
 
     @Override
@@ -222,4 +242,3 @@ public final class FieldDeclaration extends BodyDeclaration<FieldDeclaration> im
         return JavaParserMetaModel.fieldDeclarationMetaModel;
     }
 }
-

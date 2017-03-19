@@ -2,15 +2,15 @@
     <modelVersion>4.0.0</modelVersion>
     <modules>
         <module>javaparser-core</module>
-        
+        <module>javaparser-testing</module>
         <module>javaparser-core-generators</module>
         <module>javaparser-metamodel-generator</module>
     </modules>
 
     <groupId>com.github.javaparser</groupId>
-    <artifactId>javaparser</artifactId>
+    <artifactId>javaparser-parent</artifactId>
     <packaging>pom</packaging>
-    <version>3.1.1</version>
+    <version>3.1.4-SNAPSHOT</version>
 
     <name>javaparser-parent</name>
     <url>https://github.com/javaparser</url>

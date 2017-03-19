@@ -128,6 +128,7 @@ public class CompilationUnitContext extends AbstractJavaParserContext<Compilatio
             if (dotPos > -1) {
                 prefix = name.substring(0, dotPos);
             }
+            // look into type imports
             for (ImportDeclaration importDecl : wrappedNode.getImports()) {
                 if (!importDecl.isStatic()) {
                     if (!importDecl.isAsterisk()) {
@@ -148,7 +149,13 @@ public class CompilationUnitContext extends AbstractJavaParserContext<Compilatio
                                 return SymbolReference.adapt(ref, com.github.javaparser.symbolsolver.model.declarations.TypeDeclaration.class);
                             }
                         }
-                    } else{
+                    }
+                }
+            }
+            // look into type imports on demand
+            for (ImportDeclaration importDecl : wrappedNode.getImports()) {
+                if (!importDecl.isStatic()) {
+                    if (importDecl.isAsterisk()) {
                         String qName = importDecl.getNameAsString() + "." + name;
                         SymbolReference<com.github.javaparser.symbolsolver.model.declarations.ReferenceTypeDeclaration> ref = typeSolver.tryToSolveType(qName);
                         if (ref.isSolved()) {
@@ -156,7 +163,6 @@ public class CompilationUnitContext extends AbstractJavaParserContext<Compilatio
                         }
                     }
                 }
-
             }
         }
 
@@ -214,7 +220,7 @@ public class CompilationUnitContext extends AbstractJavaParserContext<Compilatio
                     String importString = importDecl.getNameAsString();
 
                     com.github.javaparser.symbolsolver.model.declarations.TypeDeclaration ref = typeSolver.solveType(importString);
-                    SymbolReference<MethodDeclaration> method = MethodResolutionLogic.solveMethodInType(ref, name, argumentsTypes, typeSolver, true);
+                    SymbolReference<MethodDeclaration> method = MethodResolutionLogic.solveMethodInType(ref, name, argumentsTypes, true, typeSolver);
 
                     if (method.isSolved()) {
                         return method;
@@ -225,7 +231,7 @@ public class CompilationUnitContext extends AbstractJavaParserContext<Compilatio
                     if (qName.equals(name) || qName.endsWith("." + name)) {
                         String typeName = getType(qName);
                         com.github.javaparser.symbolsolver.model.declarations.TypeDeclaration ref = typeSolver.solveType(typeName);
-                        SymbolReference<MethodDeclaration> method = MethodResolutionLogic.solveMethodInType(ref, name, argumentsTypes, typeSolver, true);
+                        SymbolReference<MethodDeclaration> method = MethodResolutionLogic.solveMethodInType(ref, name, argumentsTypes, true, typeSolver);
                         if (method.isSolved()) {
                             return method;
                         }

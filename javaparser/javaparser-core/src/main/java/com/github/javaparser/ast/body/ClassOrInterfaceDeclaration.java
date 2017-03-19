@@ -29,7 +29,9 @@ import com.github.javaparser.ast.expr.SimpleName;
 import com.github.javaparser.ast.nodeTypes.NodeWithExtends;
 import com.github.javaparser.ast.nodeTypes.NodeWithImplements;
 import com.github.javaparser.ast.nodeTypes.NodeWithTypeParameters;
+import com.github.javaparser.ast.nodeTypes.modifiers.*;
 import com.github.javaparser.ast.observer.ObservableProperty;
+import com.github.javaparser.ast.stmt.LocalClassDeclarationStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.TypeParameter;
 import com.github.javaparser.ast.visitor.GenericVisitor;
@@ -46,7 +48,7 @@ import com.github.javaparser.metamodel.JavaParserMetaModel;
  *
  * @author Julio Vilmar Gesser
  */
-public final class ClassOrInterfaceDeclaration extends TypeDeclaration<ClassOrInterfaceDeclaration> implements NodeWithImplements<ClassOrInterfaceDeclaration>, NodeWithExtends<ClassOrInterfaceDeclaration>, NodeWithTypeParameters<ClassOrInterfaceDeclaration> {
+public final class ClassOrInterfaceDeclaration extends TypeDeclaration<ClassOrInterfaceDeclaration> implements NodeWithImplements<ClassOrInterfaceDeclaration>, NodeWithExtends<ClassOrInterfaceDeclaration>, NodeWithTypeParameters<ClassOrInterfaceDeclaration>, NodeWithAbstractModifier<ClassOrInterfaceDeclaration>, NodeWithFinalModifier<ClassOrInterfaceDeclaration> {
 
     private boolean isInterface;
 
@@ -151,7 +153,7 @@ public final class ClassOrInterfaceDeclaration extends TypeDeclaration<ClassOrIn
      * @return the methods found (multiple in case of polymorphism)
      */
     public Optional<ConstructorDeclaration> getDefaultConstructor() {
-        return getMembers().stream().filter( bd -> bd instanceof ConstructorDeclaration).map( bd -> (ConstructorDeclaration) bd).filter( cd -> cd.getParameters().isEmpty()).findFirst();
+        return getMembers().stream().filter(bd -> bd instanceof ConstructorDeclaration).map(bd -> (ConstructorDeclaration) bd).filter(cd -> cd.getParameters().isEmpty()).findFirst();
     }
 
     @Override
@@ -184,6 +186,13 @@ public final class ClassOrInterfaceDeclaration extends TypeDeclaration<ClassOrIn
         return super.remove(node);
     }
 
+    /**
+     * @return is this class's parent a LocalClassDeclarationStmt ?
+     */
+    public boolean isLocalClassDeclaration() {
+        return getParentNode().map(p -> p instanceof LocalClassDeclarationStmt).orElse(false);
+    }
+
     @Override
     public ClassOrInterfaceDeclaration clone() {
         return (ClassOrInterfaceDeclaration) accept(new CloneVisitor(), null);
@@ -194,4 +203,3 @@ public final class ClassOrInterfaceDeclaration extends TypeDeclaration<ClassOrIn
         return JavaParserMetaModel.classOrInterfaceDeclarationMetaModel;
     }
 }
-

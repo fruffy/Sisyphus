@@ -21,11 +21,11 @@
 package com.github.javaparser.ast;
 
 import com.github.javaparser.HasParentNode;
-import com.github.javaparser.Position;
 import com.github.javaparser.Range;
 import com.github.javaparser.ast.comments.BlockComment;
 import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.comments.LineComment;
+import com.github.javaparser.ast.nodeTypes.NodeWithRange;
 import com.github.javaparser.ast.observer.AstObserver;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.observer.PropagatingAstObserver;
@@ -33,17 +33,12 @@ import com.github.javaparser.ast.visitor.CloneVisitor;
 import com.github.javaparser.ast.visitor.EqualsVisitor;
 import com.github.javaparser.ast.visitor.HashCodeVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
+import com.github.javaparser.metamodel.NodeMetaModel;
 import com.github.javaparser.printer.PrettyPrinter;
 import com.github.javaparser.printer.PrettyPrinterConfiguration;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.*;
 import static java.util.Collections.unmodifiableList;
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.metamodel.NodeMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * Base class for all nodes of the abstract syntax tree.
@@ -88,7 +83,7 @@ import com.github.javaparser.metamodel.JavaParserMetaModel;
  *
  * @author Julio Vilmar Gesser
  */
-public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable {
+public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable, NodeWithRange<Node> {
 
     /**
      * Different registration mode for observers on nodes.
@@ -113,7 +108,7 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable 
     /**
      * This can be used to sort nodes on position.
      */
-    public static Comparator<Node> NODE_BY_BEGIN_POSITION = ( a,  b) -> {
+    public static Comparator<NodeWithRange<?>> NODE_BY_BEGIN_POSITION = (a, b) -> {
         if (a.getRange().isPresent() && b.getRange().isPresent()) {
             return a.getRange().get().begin.compareTo(b.getRange().get().begin);
         }
@@ -155,26 +150,6 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable 
      */
     public final Optional<Comment> getComment() {
         return Optional.ofNullable(comment);
-    }
-
-    /**
-     * The begin position of this node in the source file.
-     */
-    public Optional<Position> getBegin() {
-        if (range == null) {
-            return Optional.empty();
-        }
-        return Optional.of(range.begin);
-    }
-
-    /**
-     * The end position of this node in the source file.
-     */
-    public Optional<Position> getEnd() {
-        if (range == null) {
-            return Optional.empty();
-        }
-        return Optional.of(range.end);
     }
 
     /**
@@ -275,13 +250,6 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable 
         return unmodifiableList(childNodes);
     }
 
-    public <N extends Node> boolean containsWithin(N other) {
-        if (getRange().isPresent() && other.getRange().isPresent()) {
-            return range.contains(other.getRange().get());
-        }
-        return false;
-    }
-
     public void addOrphanComment(Comment comment) {
         orphanComments.add(comment);
         comment.setParentNode(this);
@@ -338,7 +306,7 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable 
      */
     @Override
     public Node setParentNode(Node parentNode) {
-        observers.forEach( o -> o.parentChange(this, this.parentNode, parentNode));
+        observers.forEach(o -> o.parentChange(this, this.parentNode, parentNode));
         // remove from old parent, if any
         if (this.parentNode != null) {
             this.parentNode.childNodes.remove(this);
@@ -355,24 +323,6 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable 
 
     public static final int ABSOLUTE_END_LINE = -2;
 
-    /** @deprecated use isAfter() on range */
-    @Deprecated
-    public boolean isPositionedAfter(Position position) {
-        if (range == null) {
-            return false;
-        }
-        return range.isAfter(position);
-    }
-
-    /** @deprecated use isBefore() on range */
-    @Deprecated
-    public boolean isPositionedBefore(Position position) {
-        if (range == null) {
-            return true;
-        }
-        return range.isBefore(position);
-    }
-
     /** @deprecated use getComment().isPresent() */
     @Deprecated
     public boolean hasComment() {
@@ -380,7 +330,7 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable 
     }
 
     public void tryAddImportToParentCompilationUnit(Class<?> clazz) {
-        getAncestorOfType(CompilationUnit.class).ifPresent( p -> p.addImport(clazz));
+        getAncestorOfType(CompilationUnit.class).ifPresent(p -> p.addImport(clazz));
     }
 
     /**
@@ -456,7 +406,7 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable 
     }
 
     public <P> void notifyPropertyChange(ObservableProperty property, P oldValue, P newValue) {
-        this.observers.forEach( o -> o.propertyChange(this, property, oldValue, newValue));
+        this.observers.forEach(o -> o.propertyChange(this, property, oldValue, newValue));
     }
 
     @Override
@@ -497,8 +447,8 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable 
      */
     public void registerForSubtree(AstObserver observer) {
         register(observer);
-        this.getChildNodes().forEach( c -> c.registerForSubtree(observer));
-        this.getNodeLists().forEach( nl -> {
+        this.getChildNodes().forEach(c -> c.registerForSubtree(observer));
+        this.getNodeLists().forEach(nl -> {
             if (nl != null)
                 nl.register(observer);
         });
@@ -541,4 +491,3 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable 
         return JavaParserMetaModel.nodeMetaModel;
     }
 }
-

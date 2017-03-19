@@ -226,6 +226,7 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
             n.getQualifier().get().accept(this, arg);
             printer.print(".");
         }
+        printAnnotations(n.getAnnotations(), false, arg);
         printer.print(n.getIdentifier());
 
         printOrphanCommentsEnding(n);
@@ -375,12 +376,12 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
         printAnnotations(n.getAnnotations(), false, arg);
         boolean isFirst = true;
         for (ReferenceType element : n.getElements()) {
-            element.accept(this, arg);
             if (isFirst) {
                 isFirst = false;
             } else {
                 printer.print(" & ");
             }
+            element.accept(this, arg);
         }
     }
 
@@ -736,7 +737,7 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
 
         if (!isNullOrEmpty(n.getThrownExceptions())) {
             printer.print(" throws ");
-            for (final Iterator<ReferenceType> i = n.getThrownExceptions().iterator(); i.hasNext(); ) {
+            for (final Iterator<ReferenceType<?>> i = n.getThrownExceptions().iterator(); i.hasNext(); ) {
                 final ReferenceType name = i.next();
                 name.accept(this, arg);
                 if (i.hasNext()) {
@@ -781,7 +782,7 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
 
         if (!isNullOrEmpty(n.getThrownExceptions())) {
             printer.print(" throws ");
-            for (final Iterator<ReferenceType> i = n.getThrownExceptions().iterator(); i.hasNext(); ) {
+            for (final Iterator<ReferenceType<?>> i = n.getThrownExceptions().iterator(); i.hasNext(); ) {
                 final ReferenceType name = i.next();
                 name.accept(this, arg);
                 if (i.hasNext()) {
@@ -802,13 +803,14 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
         printJavaComment(n.getComment(), arg);
         printAnnotations(n.getAnnotations(), false, arg);
         printModifiers(n.getModifiers());
-        if (n.getType() != null) {
-            n.getType().accept(this, arg);
-        }
+        n.getType().accept(this, arg);
         if (n.isVarArgs()) {
+            printAnnotations(n.getVarArgsAnnotations(), false, arg);
             printer.print("...");
         }
-        printer.print(" ");
+        if (!(n.getType() instanceof UnknownType)) {
+            printer.print(" ");
+        }
         n.getName().accept(this, arg);
     }
 

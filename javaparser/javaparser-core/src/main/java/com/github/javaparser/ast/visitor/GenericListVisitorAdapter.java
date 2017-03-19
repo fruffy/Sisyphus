@@ -1303,6 +1303,11 @@ public abstract class GenericListVisitorAdapter<R, A> implements GenericVisitor<
     public List<R> visit(Name n, A arg) {
         List<R> result = new ArrayList<>();
         List<R> tmp;
+        {
+            tmp = n.getAnnotations().accept(this, arg);
+            if (tmp != null)
+                result.addAll(tmp);
+        }
         if (n.getQualifier().isPresent()) {
             tmp = n.getQualifier().get().accept(this, arg);
             if (tmp != null)
@@ -1420,6 +1425,11 @@ public abstract class GenericListVisitorAdapter<R, A> implements GenericVisitor<
         }
         {
             tmp = n.getType().accept(this, arg);
+            if (tmp != null)
+                result.addAll(tmp);
+        }
+        {
+            tmp = n.getVarArgsAnnotations().accept(this, arg);
             if (tmp != null)
                 result.addAll(tmp);
         }
@@ -1855,7 +1865,7 @@ public abstract class GenericListVisitorAdapter<R, A> implements GenericVisitor<
 
     @Override
     public List<R> visit(NodeList n, A arg) {
-        return ((NodeList<? extends Node>) n).stream().filter(Objects::nonNull).flatMap( v -> v.accept(this, arg).stream()).collect(Collectors.toList());
+        return ((NodeList<? extends Node>) n).stream().filter(Objects::nonNull).flatMap(v -> v.accept(this, arg).stream()).collect(Collectors.toList());
     }
 
     @Override
@@ -1985,4 +1995,3 @@ public abstract class GenericListVisitorAdapter<R, A> implements GenericVisitor<
         return result;
     }
 }
-

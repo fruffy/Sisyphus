@@ -19,8 +19,8 @@ import java.util.Stack;
 
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
+import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.jgrapht.graph.SimpleDirectedGraph;
 
 /**

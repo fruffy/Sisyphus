@@ -21,6 +21,7 @@
 package com.github.javaparser.ast.body;
 
 import com.github.javaparser.Range;
+import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
@@ -30,21 +31,24 @@ import com.github.javaparser.ast.nodeTypes.NodeWithJavadoc;
 import com.github.javaparser.ast.nodeTypes.NodeWithMembers;
 import com.github.javaparser.ast.nodeTypes.NodeWithModifiers;
 import com.github.javaparser.ast.nodeTypes.NodeWithSimpleName;
+import com.github.javaparser.ast.nodeTypes.modifiers.NodeWithAccessModifiers;
+import com.github.javaparser.ast.nodeTypes.modifiers.NodeWithStaticModifier;
+import com.github.javaparser.ast.nodeTypes.modifiers.NodeWithStrictfpModifier;
 import com.github.javaparser.ast.observer.ObservableProperty;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
+import com.github.javaparser.metamodel.TypeDeclarationMetaModel;
 import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 import static com.github.javaparser.utils.Utils.assertNotNull;
-import com.github.javaparser.ast.visitor.CloneVisitor;
-import com.github.javaparser.metamodel.TypeDeclarationMetaModel;
-import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * A base class for all types of type declarations.
  *
  * @author Julio Vilmar Gesser
  */
-public abstract class TypeDeclaration<T extends Node> extends BodyDeclaration<T> implements NodeWithSimpleName<T>, NodeWithJavadoc<T>, NodeWithModifiers<T>, NodeWithMembers<T> {
+public abstract class TypeDeclaration<T extends Node> extends BodyDeclaration<T> implements NodeWithSimpleName<T>, NodeWithJavadoc<T>, NodeWithMembers<T>, NodeWithAccessModifiers<T>, NodeWithStaticModifier<T>, NodeWithStrictfpModifier<T> {
 
     private SimpleName name;
 
@@ -156,6 +160,20 @@ public abstract class TypeDeclaration<T extends Node> extends BodyDeclaration<T>
         return super.remove(node);
     }
 
+    /**
+     * @return is this type's parent a CompilationUnit?
+     */
+    public boolean isTopLevelType() {
+        return getParentNode().map(p -> p instanceof CompilationUnit).orElse(false);
+    }
+
+    /**
+     * @return is this type's parent a TypeDeclaration?
+     */
+    public boolean isNestedType() {
+        return getParentNode().map(p -> p instanceof TypeDeclaration).orElse(false);
+    }
+
     @Override
     public TypeDeclaration<?> clone() {
         return (TypeDeclaration<?>) accept(new CloneVisitor(), null);
@@ -166,4 +184,3 @@ public abstract class TypeDeclaration<T extends Node> extends BodyDeclaration<T>
         return JavaParserMetaModel.typeDeclarationMetaModel;
     }
 }
-

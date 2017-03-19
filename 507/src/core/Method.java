@@ -2,8 +2,8 @@ package core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.jgrapht.graph.DirectedPseudograph;
 
 import com.github.javaparser.ast.Node;
@@ -46,7 +46,7 @@ public class Method {
 		this.trimBody();
 		System.out.println("BEFORE " +methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
-		//resolveMethodCalls(methodDeclaration);
+		resolveMethodCalls(methodDeclaration);
 		try {
 			methodDeclaration = normalize(methodDeclaration);
 		} catch (Exception e) {

@@ -223,9 +223,7 @@ public class JavaParserInterfaceDeclaration extends AbstractTypeDeclaration impl
         List<ReferenceType> ancestors = new ArrayList<>();
         if (wrappedNode.getExtendedTypes() != null) {
             for (ClassOrInterfaceType extended : wrappedNode.getExtendedTypes()) {
-            	if (!("BaseStream".equals(extended.getName().toString()))) {
-                    ancestors.add(toReferenceType(extended));
-            	}
+                ancestors.add(toReferenceType(extended));
             }
         }
         if (wrappedNode.getImplementedTypes() != null) {

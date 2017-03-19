@@ -1,8 +1,6 @@
 package core;
 import java.util.HashMap;
 
-import com.github.javaparser.ast.Node;
-
 /*
  * A class to hold counts of different node types in
  * a hashmap

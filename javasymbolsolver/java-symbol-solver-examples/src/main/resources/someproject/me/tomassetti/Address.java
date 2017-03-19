@@ -1,6 +1,5 @@
 package someproject.me.tomassetti;
 
-
 public class Address {
     private String street;
     private int number;

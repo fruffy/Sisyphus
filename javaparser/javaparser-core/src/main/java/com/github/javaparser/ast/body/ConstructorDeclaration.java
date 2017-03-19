@@ -28,6 +28,7 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.SimpleName;
 import com.github.javaparser.ast.nodeTypes.*;
+import com.github.javaparser.ast.nodeTypes.modifiers.NodeWithAccessModifiers;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.ReferenceType;
@@ -48,7 +49,7 @@ import com.github.javaparser.metamodel.JavaParserMetaModel;
  *
  * @author Julio Vilmar Gesser
  */
-public final class ConstructorDeclaration extends CallableDeclaration<ConstructorDeclaration> implements NodeWithBlockStmt<ConstructorDeclaration>, NodeWithModifiers<ConstructorDeclaration>, NodeWithJavadoc<ConstructorDeclaration>, NodeWithDeclaration, NodeWithSimpleName<ConstructorDeclaration>, NodeWithParameters<ConstructorDeclaration>, NodeWithThrownExceptions<ConstructorDeclaration>, NodeWithTypeParameters<ConstructorDeclaration> {
+public final class ConstructorDeclaration extends CallableDeclaration<ConstructorDeclaration> implements NodeWithBlockStmt<ConstructorDeclaration>, NodeWithAccessModifiers<ConstructorDeclaration>, NodeWithJavadoc<ConstructorDeclaration>, NodeWithDeclaration, NodeWithSimpleName<ConstructorDeclaration>, NodeWithParameters<ConstructorDeclaration>, NodeWithThrownExceptions<ConstructorDeclaration>, NodeWithTypeParameters<ConstructorDeclaration> {
 
     private BlockStmt body;
 
@@ -61,11 +62,11 @@ public final class ConstructorDeclaration extends CallableDeclaration<Constructo
     }
 
     @AllFieldsConstructor
-    public ConstructorDeclaration(EnumSet<Modifier> modifiers, NodeList<AnnotationExpr> annotations, NodeList<TypeParameter> typeParameters, SimpleName name, NodeList<Parameter> parameters, NodeList<ReferenceType> thrownExceptions, BlockStmt body) {
+    public ConstructorDeclaration(EnumSet<Modifier> modifiers, NodeList<AnnotationExpr> annotations, NodeList<TypeParameter> typeParameters, SimpleName name, NodeList<Parameter> parameters, NodeList<ReferenceType<?>> thrownExceptions, BlockStmt body) {
         this(null, modifiers, annotations, typeParameters, name, parameters, thrownExceptions, body);
     }
 
-    public ConstructorDeclaration(Range range, EnumSet<Modifier> modifiers, NodeList<AnnotationExpr> annotations, NodeList<TypeParameter> typeParameters, SimpleName name, NodeList<Parameter> parameters, NodeList<ReferenceType> thrownExceptions, BlockStmt body) {
+    public ConstructorDeclaration(Range range, EnumSet<Modifier> modifiers, NodeList<AnnotationExpr> annotations, NodeList<TypeParameter> typeParameters, SimpleName name, NodeList<Parameter> parameters, NodeList<ReferenceType<?>> thrownExceptions, BlockStmt body) {
         super(range, modifiers, annotations, typeParameters, name, parameters, thrownExceptions);
         setBody(body);
     }
@@ -118,7 +119,7 @@ public final class ConstructorDeclaration extends CallableDeclaration<Constructo
     }
 
     @Override
-    public ConstructorDeclaration setThrownExceptions(final NodeList<ReferenceType> thrownExceptions) {
+    public ConstructorDeclaration setThrownExceptions(final NodeList<ReferenceType<?>> thrownExceptions) {
         return super.setThrownExceptions(thrownExceptions);
     }
 
@@ -183,4 +184,3 @@ public final class ConstructorDeclaration extends CallableDeclaration<Constructo
         return JavaParserMetaModel.constructorDeclarationMetaModel;
     }
 }
-

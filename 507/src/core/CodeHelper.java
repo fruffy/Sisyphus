@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import datastructures.PDGGraphViz;
 import parsers.SyntaxParser;
 
 public class CodeHelper {

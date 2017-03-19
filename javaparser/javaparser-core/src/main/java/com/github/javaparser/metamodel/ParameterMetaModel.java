@@ -17,5 +17,6 @@ public class ParameterMetaModel extends NodeMetaModel {
     public PropertyMetaModel namePropertyMetaModel;
 
     public PropertyMetaModel typePropertyMetaModel;
-}
 
+    public PropertyMetaModel varArgsAnnotationsPropertyMetaModel;
+}
