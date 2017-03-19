@@ -95,8 +95,8 @@ public class CodeHelper {
 		
 		
 		System.out.println("ANALYSIS: AST Deckard");
-		//ArrayList<Method> srcTest = new ArrayList<Method>();
-		//srcTest.add(srcMethods.get(0));
+		ArrayList<Method> srcTest = new ArrayList<Method>();
+		srcTest.add(srcMethods.get(60));
 		ArrayList<Method[]> matchesDeckard = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsNodeFeatures(srcMethods);
 		Analysis analysisDeckard = new Analysis(matchesDeckard);
 		tpFp = analysisDeckard.tpfp();

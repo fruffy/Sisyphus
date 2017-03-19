@@ -1,13 +1,19 @@
 digraph G {
   1 [ label="" ];
-  2 [ label="(line 6946,col 13)-(line 6946,col 21): _param_Object_arr__0 == null" ];
-  3 [ label="(line 6947,col 20)-(line 6947,col 25): "null"" ];
-  4 [ label="(line 6949,col 9)-(line 6949,col 35): int _var_int_0 = 20 * _param_Object_arr__0.length;" ];
-  5 [ label="(line 6950,col 13)-(line 6950,col 40): _param_Object_arr__0.length != 0 && _var_int_0 <= 0" ];
-  6 [ label="(line 6951,col 13)-(line 6951,col 38): _var_int_0 = Integer.MAX_VALUE" ];
-  7 [ label="(line 6952,col 9)-(line 6952,col 54): StringBuilder _var_StringBuilder_0 = new StringBuilder(_var_int_0);" ];
-  8 [ label="(line 6953,col 9)-(line 6953,col 54): deepToString(_param_Object_arr__0, _var_StringBuilder_0, new HashSet<Object[]>());" ];
-  9 [ label="(line 6954,col 9)-(line 6954,col 30): return _var_StringBuilder_0.toString();" ];
+  2 [ label="(line 6681,col 13)-(line 6681,col 21): _param_int_arr__0 == null" ];
+  3 [ label="(line 6682,col 20)-(line 6682,col 25): "null"" ];
+  4 [ label="(line 6683,col 9)-(line 6683,col 32): int _var_int_0 = _param_int_arr__0.length - 1;" ];
+  5 [ label="(line 6684,col 13)-(line 6684,col 22): _var_int_0 == -1" ];
+  6 [ label="(line 6685,col 20)-(line 6685,col 23): "[]"" ];
+  7 [ label="(line 6687,col 9)-(line 6687,col 46): StringBuilder _var_StringBuilder_0 = new StringBuilder();" ];
+  8 [ label="(line 6688,col 9)-(line 6688,col 22): _var_StringBuilder_0.append('[');" ];
+  9 [ label="int _var_int_1 = 0;" ];
+  10 [ label="true" ];
+  11 [ label="(line 6690,col 13)-(line 6690,col 27): _var_StringBuilder_0.append(_param_int_arr__0[_var_int_1]);" ];
+  12 [ label="(line 6691,col 17)-(line 6691,col 25): _var_int_1 == _var_int_0" ];
+  13 [ label="(line 6692,col 24)-(line 6692,col 47): _var_StringBuilder_0.append(']').toString()" ];
+  14 [ label="(line 6693,col 13)-(line 6693,col 27): _var_StringBuilder_0.append(", ");" ];
+  15 [ label="_var_int_1++;" ];
   1 -> 2;
   2 -> 3;
   1 -> 4;
@@ -16,6 +22,10 @@ digraph G {
   1 -> 7;
   1 -> 8;
   1 -> 9;
-  6 -> 6;
-  6 -> 7;
+  1 -> 10;
+  1 -> 11;
+  1 -> 12;
+  12 -> 13;
+  1 -> 14;
+  1 -> 15;
 }
