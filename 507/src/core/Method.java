@@ -1,5 +1,4 @@
 package core;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,16 +40,23 @@ public class Method {
 
 	public Method(MethodDeclaration methodDeclaration) {
 		this.originalDecl = methodDeclaration.clone();
-		this.methodName = methodDeclaration.getNameAsString();
-		this.parameters = methodDeclaration.getParameters();
-		this.returnType = methodDeclaration.getType();
-		this.body = methodDeclaration.getBody().get();
-		this.pdg = this.constructPDG();
+
 		//this.nodeFeature = this.constructMethodFeature();
+		this.body = methodDeclaration.getBody().get();
 		this.trimBody();
 		System.out.println("BEFORE " +methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
 		resolveMethodCalls(methodDeclaration);
+		try {
+			methodDeclaration = normalize(methodDeclaration);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		this.body = methodDeclaration.getBody().get();
+		this.methodName = methodDeclaration.getNameAsString();
+		this.parameters = methodDeclaration.getParameters();
+		this.returnType = methodDeclaration.getType();
+		this.pdg = this.constructPDG();
 		System.out.println("AFTER " + methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
 	}
@@ -174,10 +180,11 @@ public class Method {
 	/**
 	 * Return a new method that is equivalent to this method, but normalized by
 	 * the given normalizer
+	 * @return 
 	 */
-	public void normalize(MethodDeclaration methodDecl) {
-		Method ret = new Method((MethodDeclaration) StandardForm.toStandardForm(methodDecl));
-		ret.unNormalized = this;
+	public MethodDeclaration normalize(MethodDeclaration methodDecl) {
+		return ((MethodDeclaration) StandardForm.toStandardForm(methodDecl));
+		//ret.unNormalized = this;
 	}
 
 	public boolean isRecursive() {
