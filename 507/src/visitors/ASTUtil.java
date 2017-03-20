@@ -23,6 +23,9 @@ public class ASTUtil {
 		return freesWithEnv(node, new HashSet(), new HashSet()).contains(ident);
 	}
 
+	private static HashSet<String> freesWithEnv(Node node){
+		return freesWithEnv(node, new HashSet(), new HashSet());
+	}
 
 	private static HashSet<String> freesWithEnv(
 			Node node, 
