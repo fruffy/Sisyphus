@@ -19,7 +19,6 @@ public class CodeHelper {
 		SyntaxParser libparser1, libparser2, libparser;
 		SyntaxParser srcparser;
 		ArrayList<Method> srcMethods, libMethods;
-
 		if (!(srcfile.exists()) || srcfile.isDirectory()) {
 			System.out.println("Input file does not exist or is not a valid input.");
 			// Debug
@@ -30,7 +29,7 @@ public class CodeHelper {
 		if (!(libFile1.exists()) || libFile1.isDirectory()) {
 			System.out.println("Error reading reference library.");
 			// Debug
-			// System.out.println("Working Directory = " +
+			// System.out.asdasdaprintln("Working Directory = " +
 			// System.getProperty("user.dir"));
 			return;
 		}

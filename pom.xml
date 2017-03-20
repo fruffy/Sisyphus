@@ -20,9 +20,6 @@
 	<modules>
 		<module>javaparser</module>
 		<module>jgrapht</module>
-		<module>javasymbolsolver/java-symbol-solver-model/build</module>
-		<module>javasymbolsolver/java-symbol-solver-logic/build</module>
-		<module>javasymbolsolver/java-symbol-solver-core/build</module>
 		<module>507</module>
 	</modules>
 </project>
