@@ -16,8 +16,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/fruffy/UBC/Projects/CPSC_507/javasymbolsolver/java-symbol-solver-core/build/libs/java-symbol-solver-core.jar"/>
-	<classpathentry kind="lib" path="/home/fruffy/UBC/Projects/CPSC_507/javasymbolsolver/java-symbol-solver-model/build/libs/java-symbol-solver-model.jar"/>
-	<classpathentry kind="lib" path="/home/fruffy/UBC/Projects/CPSC_507/javasymbolsolver/java-symbol-solver-logic/build/libs/java-symbol-solver-logic.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
