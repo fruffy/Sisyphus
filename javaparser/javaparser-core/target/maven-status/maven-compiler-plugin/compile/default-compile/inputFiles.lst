@@ -2,7 +2,6 @@
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/AnnotationDeclarationMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/stmt/SynchronizedStmt.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/PackageDeclarationMetaModel.java
-/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/target/generated-sources/javacc/com/github/javaparser/Token.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/stmt/AssertStmt.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/VariableDeclaratorMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/ExpressionMetaModel.java
@@ -36,7 +35,6 @@
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/TypeParameterMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ParserConfiguration.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/type/Type.java
-/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/target/generated-sources/javacc/com/github/javaparser/JavaCharStream.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/expr/TypeExpr.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/printer/ConcreteSyntaxModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/printer/PrettyPrinterConfiguration.java
@@ -49,6 +47,7 @@
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/expr/Name.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/stmt/EmptyStmt.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/type/VoidType.java
+/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/StringProvider.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/modules/ModuleUsesStmt.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/JavaParser.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/printer/lexicalpreservation/changes/ListReplacementChange.java
@@ -90,6 +89,7 @@
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/Problem.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/validator/ProblemReporter.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/TypeMetaModel.java
+/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/JavaCharStream.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/CallableDeclarationMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/expr/VariableDeclarationExpr.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/nodeTypes/NodeWithModifiers.java
@@ -138,7 +138,6 @@
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/expr/LambdaExpr.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/LineCommentMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/validator/Java9Validator.java
-/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/target/generated-sources/javacc/com/github/javaparser/ParseException.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/EnclosedExprMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/ArrayCreationExprMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/body/Parameter.java
@@ -157,6 +156,7 @@
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/nodeTypes/NodeWithSimpleName.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/modules/ModuleRequiresStmt.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/AllFieldsConstructor.java
+/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/GeneratedJavaParser.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/ClassOrInterfaceTypeMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/type/UnknownType.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/printer/lexicalpreservation/ChildTextElement.java
@@ -171,7 +171,6 @@
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/EmptyStmtMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/SimpleNameMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/Position.java
-/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/target/generated-sources/javacc/com/github/javaparser/StringProvider.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/comments/Comment.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/observer/AstObserver.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/JavadocParser.java
@@ -181,6 +180,7 @@
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/body/CallableDeclaration.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/CommentMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/nodeTypes/NodeWithVariables.java
+/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/GeneratedJavaParserTokenManager.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/ModuleOpensStmtMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/nodeTypes/NodeWithThrownExceptions.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/expr/IntegerLiteralExpr.java
@@ -188,7 +188,6 @@
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/expr/Expression.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/printer/lexicalpreservation/TextElementIteratorsFactory.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/expr/NormalAnnotationExpr.java
-/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/target/generated-sources/javacc/com/github/javaparser/StreamProvider.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/printer/concretesyntaxmodel/CsmConditional.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ParseProblemException.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/modules/ModuleOpensStmt.java
@@ -240,6 +239,7 @@
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/printer/lexicalpreservation/TextElement.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/ForeachStmtMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/visitor/Visitable.java
+/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ParseException.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/body/ClassOrInterfaceDeclaration.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/nodeTypes/NodeWithIdentifier.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/expr/MemberValuePair.java
@@ -259,6 +259,7 @@
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/comments/JavadocComment.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/printer/PrettyPrinter.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/expr/CharLiteralExpr.java
+/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/TokenMgrException.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/AnnotationExprMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/printer/lexicalpreservation/changes/ListAdditionChange.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/comments/BlockComment.java
@@ -283,13 +284,11 @@
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/printer/concretesyntaxmodel/CsmOrphanCommentsEnding.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/observer/PropagatingAstObserver.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/DerivedProperty.java
+/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/GeneratedJavaParserConstants.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/IntersectionTypeMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/expr/StringLiteralExpr.java
-/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/target/generated-sources/javacc/com/github/javaparser/GeneratedJavaParserTokenManager.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/printer/TokenConstants.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/SingleMemberAnnotationExprMetaModel.java
-/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/target/generated-sources/javacc/com/github/javaparser/GeneratedJavaParser.java
-/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/target/generated-sources/javacc/com/github/javaparser/Provider.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/printer/concretesyntaxmodel/PrintingHelper.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/printer/lexicalpreservation/TextElementMatchers.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/PropertyMetaModel.java
@@ -309,18 +308,18 @@
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/ClassExprMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/MethodReferenceExprMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/EnumDeclarationMetaModel.java
+/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/Provider.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/body/TypeDeclaration.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/printer/Printable.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/expr/FieldAccessExpr.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ParseStart.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/visitor/VoidVisitorAdapter.java
-/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/target/generated-sources/javacc/com/github/javaparser/GeneratedJavaParserConstants.java
-/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/target/generated-sources/javacc/com/github/javaparser/TokenMgrException.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/stmt/BreakStmt.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/validator/Java8Validator.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/SwitchStmtMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/BodyDeclarationMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/stmt/ContinueStmt.java
+/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/Token.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/utils/SeparatedItemStringBuilder.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/SynchronizedStmtMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/stmt/Statement.java
@@ -343,6 +342,7 @@
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/printer/concretesyntaxmodel/CsmElement.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/NameExprMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/printer/concretesyntaxmodel/CsmChar.java
+/home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/StreamProvider.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/NameMetaModel.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/ast/stmt/ExplicitConstructorInvocationStmt.java
 /home/fruffy/UBC/Projects/CPSC_507/javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/BinaryExprMetaModel.java

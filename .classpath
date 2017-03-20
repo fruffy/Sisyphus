@@ -1,48 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="507/src"/>
-	<classpathentry kind="src" path="dataflow/manual/examples"/>
-	<classpathentry kind="src" path="dataflow/src"/>
-	<classpathentry kind="src" path="javaparser/javaparser-core/src/main/java"/>
-	<classpathentry kind="src" path="javaparser/javaparser-core/target/generated-sources/javacc"/>
-	<classpathentry kind="src" path="javasymbolsolver/java-symbol-solver-core/src/main/java"/>
-	<classpathentry kind="src" path="javasymbolsolver/java-symbol-solver-core/src/test/java"/>
-	<classpathentry kind="src" path="javasymbolsolver/java-symbol-solver-core/src/test/resources/javaparser_new_src/javaparser-core"/>
-	<classpathentry kind="src" path="javasymbolsolver/java-symbol-solver-core/src/test/resources/javaparser_new_src/javaparser-generated-sources"/>
-	<classpathentry kind="src" path="javasymbolsolver/java-symbol-solver-core/src/test/resources/javaparser_src/generated"/>
-	<classpathentry kind="src" path="javasymbolsolver/java-symbol-solver-core/src/test/resources/javaparser_src/proper_source"/>
-	<classpathentry kind="src" path="javasymbolsolver/java-symbol-solver-core/target/test-classes/javaparser_new_src/javaparser-core"/>
-	<classpathentry kind="src" path="javasymbolsolver/java-symbol-solver-core/target/test-classes/javaparser_new_src/javaparser-generated-sources"/>
-	<classpathentry kind="src" path="javasymbolsolver/java-symbol-solver-core/target/test-classes/javaparser_src/generated"/>
-	<classpathentry kind="src" path="javasymbolsolver/java-symbol-solver-core/target/test-classes/javaparser_src/proper_source"/>
-	<classpathentry kind="src" path="javasymbolsolver/java-symbol-solver-examples/src/main/java"/>
-	<classpathentry kind="src" path="javasymbolsolver/java-symbol-solver-examples/src/main/resources/someproject"/>
-	<classpathentry kind="src" path="javasymbolsolver/java-symbol-solver-examples/target/classes/someproject"/>
-	<classpathentry kind="src" path="javasymbolsolver/java-symbol-solver-logic/src/main/java"/>
-	<classpathentry kind="src" path="javasymbolsolver/java-symbol-solver-model/src/main/java"/>
-	<classpathentry kind="lib" path="507/lib/org.eclipse.core.contenttype_3.5.100.v20160418-1621.jar"/>
-	<classpathentry kind="lib" path="507/lib/org.eclipse.core.jobs_3.8.0.v20160509-0411.jar"/>
-	<classpathentry kind="lib" path="507/lib/org.eclipse.core.resources_3.11.1.v20161107-2032.jar"/>
-	<classpathentry kind="lib" path="507/lib/org.eclipse.core.runtime_3.12.0.v20160606-1342.jar"/>
-	<classpathentry kind="lib" path="507/lib/org.eclipse.equinox.common_3.8.0.v20160509-1230.jar"/>
-	<classpathentry kind="lib" path="507/lib/org.eclipse.equinox.preferences_3.6.1.v20160815-1406.jar"/>
-	<classpathentry kind="lib" path="507/lib/org.eclipse.jdt.core_3.12.2.v20161117-1814.jar"/>
-	<classpathentry kind="lib" path="507/lib/org.eclipse.osgi_3.11.2.v20161107-1947.jar"/>
-	<classpathentry kind="lib" path="507/target/507-0.0.1-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="javaparser/javaparser-core/target/javaparser-core-3.0.2-SNAPSHOT.jar"/>
-	<classpathentry kind="src" path="/jgrapht/jgrapht-io/target/jgrapht-io-1.0.2.jar"/>
-	<classpathentry kind="src" path="/jgrapht/jgrapht-core/target/jgrapht-io-1.0.2.jar"/>
-	<classpathentry kind="lib" path="javasymbolsolver/gradle/wrapper/gradle-wrapper.jar"/>
-	<classpathentry kind="lib" path="javasymbolsolver/java-symbol-solver-core/src/test/resources/javaparser-core-2.1.0.jar"/>
-	<classpathentry kind="lib" path="javasymbolsolver/java-symbol-solver-core/src/test/resources/javaparser-core-3.0.0-alpha.2.jar"/>
-	<classpathentry kind="lib" path="javasymbolsolver/java-symbol-solver-core/src/test/resources/junit-4.8.1.jar"/>
-	<classpathentry kind="lib" path="javasymbolsolver/java-symbol-solver-core/target/java-symbol-solver-core-0.4-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="javasymbolsolver/java-symbol-solver-core/target/test-classes/javaparser-core-2.1.0.jar"/>
-	<classpathentry kind="lib" path="javasymbolsolver/java-symbol-solver-core/target/test-classes/javaparser-core-3.0.0-alpha.2.jar"/>
-	<classpathentry kind="lib" path="javasymbolsolver/java-symbol-solver-core/target/test-classes/junit-4.8.1.jar"/>
-	<classpathentry kind="lib" path="javasymbolsolver/java-symbol-solver-examples/target/java-symbol-solver-examples-0.4-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="javasymbolsolver/java-symbol-solver-logic/target/java-symbol-solver-logic-0.4-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="javasymbolsolver/java-symbol-solver-model/target/java-symbol-solver-model-0.4-SNAPSHOT.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="output" path="507/target/classes"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="con" path="org.springsource.ide.eclipse.gradle.classpathcontainer"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

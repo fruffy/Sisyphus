@@ -72,7 +72,7 @@ public class PDGGraphViz {
 			DOTExporter<Node, DefaultEdge> export = 
 	    			new DOTExporter<Node, DefaultEdge>(new IntegerComponentNameProvider<>(), vertexNames, null);
 	    	
-			export.exportGraph(g, writer);
+			//export.exportGraph(g, writer);
 			writer.close();
 		} catch (IOException e) {
 			System.err.println("Couldn't write graph to file " + filename);

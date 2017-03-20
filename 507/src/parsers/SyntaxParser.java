@@ -87,11 +87,11 @@ public class SyntaxParser {
 		for (MethodDeclaration n : this.methodDeclarationList) {
 			try {
 				Method nMethod = new Method(n);
-				System.out.print("Added: "+nMethod.getReturnType() + " " + nMethod.getMethodName() + " ( ");
+	/*			System.out.print("Added: "+nMethod.getReturnType() + " " + nMethod.getMethodName() + " ( ");
 				for (Parameter par : nMethod.getMethodParameters()) {
 					System.out.print(par +" ");
 				}
-				System.out.println(")" + " "+ nMethod.getBody());
+				System.out.println(")" + " "+ nMethod.getBody());*/
 				methodList.add(nMethod);
 				
 				}

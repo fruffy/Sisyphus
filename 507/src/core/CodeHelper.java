@@ -12,10 +12,11 @@ public class CodeHelper {
 		String srcName = "src/examples/TestCodeV2.java";
 		File libFile1 = new File("Math.java");
 		File libFile2 = new File("Arrays.java");
+		File libFile = new File("Library.java");
 
 		File srcfile = new File(srcName);
 
-		SyntaxParser libparser1, libparser2;
+		SyntaxParser libparser1, libparser2, libparser;
 		SyntaxParser srcparser;
 		ArrayList<Method> srcMethods, libMethods;
 
@@ -36,6 +37,7 @@ public class CodeHelper {
 
 		// initialize java parser for both library and source code.
 		try {
+			libparser = new SyntaxParser(libFile);
 			libparser1 = new SyntaxParser(libFile1);
 			libparser2 = new SyntaxParser(libFile2);
 
@@ -49,7 +51,7 @@ public class CodeHelper {
 		srcMethods = srcparser.getMethods();
 		libMethods = libparser1.getMethods();
 		libMethods.addAll(libparser2.getMethods());
-		
+		//libMethods = libparser.getMethods();
 		for (Method method : libMethods) {
 			System.out.println(method.getMethodName());
 		}

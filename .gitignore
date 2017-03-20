@@ -1,10 +1,9 @@
 bin
 #jre_library
 .manager
-target
 .settings
 *~
-/target
+target/
 .project'
 #.classpath
 .idea/
@@ -12,7 +11,6 @@ target
 release.properties
 .metadata
 .recommenders
-
 *.class
 
 # BlueJ files
@@ -29,4 +27,9 @@ release.properties
 hs_err_pid*
 output.txt
 
+
 *.dot
+/.gradle/
+
+build/libs/
+build/
