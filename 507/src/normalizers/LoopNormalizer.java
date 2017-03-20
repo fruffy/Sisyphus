@@ -30,14 +30,6 @@ import com.github.javaparser.ast.visitor.Visitable;
 
 public class LoopNormalizer extends Normalizer {
 
-	private static Expression litTrueIfNull(Expression n){
-		if (n == null){
-			return new BooleanLiteralExpr(true);
-		}
-		else{
-			return n;
-		}
-	}
 
 	private static BlockStmt mergeBlocks(Statement s1, Statement s2){
 		NodeList<Statement> newStmts = new NodeList<Statement>();
@@ -72,7 +64,7 @@ public class LoopNormalizer extends Normalizer {
 		return new BlockStmt(newList);
 	}
 
-	private class FixLoopsVisitor extends ModifierVisitor{
+	private class FixLoopsVisitor extends ModifierVisitor<Object>{
 
 		public FixLoopsVisitor(){
 
