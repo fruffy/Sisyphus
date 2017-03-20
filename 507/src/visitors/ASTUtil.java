@@ -20,11 +20,11 @@ import com.github.javaparser.ast.stmt.WhileStmt;
 public class ASTUtil {
 	public static boolean occursFree(Node node, String ident){
 
-		return freesWithEnv(node, new HashSet(), new HashSet()).contains(ident);
+		return freesWithEnv(node, new HashSet<String>(), new HashSet<String>()).contains(ident);
 	}
 
-	private static HashSet<String> freesWithEnv(Node node){
-		return freesWithEnv(node, new HashSet(), new HashSet());
+	public static HashSet<String> freeVars(Node node){
+		return freesWithEnv(node, new HashSet<String>(), new HashSet<String>());
 	}
 
 	private static HashSet<String> freesWithEnv(

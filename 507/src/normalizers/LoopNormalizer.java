@@ -25,10 +25,11 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.type.TypeParameter;
 import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.ast.visitor.ModifierVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
 
 public class LoopNormalizer extends Normalizer {
-	
+
 	private static Expression litTrueIfNull(Expression n){
 		if (n == null){
 			return new BooleanLiteralExpr(true);
@@ -71,20 +72,36 @@ public class LoopNormalizer extends Normalizer {
 		return new BlockStmt(newList);
 	}
 
-	private class FixLoopsVisitor extends CloneVisitor{
+	private class FixLoopsVisitor extends ModifierVisitor{
 
 		public FixLoopsVisitor(){
-			
+
+		}
+
+		protected <T extends Node> T modifyNode(T _node, Object _arg) {
+			if (_node == null) {
+				return null;
+			}
+			Node r = (Node) _node.accept(this, _arg);
+			if (r == null) {
+				return null;
+			}
+			return (T) r;
 		}
 
 		@Override
 		public Visitable visit(ForStmt n, Object arg) {
 			//Clone this like before
-			Statement body = cloneNode(n.getBody(), arg);
-			Expression compare = litTrueIfNull(cloneNode(n.getCompare(), arg));
+			Statement body = modifyNode(n.getBody(), arg);
+			Expression compare;
+			if (n.getCompare().isPresent()){
+				compare = modifyNode(n.getCompare().get(), arg);	
+			} else {
+				compare = new BooleanLiteralExpr(true);
+			}
 			NodeList<Expression> initialization = cloneList(n.getInitialization(), arg);
 			NodeList<Expression> update = cloneList(n.getUpdate(), arg);
-			Comment comment = cloneNode(n.getComment(), arg);
+			Comment comment = modifyNode(n.getComment(), arg);
 
 			//While loop body is old body, plus the update at the end
 			Statement newBody;
@@ -94,7 +111,7 @@ public class LoopNormalizer extends Normalizer {
 			else {
 				newBody = body;
 			}
-			
+
 			Optional<Range> or = n.getRange();
 			WhileStmt loop;
 			if (or.isPresent()){
@@ -102,18 +119,18 @@ public class LoopNormalizer extends Normalizer {
 			} else {
 				loop = new WhileStmt(compare, newBody);
 			}
-			
-			
+
+
 			//System.err.println("COND:" + loop.getCondition());
-			
-			
+
+
 
 			//Finally, return a block with the initialization appended to the loop
 
 			BlockStmt r = new BlockStmt();
 			r.setStatements(mergeBlocks(exprBlock(initialization), loop).getStatements());
 			r.setComment(comment);
-			
+
 			//System.err.println("Changed loop:\n" + n);
 			//System.err.println("to:\n" + r);
 
@@ -121,9 +138,9 @@ public class LoopNormalizer extends Normalizer {
 		}		
 		@Override
 		public Visitable visit(DoStmt n, Object arg) {
-			Statement body = cloneNode(n.getBody(), arg);
-			Expression condition = cloneNode(n.getCondition(), arg);
-			Comment comment = cloneNode(n.getComment(), arg);
+			Statement body = modifyNode(n.getBody(), arg);
+			Expression condition = modifyNode(n.getCondition(), arg);
+			Comment comment = modifyNode(n.getComment(), arg);
 
 			//Make a while loop from our Do-While loop i.e. same cond and body
 			WhileStmt loop = new WhileStmt(condition, body);
@@ -136,42 +153,42 @@ public class LoopNormalizer extends Normalizer {
 
 			return r;
 		}
-		
-		
+
+
 		//http://stackoverflow.com/questions/85190/how-does-the-java-for-each-loop-work
 		@Override
-	    public Visitable visit(ForeachStmt n, Object arg) {
-	        Statement body = cloneNode(n.getBody(), arg);
-	        Expression iterable = cloneNode(n.getIterable(), arg);
-	        VariableDeclarationExpr variable = cloneNode(n.getVariable(), arg);
-	        Comment comment = cloneNode(n.getComment(), arg);
-	        
-	        Type iterType = 
-	        		new TypeParameter("Iterable", 
-	        				new NodeList<ClassOrInterfaceType>(variable.getElementType()));
-	        
-	        VariableDeclarationExpr iterDecl = new VariableDeclarationExpr(iterType, "__iter");
-	        AssignExpr iterAssign = new AssignExpr(new NameExpr("__iter"), iterable, AssignExpr.Operator.ASSIGN);
-	        
-	        //New body: Create variable with iter.next() assigned to it
-	        Expression elemValue = new MethodCallExpr(new NameExpr("__iter"), "next");
-	        Expression elemDecl = 
-	        		new AssignExpr(variable, elemValue, AssignExpr.Operator.ASSIGN); 
-	        //Then do the normal loop body
-	        Statement newBody = mergeBlocks(new ExpressionStmt(elemDecl), 
-	        		mergeBlocks(new ExpressionStmt(iterAssign), body));
-	        
-	        //End condition, check if iter has next
-	        Expression endCond = new MethodCallExpr(new NameExpr("__iter"), "hasNext");
-	        
-	        //Make the for loop doing each step of the for-each
-	        ForStmt loop = 
-	        		new ForStmt(new NodeList<Expression>(iterDecl),
-	        					endCond, new NodeList<Expression>(), newBody);
-	        
-	        //Finally, turn our for-loop into a while loop and return
-	        return visit(loop, arg);
-	}
+		public Visitable visit(ForeachStmt n, Object arg) {
+			Statement body = modifyNode(n.getBody(), arg);
+			Expression iterable = modifyNode(n.getIterable(), arg);
+			VariableDeclarationExpr variable = modifyNode(n.getVariable(), arg);
+			Comment comment = modifyNode(n.getComment(), arg);
+
+			Type iterType = 
+					new TypeParameter("Iterable", 
+							new NodeList<ClassOrInterfaceType>(variable.getElementType()));
+
+			VariableDeclarationExpr iterDecl = new VariableDeclarationExpr(iterType, "__iter");
+			AssignExpr iterAssign = new AssignExpr(new NameExpr("__iter"), iterable, AssignExpr.Operator.ASSIGN);
+
+			//New body: Create variable with iter.next() assigned to it
+			Expression elemValue = new MethodCallExpr(new NameExpr("__iter"), "next");
+			Expression elemDecl = 
+					new AssignExpr(variable, elemValue, AssignExpr.Operator.ASSIGN); 
+			//Then do the normal loop body
+			Statement newBody = mergeBlocks(new ExpressionStmt(elemDecl), 
+					mergeBlocks(new ExpressionStmt(iterAssign), body));
+
+			//End condition, check if iter has next
+			Expression endCond = new MethodCallExpr(new NameExpr("__iter"), "hasNext");
+
+			//Make the for loop doing each step of the for-each
+			ForStmt loop = 
+					new ForStmt(new NodeList<Expression>(iterDecl),
+							endCond, new NodeList<Expression>(), newBody);
+
+			//Finally, turn our for-loop into a while loop and return
+			return visit(loop, arg);
+		}
 
 		private <N extends Node> NodeList<N> cloneList(NodeList<N> list, Object arg) {
 			if (list == null) {
@@ -182,6 +199,7 @@ public class LoopNormalizer extends Normalizer {
 
 
 	}
+
 
 	@Override
 	public Node result() {
