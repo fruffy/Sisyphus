@@ -233,7 +233,7 @@ public class VariableNameNormalizer extends Normalizer {
 	@Override
 	public Node result() {
 		//System.err.println("Fixing names for " + this.startBlock);
-		Node ret = startBlock.clone();
+		Node ret = startBlock;
 		visit(ret, new VisitInfo(VariableEnv.empty(), new LinkedList<Pair<String, String>>()));
 		//System.err.println("Changed body:\n" + startBlock);
 		//System.err.println("to:\n" + ret);
