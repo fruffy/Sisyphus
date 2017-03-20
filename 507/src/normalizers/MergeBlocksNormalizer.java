@@ -25,13 +25,14 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.type.TypeParameter;
 import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.ast.visitor.ModifierVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
 
 public class MergeBlocksNormalizer extends Normalizer {
 
 
 
-	private class MergeBlocksVisitor extends CloneVisitor{
+	private class MergeBlocksVisitor extends ModifierVisitor<Object>{
 		
 		int freshNum = 0;
 		
@@ -66,7 +67,7 @@ public class MergeBlocksNormalizer extends Normalizer {
 				}
 			}
 
-			Comment comment = cloneNode(n.getComment(), arg);
+			Comment comment = n.getComment();
 			BlockStmt r = new BlockStmt(n.getRange().orElse(null), newStatementList);
 			r.setComment(comment);
 			return r;
