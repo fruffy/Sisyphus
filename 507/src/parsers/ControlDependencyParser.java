@@ -6,7 +6,7 @@ import datastructures.DominatorTree;
 import datastructures.EntryStmt;
 import datastructures.NodeWrapper;
 import org.jgrapht.DirectedGraph;
-import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
+import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.jgrapht.graph.DefaultEdge;
 
 public class ControlDependencyParser {

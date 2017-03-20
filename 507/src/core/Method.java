@@ -2,7 +2,7 @@ package core;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
+import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedPseudograph;
 
@@ -43,27 +43,19 @@ public class Method {
 
 		//this.nodeFeature = this.constructMethodFeature();
 		this.body = methodDeclaration.getBody().get();
-		this.methodName = methodDeclaration.getNameAsString();
-		this.parameters = methodDeclaration.getParameters();
-		this.returnType = methodDeclaration.getType();
 		this.trimBody();
 		//System.out.println("BEFORE " +methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
-		try {
-			methodDeclaration = normalize(methodDeclaration);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		this.body = methodDeclaration.getBody().get();
 		resolveMethodCalls(methodDeclaration);
 		try {
 			methodDeclaration = normalize(methodDeclaration);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("TEST1" + this.body);
 		this.body = methodDeclaration.getBody().get();
-		System.out.println("AFTER" + this.body);
+		this.methodName = methodDeclaration.getNameAsString();
+		this.parameters = methodDeclaration.getParameters();
+		this.returnType = methodDeclaration.getType();
 		this.pdg = this.constructPDG();
 		//System.out.println("AFTER " + methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
