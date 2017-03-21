@@ -49,7 +49,7 @@ public class ControlFlowParser {
 	public ControlFlowParser(Method m) {
 		this.cfg = new DirectedPseudograph<>(DefaultEdge.class);
 		this.previousNodes = new LinkedList<NodeWrapper>();
-		parse(m.getFilteredBody());
+		parse(m.getBody());
 
 	}
 

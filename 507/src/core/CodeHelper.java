@@ -10,8 +10,8 @@ public class CodeHelper {
 	public static void main(String[] args) {
 		
 		String srcName = "src/examples/TestCodeV2.java";
-		File libFile1 = new File("Math.java");
-		File libFile2 = new File("Arrays.java");
+		File libFile2 = new File("Math.java");
+		File libFile1 = new File("Arrays.java");
 
 		File srcfile = new File(srcName);
 
@@ -47,9 +47,9 @@ public class CodeHelper {
 		srcMethods = srcparser.getMethods();
 		libMethods = libparser1.getMethods();
 		libMethods.addAll(libparser2.getMethods());
-		for (Method method : libMethods) {
+/*		for (Method method : libMethods) {
 			System.out.println(method.getMethodName());
-		}
+		}*/
 		//ArrayList<Method> libTest = new ArrayList<Method>();
 		//libTest.add(libMethods.get(223));
 
@@ -96,7 +96,7 @@ public class CodeHelper {
 
 		System.out.println("ANALYSIS: AST Deckard");
 		ArrayList<Method> srcTest2 = new ArrayList<Method>();
-		srcTest2.add(srcMethods.get(60));
+		//srcTest2.add(srcMethods.get(60));
 		ArrayList<Method[]> matchesDeckard = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsNodeFeatures(srcMethods);
 		Analysis analysisDeckard = new Analysis(matchesDeckard);
 		tpFp = analysisDeckard.tpfp();

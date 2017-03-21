@@ -48,16 +48,15 @@ public class ControlListParser {
 		}
 	}
 
-	private void printGraph(Method m, Graph<NodeWrapper, DefaultEdge> cdg) {
+	private void printGraph(Method m, Graph<NodeWrapper, DefaultEdge> graph) {
 
-		for (NodeWrapper n : cdg.vertexSet()) {
+		for (NodeWrapper n : graph.vertexSet()) {
 			System.out.println(n.NODE);
-			for (DefaultEdge e : cdg.outgoingEdgesOf(n)) {
-				System.out.println("\t --> " + cdg.getEdgeTarget(e).NODE);
+			for (DefaultEdge e : graph.outgoingEdgesOf(n)) {
+				System.out.println("\t --> " + graph.getEdgeTarget(e).NODE);
 			}
 		}
 		System.out.println("\n***************");
-
 	}
 
 	/**
