@@ -18,25 +18,26 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package com.github.javaparser.ast.body;
 
 import com.github.javaparser.Range;
 import com.github.javaparser.ast.AllFieldsConstructor;
 import com.github.javaparser.ast.Modifier;
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.SimpleName;
 import com.github.javaparser.ast.nodeTypes.NodeWithImplements;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import com.github.javaparser.ast.visitor.CloneVisitor;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-
+import com.github.javaparser.metamodel.EnumDeclarationMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
+import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.LinkedList;
 import java.util.List;
-
 import static com.github.javaparser.utils.Utils.assertNonEmpty;
 import static com.github.javaparser.utils.Utils.assertNotNull;
 
@@ -45,49 +46,26 @@ import static com.github.javaparser.utils.Utils.assertNotNull;
  *
  * @author Julio Vilmar Gesser
  */
-public final class EnumDeclaration extends TypeDeclaration<EnumDeclaration> implements
-        NodeWithImplements<EnumDeclaration> {
+public final class EnumDeclaration extends TypeDeclaration<EnumDeclaration> implements NodeWithImplements<EnumDeclaration> {
 
     private NodeList<ClassOrInterfaceType> implementedTypes;
 
     private NodeList<EnumConstantDeclaration> entries;
 
     public EnumDeclaration() {
-        this(null,
-                EnumSet.noneOf(Modifier.class),
-                new NodeList<>(),
-                new SimpleName(),
-                new NodeList<>(),
-                new NodeList<>(),
-                new NodeList<>());
+        this(null, EnumSet.noneOf(Modifier.class), new NodeList<>(), new SimpleName(), new NodeList<>(), new NodeList<>(), new NodeList<>());
     }
 
     public EnumDeclaration(EnumSet<Modifier> modifiers, String name) {
-        this(null,
-                modifiers,
-                new NodeList<>(),
-                new SimpleName(name),
-                new NodeList<>(),
-                new NodeList<>(),
-                new NodeList<>());
+        this(null, modifiers, new NodeList<>(), new SimpleName(name), new NodeList<>(), new NodeList<>(), new NodeList<>());
     }
 
     @AllFieldsConstructor
-    public EnumDeclaration(EnumSet<Modifier> modifiers, NodeList<AnnotationExpr> annotations, SimpleName name,
-                           NodeList<ClassOrInterfaceType> implementedTypes, NodeList<EnumConstantDeclaration> entries,
-                           NodeList<BodyDeclaration<?>> members) {
-        this(null,
-                modifiers,
-                annotations,
-                name,
-                implementedTypes,
-                entries,
-                members);
+    public EnumDeclaration(EnumSet<Modifier> modifiers, NodeList<AnnotationExpr> annotations, SimpleName name, NodeList<ClassOrInterfaceType> implementedTypes, NodeList<EnumConstantDeclaration> entries, NodeList<BodyDeclaration<?>> members) {
+        this(null, modifiers, annotations, name, implementedTypes, entries, members);
     }
 
-    public EnumDeclaration(Range range, EnumSet<Modifier> modifiers, NodeList<AnnotationExpr> annotations, SimpleName name,
-                           NodeList<ClassOrInterfaceType> implementedTypes, NodeList<EnumConstantDeclaration> entries,
-                           NodeList<BodyDeclaration<?>> members) {
+    public EnumDeclaration(Range range, EnumSet<Modifier> modifiers, NodeList<AnnotationExpr> annotations, SimpleName name, NodeList<ClassOrInterfaceType> implementedTypes, NodeList<EnumConstantDeclaration> entries, NodeList<BodyDeclaration<?>> members) {
         super(range, annotations, modifiers, name, members);
         setImplementedTypes(implementedTypes);
         setEntries(entries);
@@ -97,7 +75,6 @@ public final class EnumDeclaration extends TypeDeclaration<EnumDeclaration> impl
     public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
         return v.visit(this, arg);
     }
-
 
     @Override
     public <A> void accept(VoidVisitor<A> v, A arg) {
@@ -127,18 +104,24 @@ public final class EnumDeclaration extends TypeDeclaration<EnumDeclaration> impl
         return implementedTypes;
     }
 
-    public EnumDeclaration setEntries(NodeList<EnumConstantDeclaration> entries) {
+    public EnumDeclaration setEntries(final NodeList<EnumConstantDeclaration> entries) {
+        assertNotNull(entries);
         notifyPropertyChange(ObservableProperty.ENTRIES, this.entries, entries);
-        this.entries = assertNotNull(entries);
-        setAsParentNodeOf(this.entries);
+        if (this.entries != null)
+            this.entries.setParentNode(null);
+        this.entries = entries;
+        setAsParentNodeOf(entries);
         return this;
     }
 
     @Override
-    public EnumDeclaration setImplementedTypes(NodeList<ClassOrInterfaceType> implementsList) {
-        notifyPropertyChange(ObservableProperty.IMPLEMENTED_TYPES, this.implementedTypes, implementsList);
-        this.implementedTypes = assertNotNull(implementsList);
-        setAsParentNodeOf(this.implementedTypes);
+    public EnumDeclaration setImplementedTypes(final NodeList<ClassOrInterfaceType> implementedTypes) {
+        assertNotNull(implementedTypes);
+        notifyPropertyChange(ObservableProperty.IMPLEMENTED_TYPES, this.implementedTypes, implementedTypes);
+        if (this.implementedTypes != null)
+            this.implementedTypes.setParentNode(null);
+        this.implementedTypes = implementedTypes;
+        setAsParentNodeOf(implementedTypes);
         return this;
     }
 
@@ -146,15 +129,40 @@ public final class EnumDeclaration extends TypeDeclaration<EnumDeclaration> impl
         assertNonEmpty(name);
         EnumConstantDeclaration enumConstant = new EnumConstantDeclaration(name);
         getEntries().add(enumConstant);
-        enumConstant.setParentNode(this);
         return enumConstant;
     }
 
     @Override
     public List<NodeList<?>> getNodeLists() {
-        List<NodeList<?>> res = new LinkedList<>(super.getNodeLists());
-        res.add(implementedTypes);
-        res.add(entries);
-        return res;
+        return Arrays.asList(getEntries(), getImplementedTypes(), getMembers(), getAnnotations());
+    }
+
+    @Override
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        for (int i = 0; i < entries.size(); i++) {
+            if (entries.get(i) == node) {
+                entries.remove(i);
+                return true;
+            }
+        }
+        for (int i = 0; i < implementedTypes.size(); i++) {
+            if (implementedTypes.get(i) == node) {
+                implementedTypes.remove(i);
+                return true;
+            }
+        }
+        return super.remove(node);
+    }
+
+    @Override
+    public EnumDeclaration clone() {
+        return (EnumDeclaration) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    public EnumDeclarationMetaModel getMetaModel() {
+        return JavaParserMetaModel.enumDeclarationMetaModel;
     }
 }

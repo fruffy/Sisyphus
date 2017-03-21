@@ -1,35 +1,34 @@
 package examples;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import core.CloneDetector;
 import core.Method;
-import datastructures.NodeWrapper;
-import jgrapht.experimental.dag.DirectedAcyclicGraph;
-import jgrapht.graph.DefaultEdge;
-import jgrapht.graph.DirectedPseudograph;
-import parsers.ControlDependencyParser;
-import parsers.ControlFlowParser;
-import parsers.SyntaxParser;
 
 public class TestCode {
+	
+	public int absoluteLib(int num) {
+		return num;
+	}
+	public int absoluteLib(int num) {
+		return Math.abs(num);
+	}
 
+	public double absoluteLib(double num) {
+		return Math.abs(num);
+	}
+	
 	private int buildCFG(List<Method> methList) {
-
-		for (int i = 0, j = 2; i < methList.length(); i++) {
-			j = 3;
+		int j = 3;
+		for (int i = 0, k = 2; i < methList.size(); i++) {
+			j = 123;
 			j++;
 		}
 		System.out.print("exit");
-		return num;
+		return j;
 	}
 	private int buildCFG(int numbers) {
 
 		while ( numbers < 3 ) {
-			j = 3;
+			int j = 3;
 			numbers++;
 		}
 		System.out.print("exit");
@@ -47,6 +46,7 @@ public class TestCode {
 	}
 
 	public int ifStmt(int num) {
+		int number = num;
 		if (number < 0) {
 			num++; // Check1
 		} else {
@@ -61,17 +61,7 @@ public class TestCode {
 	}
 
 	public int absoluteVal(int number) {
-		// hello?
-		// System.out.println("functionCall");
-		/*
-		 * testing comments Mogambo
-		 */
-		try {
-			int temp = 3;
-		} catch (IOException e) {
-			int temp = 4;
-			return;
-		}
+		int temp = 3;
 
 		if (number < 0) {
 			return 0 - number; // Check1
@@ -104,14 +94,7 @@ public class TestCode {
 
 	}
 
-	public int absoluteLib(int num) {
-		return Math.abs(num);
 
-	}
-
-	public double absoluteLib(double num) {
-		return Math.abs(num);
-	}
 
 	public int noOfLegs() {
 		int test = 3 + 3;

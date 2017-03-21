@@ -18,13 +18,16 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
 import com.github.javaparser.ast.AllFieldsConstructor;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.NullLiteralExprMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * A literal "null".
@@ -51,5 +54,22 @@ public final class NullLiteralExpr extends LiteralExpr {
     @Override
     public <A> void accept(final VoidVisitor<A> v, final A arg) {
         v.visit(this, arg);
+    }
+
+    @Override
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        return super.remove(node);
+    }
+
+    @Override
+    public NullLiteralExpr clone() {
+        return (NullLiteralExpr) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    public NullLiteralExprMetaModel getMetaModel() {
+        return JavaParserMetaModel.nullLiteralExprMetaModel;
     }
 }

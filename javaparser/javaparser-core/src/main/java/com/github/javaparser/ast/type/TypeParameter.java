@@ -18,7 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package com.github.javaparser.ast.type;
 
 import com.github.javaparser.Range;
@@ -31,8 +30,13 @@ import com.github.javaparser.ast.nodeTypes.NodeWithSimpleName;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-
+import java.util.Arrays;
+import java.util.List;
 import static com.github.javaparser.utils.Utils.assertNotNull;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.TypeParameterMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * A type parameter.
@@ -46,40 +50,26 @@ import static com.github.javaparser.utils.Utils.assertNotNull;
  * @author Julio Vilmar Gesser
  * @see com.github.javaparser.ast.nodeTypes.NodeWithTypeParameters
  */
-public final class TypeParameter extends ReferenceType<TypeParameter> implements
-        NodeWithSimpleName<TypeParameter>,
-        NodeWithAnnotations<TypeParameter> {
+public final class TypeParameter extends ReferenceType<TypeParameter> implements NodeWithSimpleName<TypeParameter>, NodeWithAnnotations<TypeParameter> {
 
     private SimpleName name;
 
     private NodeList<ClassOrInterfaceType> typeBound;
 
     public TypeParameter() {
-        this(null,
-                new SimpleName(),
-                new NodeList<>(),
-                new NodeList<>());
+        this(null, new SimpleName(), new NodeList<>(), new NodeList<>());
     }
 
     public TypeParameter(final String name) {
-        this(null,
-                new SimpleName(name),
-                new NodeList<>(),
-                new NodeList<>());
+        this(null, new SimpleName(name), new NodeList<>(), new NodeList<>());
     }
 
     public TypeParameter(final String name, final NodeList<ClassOrInterfaceType> typeBound) {
-        this(null,
-                new SimpleName(name),
-                typeBound,
-                new NodeList<>());
+        this(null, new SimpleName(name), typeBound, new NodeList<>());
     }
 
     public TypeParameter(Range range, final SimpleName name, final NodeList<ClassOrInterfaceType> typeBound) {
-        this(range,
-                name,
-                typeBound,
-                new NodeList<>());
+        this(range, name, typeBound, new NodeList<>());
     }
 
     @AllFieldsConstructor
@@ -126,15 +116,21 @@ public final class TypeParameter extends ReferenceType<TypeParameter> implements
 
     @Override
     public TypeParameter setName(final SimpleName name) {
+        assertNotNull(name);
         notifyPropertyChange(ObservableProperty.NAME, this.name, name);
-        this.name = assertNotNull(name);
+        if (this.name != null)
+            this.name.setParentNode(null);
+        this.name = name;
         setAsParentNodeOf(name);
         return this;
     }
 
     public TypeParameter setTypeBound(final NodeList<ClassOrInterfaceType> typeBound) {
+        assertNotNull(typeBound);
         notifyPropertyChange(ObservableProperty.TYPE_BOUND, this.typeBound, typeBound);
-        this.typeBound = assertNotNull(typeBound);
+        if (this.typeBound != null)
+            this.typeBound.setParentNode(null);
+        this.typeBound = typeBound;
         setAsParentNodeOf(typeBound);
         return this;
     }
@@ -143,5 +139,33 @@ public final class TypeParameter extends ReferenceType<TypeParameter> implements
     public TypeParameter setAnnotations(NodeList<AnnotationExpr> annotations) {
         super.setAnnotations(annotations);
         return this;
+    }
+
+    @Override
+    public List<NodeList<?>> getNodeLists() {
+        return Arrays.asList(getTypeBound(), getAnnotations());
+    }
+
+    @Override
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        for (int i = 0; i < typeBound.size(); i++) {
+            if (typeBound.get(i) == node) {
+                typeBound.remove(i);
+                return true;
+            }
+        }
+        return super.remove(node);
+    }
+
+    @Override
+    public TypeParameter clone() {
+        return (TypeParameter) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    public TypeParameterMetaModel getMetaModel() {
+        return JavaParserMetaModel.typeParameterMetaModel;
     }
 }

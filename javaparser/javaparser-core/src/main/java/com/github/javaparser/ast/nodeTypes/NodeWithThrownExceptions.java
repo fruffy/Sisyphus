@@ -30,11 +30,13 @@ import com.github.javaparser.ast.type.ReferenceType;
  * A node that declares the types of exception it throws.
  */
 public interface NodeWithThrownExceptions<N extends Node> {
-    N setThrownExceptions(NodeList<ReferenceType> thrownExceptions);
+    N setThrownExceptions(NodeList<ReferenceType<?>> thrownExceptions);
 
-    NodeList<ReferenceType> getThrownExceptions();
+    NodeList<ReferenceType<?>> getThrownExceptions();
 
-    default ReferenceType getThrownException(int i) {
+    void tryAddImportToParentCompilationUnit(Class<?> clazz);
+
+    default ReferenceType<?> getThrownException(int i) {
         return getThrownExceptions().get(i);
     }
 
@@ -45,9 +47,8 @@ public interface NodeWithThrownExceptions<N extends Node> {
      * @return this
      */
     @SuppressWarnings("unchecked")
-    default N addThrownException(ReferenceType throwType) {
+    default N addThrownException(ReferenceType<?> throwType) {
         getThrownExceptions().add(throwType);
-        throwType.setParentNode((Node) this);
         return (N) this;
     }
 
@@ -58,7 +59,7 @@ public interface NodeWithThrownExceptions<N extends Node> {
      * @return this
      */
     default N addThrownException(Class<? extends Throwable> clazz) {
-        ((Node) this).tryAddImportToParentCompilationUnit(clazz);
+        tryAddImportToParentCompilationUnit(clazz);
         return addThrownException(new ClassOrInterfaceType(clazz.getSimpleName()));
     }
 

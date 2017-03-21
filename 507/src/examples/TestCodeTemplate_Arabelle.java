@@ -12,7 +12,7 @@ import java.util.List;
  * @author iaakhter
  *
  */
-public class TestCodeTemplate {
+public class TestCodeTemplate_Arabelle {
 	
 	/**
 	 * Returns the absolute value an int value

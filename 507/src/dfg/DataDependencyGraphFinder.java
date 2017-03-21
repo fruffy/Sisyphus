@@ -1,9 +1,7 @@
 package dfg;
 
-import java.awt.List;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -11,16 +9,15 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedPseudograph;
+
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.AssignExpr;
-import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.utils.Pair;
 
 import datastructures.EntryStmt;
 import datastructures.NodeWrapper;
-import jgrapht.graph.DirectedPseudograph;
-import jgrapht.graph.DefaultEdge;
-import jgrapht.graph.DirectedPseudograph;
 import visitors.ASTUtil;
 
 /**

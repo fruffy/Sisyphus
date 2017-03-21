@@ -18,7 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
@@ -34,10 +33,14 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
-
 import static com.github.javaparser.utils.Utils.assertNotNull;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.ObjectCreationExprMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * A constructor call. <br/>In <code>new HashMap.Entry<String, Long>(15) {public String getKey() {return null;}};</code>
@@ -46,11 +49,7 @@ import static com.github.javaparser.utils.Utils.assertNotNull;
  *
  * @author Julio Vilmar Gesser
  */
-public final class ObjectCreationExpr extends Expression implements
-        NodeWithTypeArguments<ObjectCreationExpr>,
-        NodeWithType<ObjectCreationExpr, ClassOrInterfaceType>,
-        NodeWithArguments<ObjectCreationExpr>,
-        NodeWithOptionalScope<ObjectCreationExpr> {
+public final class ObjectCreationExpr extends Expression implements NodeWithTypeArguments<ObjectCreationExpr>, NodeWithType<ObjectCreationExpr, ClassOrInterfaceType>, NodeWithArguments<ObjectCreationExpr>, NodeWithOptionalScope<ObjectCreationExpr> {
 
     private Expression scope;
 
@@ -63,12 +62,7 @@ public final class ObjectCreationExpr extends Expression implements
     private NodeList<BodyDeclaration<?>> anonymousClassBody;
 
     public ObjectCreationExpr() {
-        this(null,
-                null,
-                new ClassOrInterfaceType(),
-                new NodeList<>(),
-                new NodeList<>(),
-                null);
+        this(null, null, new ClassOrInterfaceType(), new NodeList<>(), new NodeList<>(), null);
     }
 
     /**
@@ -78,28 +72,16 @@ public final class ObjectCreationExpr extends Expression implements
      * @param type this is the class that the constructor is being called for.
      * @param arguments Any arguments to pass to the constructor
      */
-    public ObjectCreationExpr(final Expression scope, final ClassOrInterfaceType type,
-                              final NodeList<Expression> arguments) {
-        this(null,
-                scope,
-                type,
-                new NodeList<>(),
-                arguments,
-                null);
+    public ObjectCreationExpr(final Expression scope, final ClassOrInterfaceType type, final NodeList<Expression> arguments) {
+        this(null, scope, type, new NodeList<>(), arguments, null);
     }
 
     @AllFieldsConstructor
-    public ObjectCreationExpr(
-            final Expression scope, final ClassOrInterfaceType type,
-            final NodeList<Type> typeArguments,
-            final NodeList<Expression> arguments, final NodeList<BodyDeclaration<?>> anonymousClassBody) {
+    public ObjectCreationExpr(final Expression scope, final ClassOrInterfaceType type, final NodeList<Type> typeArguments, final NodeList<Expression> arguments, final NodeList<BodyDeclaration<?>> anonymousClassBody) {
         this(null, scope, type, typeArguments, arguments, anonymousClassBody);
     }
 
-    public ObjectCreationExpr(final Range range,
-                              final Expression scope, final ClassOrInterfaceType type,
-                              final NodeList<Type> typeArguments,
-                              final NodeList<Expression> arguments, final NodeList<BodyDeclaration<?>> anonymousClassBody) {
+    public ObjectCreationExpr(final Range range, final Expression scope, final ClassOrInterfaceType type, final NodeList<Type> typeArguments, final NodeList<Expression> arguments, final NodeList<BodyDeclaration<?>> anonymousClassBody) {
         super(range);
         setScope(scope);
         setType(type);
@@ -153,16 +135,21 @@ public final class ObjectCreationExpr extends Expression implements
      */
     public ObjectCreationExpr setAnonymousClassBody(final NodeList<BodyDeclaration<?>> anonymousClassBody) {
         notifyPropertyChange(ObservableProperty.ANONYMOUS_CLASS_BODY, this.anonymousClassBody, anonymousClassBody);
+        if (this.anonymousClassBody != null)
+            this.anonymousClassBody.setParentNode(null);
         this.anonymousClassBody = anonymousClassBody;
-        setAsParentNodeOf(this.anonymousClassBody);
+        setAsParentNodeOf(anonymousClassBody);
         return this;
     }
 
     @Override
     public ObjectCreationExpr setArguments(final NodeList<Expression> arguments) {
+        assertNotNull(arguments);
         notifyPropertyChange(ObservableProperty.ARGUMENTS, this.arguments, arguments);
-        this.arguments = assertNotNull(arguments);
-        setAsParentNodeOf(this.arguments);
+        if (this.arguments != null)
+            this.arguments.setParentNode(null);
+        this.arguments = arguments;
+        setAsParentNodeOf(arguments);
         return this;
     }
 
@@ -175,17 +162,21 @@ public final class ObjectCreationExpr extends Expression implements
     @Override
     public ObjectCreationExpr setScope(final Expression scope) {
         notifyPropertyChange(ObservableProperty.SCOPE, this.scope, scope);
+        if (this.scope != null)
+            this.scope.setParentNode(null);
         this.scope = scope;
-        setAsParentNodeOf(this.scope);
+        setAsParentNodeOf(scope);
         return this;
     }
 
     @Override
     public ObjectCreationExpr setType(final ClassOrInterfaceType type) {
-        notifyPropertyChange(ObservableProperty.TYPE, this.type, type);
         assertNotNull(type);
+        notifyPropertyChange(ObservableProperty.TYPE, this.type, type);
+        if (this.type != null)
+            this.type.setParentNode(null);
         this.type = type;
-        setAsParentNodeOf(this.type);
+        setAsParentNodeOf(type);
         return this;
     }
 
@@ -203,8 +194,64 @@ public final class ObjectCreationExpr extends Expression implements
     @Override
     public ObjectCreationExpr setTypeArguments(final NodeList<Type> typeArguments) {
         notifyPropertyChange(ObservableProperty.TYPE_ARGUMENTS, this.typeArguments, typeArguments);
+        if (this.typeArguments != null)
+            this.typeArguments.setParentNode(null);
         this.typeArguments = typeArguments;
-        setAsParentNodeOf(this.typeArguments);
+        setAsParentNodeOf(typeArguments);
         return this;
+    }
+
+    @Override
+    public List<NodeList<?>> getNodeLists() {
+        return Arrays.asList(getAnonymousClassBody().orElse(null), getArguments(), getTypeArguments().orElse(null));
+    }
+
+    @Override
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        if (anonymousClassBody != null) {
+            for (int i = 0; i < anonymousClassBody.size(); i++) {
+                if (anonymousClassBody.get(i) == node) {
+                    anonymousClassBody.remove(i);
+                    return true;
+                }
+            }
+        }
+        for (int i = 0; i < arguments.size(); i++) {
+            if (arguments.get(i) == node) {
+                arguments.remove(i);
+                return true;
+            }
+        }
+        if (scope != null) {
+            if (node == scope) {
+                removeScope();
+                return true;
+            }
+        }
+        if (typeArguments != null) {
+            for (int i = 0; i < typeArguments.size(); i++) {
+                if (typeArguments.get(i) == node) {
+                    typeArguments.remove(i);
+                    return true;
+                }
+            }
+        }
+        return super.remove(node);
+    }
+
+    public ObjectCreationExpr removeScope() {
+        return setScope((Expression) null);
+    }
+
+    @Override
+    public ObjectCreationExpr clone() {
+        return (ObjectCreationExpr) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    public ObjectCreationExprMetaModel getMetaModel() {
+        return JavaParserMetaModel.objectCreationExprMetaModel;
     }
 }

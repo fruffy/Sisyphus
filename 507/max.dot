@@ -1,7 +1,0 @@
-digraph G {
-  1 [ label="" ];
-  2 [ label="(line 2221,col 7)-(line 2221,col 19): _param_int_arr__0 == null" ];
-  3 [ label="(line 2226,col 3)-(line 2226,col 40): StringBuilder _var_StringBuilder_0 = new StringBuilder();" ];
-  1 -> 2;
-  1 -> 3;
-}

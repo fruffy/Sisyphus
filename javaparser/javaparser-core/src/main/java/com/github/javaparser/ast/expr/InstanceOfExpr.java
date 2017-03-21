@@ -18,7 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
@@ -30,8 +29,11 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.ReferenceType;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-
 import static com.github.javaparser.utils.Utils.assertNotNull;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.InstanceOfExprMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * Usage of the instanceof operator.
@@ -39,24 +41,22 @@ import static com.github.javaparser.utils.Utils.assertNotNull;
  *
  * @author Julio Vilmar Gesser
  */
-public final class InstanceOfExpr extends Expression implements
-        NodeWithType<InstanceOfExpr, ReferenceType>,
-        NodeWithExpression<InstanceOfExpr> {
+public final class InstanceOfExpr extends Expression implements NodeWithType<InstanceOfExpr, ReferenceType<?>>, NodeWithExpression<InstanceOfExpr> {
 
     private Expression expression;
 
-    private ReferenceType type;
+    private ReferenceType<?> type;
 
     public InstanceOfExpr() {
         this(null, new NameExpr(), new ClassOrInterfaceType());
     }
 
     @AllFieldsConstructor
-    public InstanceOfExpr(final Expression expression, final ReferenceType type) {
+    public InstanceOfExpr(final Expression expression, final ReferenceType<?> type) {
         this(null, expression, type);
     }
 
-    public InstanceOfExpr(final Range range, final Expression expression, final ReferenceType type) {
+    public InstanceOfExpr(final Range range, final Expression expression, final ReferenceType<?> type) {
         super(range);
         setExpression(expression);
         setType(type);
@@ -78,23 +78,46 @@ public final class InstanceOfExpr extends Expression implements
     }
 
     @Override
-    public ReferenceType getType() {
+    public ReferenceType<?> getType() {
         return type;
     }
 
     @Override
     public InstanceOfExpr setExpression(final Expression expression) {
+        assertNotNull(expression);
         notifyPropertyChange(ObservableProperty.EXPRESSION, this.expression, expression);
-        this.expression = assertNotNull(expression);
-        setAsParentNodeOf(this.expression);
+        if (this.expression != null)
+            this.expression.setParentNode(null);
+        this.expression = expression;
+        setAsParentNodeOf(expression);
         return this;
     }
 
     @Override
-    public InstanceOfExpr setType(final ReferenceType type) {
+    public InstanceOfExpr setType(final ReferenceType<?> type) {
+        assertNotNull(type);
         notifyPropertyChange(ObservableProperty.TYPE, this.type, type);
-        this.type = assertNotNull(type);
-        setAsParentNodeOf(this.type);
+        if (this.type != null)
+            this.type.setParentNode(null);
+        this.type = type;
+        setAsParentNodeOf(type);
         return this;
+    }
+
+    @Override
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        return super.remove(node);
+    }
+
+    @Override
+    public InstanceOfExpr clone() {
+        return (InstanceOfExpr) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    public InstanceOfExprMetaModel getMetaModel() {
+        return JavaParserMetaModel.instanceOfExprMetaModel;
     }
 }

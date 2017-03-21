@@ -18,7 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package com.github.javaparser.ast.type;
 
 import com.github.javaparser.Range;
@@ -32,10 +31,14 @@ import com.github.javaparser.ast.nodeTypes.NodeWithTypeArguments;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
-
 import static com.github.javaparser.utils.Utils.assertNotNull;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.ClassOrInterfaceTypeMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * A class or an interface type. <br/><code>Object</code> <br/><code>HashMap&lt;String, String></code>
@@ -49,10 +52,7 @@ import static com.github.javaparser.utils.Utils.assertNotNull;
  *
  * @author Julio Vilmar Gesser
  */
-public final class ClassOrInterfaceType extends ReferenceType implements
-        NodeWithSimpleName<ClassOrInterfaceType>,
-        NodeWithAnnotations<ClassOrInterfaceType>,
-        NodeWithTypeArguments<ClassOrInterfaceType> {
+public final class ClassOrInterfaceType extends ReferenceType implements NodeWithSimpleName<ClassOrInterfaceType>, NodeWithAnnotations<ClassOrInterfaceType>, NodeWithTypeArguments<ClassOrInterfaceType> {
 
     private ClassOrInterfaceType scope;
 
@@ -61,34 +61,23 @@ public final class ClassOrInterfaceType extends ReferenceType implements
     private NodeList<Type> typeArguments;
 
     public ClassOrInterfaceType() {
-        this(null,
-                null,
-                new SimpleName(),
-                null);
+        this(null, null, new SimpleName(), null);
     }
 
     public ClassOrInterfaceType(final String name) {
-        this(null,
-                null,
-                new SimpleName(name),
-                null);
+        this(null, null, new SimpleName(name), null);
     }
 
     public ClassOrInterfaceType(final ClassOrInterfaceType scope, final String name) {
-        this(null,
-                scope,
-                new SimpleName(name),
-                null);
+        this(null, scope, new SimpleName(name), null);
     }
 
     @AllFieldsConstructor
-    public ClassOrInterfaceType(final ClassOrInterfaceType scope, final SimpleName name,
-                                final NodeList<Type> typeArguments) {
+    public ClassOrInterfaceType(final ClassOrInterfaceType scope, final SimpleName name, final NodeList<Type> typeArguments) {
         this(null, scope, name, typeArguments);
     }
 
-    public ClassOrInterfaceType(final Range range, final ClassOrInterfaceType scope, final SimpleName name,
-                                final NodeList<Type> typeArguments) {
+    public ClassOrInterfaceType(final Range range, final ClassOrInterfaceType scope, final SimpleName name, final NodeList<Type> typeArguments) {
         super(range);
         setScope(scope);
         setName(name);
@@ -127,8 +116,11 @@ public final class ClassOrInterfaceType extends ReferenceType implements
 
     @Override
     public ClassOrInterfaceType setName(final SimpleName name) {
+        assertNotNull(name);
         notifyPropertyChange(ObservableProperty.NAME, this.name, name);
-        this.name = assertNotNull(name);
+        if (this.name != null)
+            this.name.setParentNode(null);
+        this.name = name;
         setAsParentNodeOf(name);
         return this;
     }
@@ -140,9 +132,11 @@ public final class ClassOrInterfaceType extends ReferenceType implements
      * @return this, the ClassOrInterfaceType
      */
     public ClassOrInterfaceType setScope(final ClassOrInterfaceType scope) {
-        notifyPropertyChange(ObservableProperty.TYPE_ARGUMENTS, this.typeArguments, typeArguments);
+        notifyPropertyChange(ObservableProperty.SCOPE, this.scope, scope);
+        if (this.scope != null)
+            this.scope.setParentNode(null);
         this.scope = scope;
-        setAsParentNodeOf(this.scope);
+        setAsParentNodeOf(scope);
         return this;
     }
 
@@ -160,13 +154,55 @@ public final class ClassOrInterfaceType extends ReferenceType implements
     @Override
     public ClassOrInterfaceType setTypeArguments(final NodeList<Type> typeArguments) {
         notifyPropertyChange(ObservableProperty.TYPE_ARGUMENTS, this.typeArguments, typeArguments);
+        if (this.typeArguments != null)
+            this.typeArguments.setParentNode(null);
         this.typeArguments = typeArguments;
-        setAsParentNodeOf(this.typeArguments);
+        setAsParentNodeOf(typeArguments);
         return this;
     }
 
     @Override
     public ClassOrInterfaceType setAnnotations(NodeList<AnnotationExpr> annotations) {
         return (ClassOrInterfaceType) super.setAnnotations(annotations);
+    }
+
+    @Override
+    public List<NodeList<?>> getNodeLists() {
+        return Arrays.asList(getTypeArguments().orElse(null), getAnnotations());
+    }
+
+    @Override
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        if (scope != null) {
+            if (node == scope) {
+                removeScope();
+                return true;
+            }
+        }
+        if (typeArguments != null) {
+            for (int i = 0; i < typeArguments.size(); i++) {
+                if (typeArguments.get(i) == node) {
+                    typeArguments.remove(i);
+                    return true;
+                }
+            }
+        }
+        return super.remove(node);
+    }
+
+    public ClassOrInterfaceType removeScope() {
+        return setScope((ClassOrInterfaceType) null);
+    }
+
+    @Override
+    public ClassOrInterfaceType clone() {
+        return (ClassOrInterfaceType) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    public ClassOrInterfaceTypeMetaModel getMetaModel() {
+        return JavaParserMetaModel.classOrInterfaceTypeMetaModel;
     }
 }

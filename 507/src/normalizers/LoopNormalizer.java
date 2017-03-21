@@ -1,18 +1,15 @@
 package normalizers;
 
-import java.util.LinkedList;
 import java.util.Optional;
 
 import com.github.javaparser.Range;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
-import com.github.javaparser.ast.expr.SimpleName;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.DoStmt;
@@ -24,7 +21,6 @@ import com.github.javaparser.ast.stmt.WhileStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.type.TypeParameter;
-import com.github.javaparser.ast.visitor.CloneVisitor;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
 
@@ -93,7 +89,7 @@ public class LoopNormalizer extends Normalizer {
 			}
 			NodeList<Expression> initialization = cloneList(n.getInitialization(), arg);
 			NodeList<Expression> update = cloneList(n.getUpdate(), arg);
-			Comment comment = modifyNode(n.getComment(), arg);
+			//Comment comment = modifyNode(n.getComment(), arg);
 
 			//While loop body is old body, plus the update at the end
 			Statement newBody;
@@ -121,7 +117,7 @@ public class LoopNormalizer extends Normalizer {
 
 			BlockStmt r = new BlockStmt();
 			r.setStatements(mergeBlocks(exprBlock(initialization), loop).getStatements());
-			r.setComment(comment);
+			//r.setComment(comment);
 
 			//System.err.println("Changed loop:\n" + n);
 			//System.err.println("to:\n" + r);
@@ -132,7 +128,7 @@ public class LoopNormalizer extends Normalizer {
 		public Visitable visit(DoStmt n, Object arg) {
 			Statement body = modifyNode(n.getBody(), arg);
 			Expression condition = modifyNode(n.getCondition(), arg);
-			Comment comment = modifyNode(n.getComment(), arg);
+			//Comment comment = modifyNode(n.getComment(), arg);
 
 			//Make a while loop from our Do-While loop i.e. same cond and body
 			WhileStmt loop = new WhileStmt(condition, body);
@@ -141,7 +137,7 @@ public class LoopNormalizer extends Normalizer {
 
 			BlockStmt r = new BlockStmt();
 			r.setStatements(mergeBlocks(body, loop).getStatements());
-			r.setComment(comment);
+			//r.setComment(comment);
 
 			return r;
 		}
@@ -153,7 +149,7 @@ public class LoopNormalizer extends Normalizer {
 			Statement body = modifyNode(n.getBody(), arg);
 			Expression iterable = modifyNode(n.getIterable(), arg);
 			VariableDeclarationExpr variable = modifyNode(n.getVariable(), arg);
-			Comment comment = modifyNode(n.getComment(), arg);
+			//Comment comment = modifyNode(n.getComment(), arg);
 
 			Type iterType = 
 					new TypeParameter("Iterable", 
@@ -195,7 +191,8 @@ public class LoopNormalizer extends Normalizer {
 
 	@Override
 	public Node result() {
-		return (Node)this.startBlock.accept(new FixLoopsVisitor(), null);
+		this.startBlock.accept(new FixLoopsVisitor(), null);
+		return this.startBlock;
 	}
 
 }
