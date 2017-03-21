@@ -179,8 +179,8 @@ public class VariableNameNormalizer extends Normalizer {
 
 			//Where we'll store the modified statements from our list after we process them
 
-
-			for (Node stmt : ASTUtil.orderedChildNodes(n)){
+			BlockStmt block = (BlockStmt)n;
+			for (Node stmt : block.getStatements()){
 
 				//Make the map where we store declarations from the statement, so we can use them later on
 				LinkedList<Pair<String, String>> childDecls = new LinkedList<Pair<String, String>>();

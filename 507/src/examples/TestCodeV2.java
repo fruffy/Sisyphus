@@ -589,7 +589,7 @@ public class TestCodeV2 {
 	public static double powerAt(double val1, double val2){
 		// Rounds to integer powers
         double working = val1;
-        int exp = int(val2);
+        int exp = (int)(val2);
         if (exp == 0) {
             return 1;
         }
