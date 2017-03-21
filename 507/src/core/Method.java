@@ -40,24 +40,17 @@ public class Method {
 
 	public Method(MethodDeclaration methodDeclaration) {
 		this.originalDecl = methodDeclaration.clone();
-
-		//this.nodeFeature = this.constructMethodFeature();
 		this.body = methodDeclaration.getBody().get();
 		this.trimBody();
 		//System.out.println("BEFORE " +methodDeclaration);
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
 		resolveMethodCalls(methodDeclaration);
-		try {
-			methodDeclaration = normalize(methodDeclaration);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		this.body = methodDeclaration.getBody().get();
+		methodDeclaration = normalize(methodDeclaration);
 		this.methodName = methodDeclaration.getNameAsString();
 		this.parameters = methodDeclaration.getParameters();
 		this.returnType = methodDeclaration.getType();
-		this.pdg = this.constructPDG();
 		//System.out.println("AFTER " + methodDeclaration);
+		this.pdg = this.constructPDG();
 		//methodDeclaration.accept(new TreeStructureVisitor(), 0);
 	}
 
@@ -93,7 +86,7 @@ public class Method {
 	}
 
 	public BlockStmt getFilteredBody() {
-		BlockStmt filteredBody = (BlockStmt) this.body.clone();
+		BlockStmt filteredBody = this.body.clone();
 		for (Comment co : filteredBody.getAllContainedComments()) {
 			co.remove();
 		}

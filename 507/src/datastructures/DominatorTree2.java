@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.Stack;
 
-import org.jgrapht.DirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -72,7 +72,7 @@ import org.jgrapht.graph.SimpleDirectedGraph;
  */
 public class DominatorTree2<V, E> {
 
-    public static <Y, Z> DominatorTree2<Y, Z> compute(DirectedGraph<Y, Z> graph, Y entry) {
+    public static <Y, Z> DominatorTree2<Y, Z> compute(Graph<Y, Z> graph, Y entry) {
         DominatorTree2<Y, Z> dom = new DominatorTree2<Y, Z>(graph, entry);
         dom.compute();
 
@@ -81,11 +81,11 @@ public class DominatorTree2<V, E> {
         return dom;
     }
 
-    private final DirectedGraph<V, E> graph;
+    private final Graph<V, E> graph;
     private final V start;
 
     @SuppressWarnings("unchecked")
-	public DominatorTree2(DirectedGraph<V, E> graph, V start) {
+	public DominatorTree2(Graph<V, E> graph, V start) {
         this.graph = graph;
         this.start = start;
         this.dfsnum2node = (V[]) new Object[graph.vertexSet().size()];
@@ -158,7 +158,8 @@ public class DominatorTree2<V, E> {
             super(DomEdge.class);
         }
 
-        public String toString() {
+        @Override
+		public String toString() {
             return "IDOM Tree";
         }
     }
@@ -166,7 +167,8 @@ public class DominatorTree2<V, E> {
     public static class DomEdge {
         public DomEdge() {}
 
-        public String toString() {
+        @Override
+		public String toString() {
             return "IDOM";
         }
     }
@@ -178,16 +180,19 @@ public class DominatorTree2<V, E> {
             this.nodes = nodes;
         }
 
-        public Iterator<V> iterator() {
+        @Override
+		public Iterator<V> iterator() {
             return new Iterator<V>() {
 
                 int index = 0;
 
-                public boolean hasNext() {
+                @Override
+				public boolean hasNext() {
                     return nodes.nextSetBit(index) >= 0;
                 }
 
-                public V next() {
+                @Override
+				public V next() {
                     if (index < 0) {
                         throw new NoSuchElementException();
                     }
@@ -203,7 +208,8 @@ public class DominatorTree2<V, E> {
                     return dfsnum2node[index - 1];
                 }
 
-                public void remove() {
+                @Override
+				public void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
@@ -351,7 +357,8 @@ public class DominatorTree2<V, E> {
 
     private static final class ForestEdgeFactory<V> implements EdgeFactory<V, ForestEdge> {
 
-        public ForestEdge createEdge(V sourceVertex, V targetVertex) {
+        @Override
+		public ForestEdge createEdge(V sourceVertex, V targetVertex) {
             return new ForestEdge();
         }
 

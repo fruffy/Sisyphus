@@ -553,11 +553,11 @@ public class TestCodeV2 {
      */
 	public static double powerJ(double val1, double val2){
     	//YOUR CODE HERE
-    	 double result = 1;
-    	 for(int i = 1; i < val2; i++){
-               result = result * result;
-  	      }
-          return result;
+    	double result = 1;
+    	for(int i = 1; i < val2; i++){
+    		result = result * result;
+    	}
+    	return result;
    	}
 	
 	/**
@@ -718,11 +718,11 @@ public class TestCodeV2 {
      * @param array - the array where the elements are swapped
      */
 	public static void swapJ(int pos1, int pos2, int[] array){
-    	 if(pos1 < array.length && pos2 < array.length && pos1 >= 0 && pos2 >= 0){
-    		     int temp = array[pos1];
-    	         array[pos1] = array[pos2];
-    	         array[pos2] = temp;
-    	  }
+    	if(pos1 < array.length && pos2 < array.length && pos1 >= 0 && pos2 >= 0) {
+    		int temp = array[pos1];
+    		array[pos1] = array[pos2];
+    		array[pos2] = temp;
+    	}
     }
 	
 	
@@ -994,10 +994,10 @@ public class TestCodeV2 {
 		boolean result = false;
 		
 		// first check the arrays are of the same size
-		if(array1.size() != array2.size()) return result;
+		if(array1.length != array2.length) return result;
 		
 		result = true;
-		for (int i = 0; i < array1.size(); i++) {
+		for (int i = 0; i < array1.length; i++) {
 			if (array1[i] != array2[i]) {
 				result = false;
 				break;
@@ -1143,9 +1143,9 @@ public class TestCodeV2 {
 	 */
 	public static void fillArrayAJ(int[] array, int val){
 		//YOUR CODE HERE
-		assert(array.size() != 0);
+		assert(array.length != 0);
 		
-		for (int i = 0; i<array.size(); i++) {
+		for (int i = 0; i<array.length; i++) {
 			array[i] = val;
 		}
 	}
@@ -1344,8 +1344,8 @@ public class TestCodeV2 {
 		//YOUR CODE HERE
 		
 		assert (startIndex < endIndex); // since exclusive
-		assert (array.size() != 0);
-		assert (array.size() >= endIndex);
+		assert (array.length != 0);
+		assert (array.length >= endIndex);
 		for (int i = startIndex; i < endIndex; i++) {
 			array[i] = val;
 		}
@@ -1599,7 +1599,7 @@ public class TestCodeV2 {
 	 */
 	public static int[] returnCopyAJ(int[] array, int newLength){
 		//YOUR CODE HERE
-		assert (array.size() != 0);
+		assert (array.length != 0);
 		
 		int[] newArray = new int[newLength];
 		
@@ -2018,9 +2018,9 @@ public class TestCodeV2 {
 	 * @param array - the array whose string representation to return
 	 * @return a string representation of array
 	 */
-	public static String arrToStringG(int[] array){
+	public static String[] arrToStringG(int[] array){
         int newLength = 2*array.length + 1;
-        String str = new String[newLength];
+        String[] str = new String[newLength];
         str[0] = "[";
         for (int j=1; (j-1)/2<array.length; j+=2) {
             str[j] = String.valueOf(array[(j-1)/2]);
@@ -2028,7 +2028,7 @@ public class TestCodeV2 {
              str[j+1] = ",";
             }
         }
-        string[newLength-1] = "]";
+        str[newLength-1] = "]";
         return array == null ? null : str;
 	}
 	

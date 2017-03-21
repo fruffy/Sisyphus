@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.jgrapht.DirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedPseudograph;
 
@@ -133,8 +133,8 @@ public class CloneDetector {
 	 * @param edge2
 	 * @return
 	 */
-	private boolean compareEdgeAttributes(DirectedGraph<Node, DefaultEdge> method1pdg, 
-										DirectedGraph<Node, DefaultEdge> method2pdg,
+	private boolean compareEdgeAttributes(Graph<Node, DefaultEdge> method1pdg, 
+			Graph<Node, DefaultEdge> method2pdg,
 										DefaultEdge edge1, DefaultEdge edge2){
 		if(!(method1pdg.getEdgeSource(edge1) instanceof EntryStmt && method2pdg.getEdgeSource(edge2) instanceof EntryStmt)){
 			if(!method1pdg.getEdgeSource(edge1).equals(method2pdg.getEdgeSource(edge2))){

@@ -223,6 +223,27 @@ public final class MethodDeclaration extends CallableDeclaration<MethodDeclarati
         return sb.toString();
     }
 
+    @Override
+    public String getSignature() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getName());
+        sb.append("(");
+        boolean firstParam = true;
+        for (Parameter param : getParameters()) {
+            if (firstParam) {
+                firstParam = false;
+            } else {
+                sb.append(", ");
+            }
+            sb.append(param.getType().toString(prettyPrinterNoCommentsConfiguration));
+            if (param.isVarArgs()) {
+                sb.append("...");
+            }
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
     public boolean isNative() {
         return getModifiers().contains(NATIVE);
     }

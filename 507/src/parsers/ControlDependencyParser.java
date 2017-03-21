@@ -5,7 +5,7 @@ import java.util.Iterator;
 import datastructures.DominatorTree;
 import datastructures.EntryStmt;
 import datastructures.NodeWrapper;
-import org.jgrapht.DirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -20,7 +20,7 @@ public class ControlDependencyParser {
 	 * @return
 	 * 
 	 */
-	public ControlDependencyParser(DirectedGraph<NodeWrapper, DefaultEdge> cfg) {
+	public ControlDependencyParser(Graph<NodeWrapper, DefaultEdge> cfg) {
 		// this.cfg = cfg;
 			cdg = new DirectedAcyclicGraph<NodeWrapper, DefaultEdge>(DefaultEdge.class);
 			parse(cfg);
@@ -33,8 +33,8 @@ public class ControlDependencyParser {
 		return cdg;
 	}
 
-	public DirectedGraph<NodeWrapper, DefaultEdge> buildForwardDominanceTree(
-			DirectedGraph<NodeWrapper, DefaultEdge> cfg) {
+	public Graph<NodeWrapper, DefaultEdge> buildForwardDominanceTree(
+			Graph<NodeWrapper, DefaultEdge> cfg) {
 		if (cfg.vertexSet().size() == 0) {
 			return cfg;
 		}
@@ -43,13 +43,13 @@ public class ControlDependencyParser {
 		return fdtBuilder.getDominatorTree();
 	}
 
-	private void parse(DirectedGraph<NodeWrapper, DefaultEdge> cfg) {
-		DirectedGraph<NodeWrapper, DefaultEdge> fdt = buildForwardDominanceTree(cfg);
+	private void parse(Graph<NodeWrapper, DefaultEdge> cfg) {
+		Graph<NodeWrapper, DefaultEdge> fdt = buildForwardDominanceTree(cfg);
 		buildControlDependenceGraph(cfg, fdt);
 	}
 
-	private void buildControlDependenceGraph(DirectedGraph<NodeWrapper, DefaultEdge> cfg,
-			DirectedGraph<NodeWrapper, DefaultEdge> fdt) {
+	private void buildControlDependenceGraph(Graph<NodeWrapper, DefaultEdge> cfg,
+			Graph<NodeWrapper, DefaultEdge> fdt) {
 		NodeWrapper entry = new NodeWrapper(new EntryStmt());
 		NodeWrapper previousNode = entry;
 		cdg.addVertex(entry);

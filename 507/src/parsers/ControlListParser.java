@@ -3,22 +3,23 @@ package parsers;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedAcyclicGraph;
+import org.jgrapht.graph.DirectedPseudograph;
+
 import core.Method;
 import datastructures.NodeWrapper;
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.graph.DirectedAcyclicGraph;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DirectedPseudograph;
 
 public class ControlListParser {
 	List<DirectedPseudograph<NodeWrapper, DefaultEdge>> cfgList;
 	List<DirectedAcyclicGraph<NodeWrapper, DefaultEdge>> cdgList;
-	List<DirectedGraph<NodeWrapper, DefaultEdge>> fdtList;
+	List<Graph<NodeWrapper, DefaultEdge>> fdtList;
 
 	public ControlListParser(List<Method> methList) {
 		cfgList = new LinkedList<DirectedPseudograph<NodeWrapper, DefaultEdge>>();
 		cdgList = new LinkedList<DirectedAcyclicGraph<NodeWrapper, DefaultEdge>>();
-		fdtList = new LinkedList<DirectedGraph<NodeWrapper, DefaultEdge>>();
+		fdtList = new LinkedList<Graph<NodeWrapper, DefaultEdge>>();
 		buildCFG(methList);
 	}
 
@@ -29,7 +30,7 @@ public class ControlListParser {
 			DirectedPseudograph<NodeWrapper, DefaultEdge> cfg = cfgParse.getCFG();
 			ControlDependencyParser cdgParse = new ControlDependencyParser(cfg);
 			DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg = cdgParse.getCDG();
-			DirectedGraph<NodeWrapper, DefaultEdge> fdt = cdgParse.buildForwardDominanceTree(cfg);
+			Graph<NodeWrapper, DefaultEdge> fdt = cdgParse.buildForwardDominanceTree(cfg);
 /*
 			this.cfgList.add(cfg);
 			this.cdgList.add(cdg);
@@ -47,7 +48,7 @@ public class ControlListParser {
 		}
 	}
 
-	private void printGraph(Method m, DirectedGraph<NodeWrapper, DefaultEdge> cdg) {
+	private void printGraph(Method m, Graph<NodeWrapper, DefaultEdge> cdg) {
 
 		for (NodeWrapper n : cdg.vertexSet()) {
 			System.out.println(n.NODE);

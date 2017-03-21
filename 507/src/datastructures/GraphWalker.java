@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import org.jgrapht.DirectedGraph;
+import org.jgrapht.Graph;
 
 /**
  * Provides ways to traverse a directed graph. Currently only depth first search
@@ -27,13 +27,13 @@ import org.jgrapht.DirectedGraph;
  */
 public abstract class GraphWalker<V, E> {
 
-	private final DirectedGraph<V, E> graph;
+	private final Graph<V, E> graph;
 
-	public GraphWalker(DirectedGraph<V, E> graph) {
+	public GraphWalker(Graph<V, E> graph) {
 		this.graph = graph;
 	}
 
-	public final DirectedGraph<V, E> getGraph() {
+	public final Graph<V, E> getGraph() {
 		return graph;
 	}
 

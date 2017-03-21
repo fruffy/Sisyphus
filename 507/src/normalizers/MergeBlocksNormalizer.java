@@ -1,30 +1,9 @@
 package normalizers;
 
-import java.util.LinkedList;
-import java.util.Optional;
-
-import com.github.javaparser.Range;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.comments.Comment;
-import com.github.javaparser.ast.expr.AssignExpr;
-import com.github.javaparser.ast.expr.BooleanLiteralExpr;
-import com.github.javaparser.ast.expr.Expression;
-import com.github.javaparser.ast.expr.MethodCallExpr;
-import com.github.javaparser.ast.expr.NameExpr;
-import com.github.javaparser.ast.expr.SimpleName;
-import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.stmt.DoStmt;
-import com.github.javaparser.ast.stmt.ExpressionStmt;
-import com.github.javaparser.ast.stmt.ForStmt;
-import com.github.javaparser.ast.stmt.ForeachStmt;
 import com.github.javaparser.ast.stmt.Statement;
-import com.github.javaparser.ast.stmt.WhileStmt;
-import com.github.javaparser.ast.type.ClassOrInterfaceType;
-import com.github.javaparser.ast.type.Type;
-import com.github.javaparser.ast.type.TypeParameter;
-import com.github.javaparser.ast.visitor.CloneVisitor;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
 
@@ -67,9 +46,9 @@ public class MergeBlocksNormalizer extends Normalizer {
 				}
 			}
 
-			Comment comment = n.getComment();
+			//Comment comment = n.getComment();
 			BlockStmt r = new BlockStmt(n.getRange().orElse(null), newStatementList);
-			r.setComment(comment);
+			//r.setComment(comment);
 			return r;
 		}
 
@@ -86,7 +65,8 @@ public class MergeBlocksNormalizer extends Normalizer {
 
 	@Override
 	public Node result() {
-		return (Node)this.startBlock.accept(new MergeBlocksVisitor(), null);
+		this.startBlock.accept(new MergeBlocksVisitor(), null);
+		return this.startBlock;
 	}
 
 }

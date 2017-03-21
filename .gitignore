@@ -33,3 +33,7 @@ output.txt
 
 build/libs/
 build/
+
+javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/JavaParserMetaModel\.java
+
+experimental/

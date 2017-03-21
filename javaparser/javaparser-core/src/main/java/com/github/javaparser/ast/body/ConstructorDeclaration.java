@@ -163,6 +163,24 @@ public final class ConstructorDeclaration extends CallableDeclaration<Constructo
     }
 
     @Override
+    public String getSignature() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getName());
+        sb.append("(");
+        boolean firstParam = true;
+        for (Parameter param : getParameters()) {
+            if (firstParam) {
+                firstParam = false;
+            } else {
+                sb.append(", ");
+            }
+            sb.append(param.getType().toString(prettyPrinterNoCommentsConfiguration));
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
+    @Override
     public List<NodeList<?>> getNodeLists() {
         return Arrays.asList(getParameters(), getThrownExceptions(), getTypeParameters(), getAnnotations());
     }

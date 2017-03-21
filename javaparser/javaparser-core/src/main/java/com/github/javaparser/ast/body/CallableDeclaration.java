@@ -144,6 +144,8 @@ public abstract class CallableDeclaration<T extends Node> extends BodyDeclaratio
 
     public abstract String getDeclarationAsString(boolean includingModifiers, boolean includingThrows, boolean includingParameterName);
 
+    public abstract String getSignature();
+
     protected String appendThrowsIfRequested(boolean includingThrows) {
         StringBuilder sb = new StringBuilder();
         if (includingThrows) {

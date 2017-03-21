@@ -172,12 +172,15 @@ public class ControlFlowParser {
 		addGraphElements(entryNode);
 		refreshPreviousNodes(entryNode);
 		tempNodes.add(entryNode);
-
+		
 		// Parse the body of the for statement
 		exitNode = parseRec(currentNode.getBody());
-		// Connect the entry of the for loop (condition) with the exit operation
-		refreshPreviousNodes(entryNode);
-		addGraphElements(exitNode, new BackEdge());
+		if (exitNode != null) {
+			//It can happen that a while statement is empty and the control flow is in the condition clause
+			//TODO: Figure out a way to handle this 
+			refreshPreviousNodes(entryNode);
+			addGraphElements(exitNode, new BackEdge());
+		}
 		this.previousNodes = tempNodes;
 		return entryNode;
 	}

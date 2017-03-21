@@ -2,6 +2,7 @@
 
 
 gradle -p javasymbolsolver compileJava
+gradle -p javasymbolsolver build
 # cd -
 # cp javasymbolsolver/java-symbol-solver-core/build/libs/java-symbol-solver-core.jar 507/lib/
 # cp javasymbolsolver/java-symbol-solver-model/build/libs/java-symbol-solver-model.jar 507/lib/
