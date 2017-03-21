@@ -37,6 +37,8 @@ import jgrapht.graph.DirectedPseudograph;
 public class ControlFlowParser {
 	private DirectedPseudograph<NodeWrapper, DefaultEdge> cfg;
 	private List<NodeWrapper> previousNodes;
+	
+	private NodeWrapper specialInitNode;
 
 	/**
 	 * Build a new control flow graph.
@@ -76,11 +78,11 @@ public class ControlFlowParser {
 		// Remove them after initialising the graph
 		// TODO: Figure out a better way...
 
-		NodeWrapper initNode = new NodeWrapper(new EntryStmt());
-		this.cfg.addVertex(initNode);
-		this.previousNodes.add(initNode);
+		specialInitNode = new NodeWrapper(new EntryStmt());
+		this.cfg.addVertex(specialInitNode);
+		this.previousNodes.add(specialInitNode);
 		parseRec(methodBody);
-		this.cfg.removeVertex(initNode);
+		this.cfg.removeVertex(specialInitNode);
 	}
 
 	/**
@@ -98,6 +100,7 @@ public class ControlFlowParser {
 		} else {
 			NodeWrapper initNode = new NodeWrapper(entryNode);
 			this.cfg.addVertex(initNode);
+			//this.cfg.addEdge(specialInitNode, initNode);
 			this.previousNodes.add(initNode);
 		}
 	}

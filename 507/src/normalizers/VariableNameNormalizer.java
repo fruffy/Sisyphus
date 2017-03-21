@@ -94,6 +94,10 @@ public class VariableNameNormalizer extends Normalizer {
 			visit(n, arg);
 		}
 	}
+	
+	private class VariableNameVisitor extends ModifierVisitor<VisitInfo>{
+		
+	}
 
 	private  void visit(Node n, VisitInfo info){
 		//Names get renamed to whatever fresh name we've generated and stored in the info
