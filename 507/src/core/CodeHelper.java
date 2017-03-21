@@ -139,7 +139,7 @@ public class CodeHelper {
 			tpProportion[n] = tpProportion[n]/totalPossibleMatches;
 		}
 	
-		System.out.println("Proportion of true positives for each method:");
+		System.out.println("Proportion of true positives out of all possible matches for each method:");
 		for (int i = 0; i<tpProportion.length; i++){
 			System.out.print(tpProportion[i]+" ");
 		}
@@ -163,7 +163,7 @@ public class CodeHelper {
 			tpProportion[n] = tpProportion[n]/totalPossibleMatches;
 		}
 	
-		System.out.println("Proportion of true positives for each method:");
+		System.out.println("Proportion of true positives out of all possible matches for each method:");
 		for (int i = 0; i<tpProportion.length; i++){
 			System.out.print(tpProportion[i]+" ");
 		}
@@ -187,7 +187,7 @@ public class CodeHelper {
 			tpProportion[n] = tpProportion[n]/totalPossibleMatches;
 		}
 	
-		System.out.println("Proportion of true positives for each method:");
+		System.out.println("Proportion of true positives out of all possible matches for each method:");
 		for (int i = 0; i<tpProportion.length; i++){
 			System.out.print(tpProportion[i]+" ");
 		}
