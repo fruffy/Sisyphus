@@ -123,16 +123,15 @@ public class TestCodeV2 {
 	
 	
 	/**
-	 * @author Al-Shahna
-	 * Returns the absolute value an int value
-	 * @param val
-	 * @return the absolute value of val.
-	 */
-	public int absoluteValueAJ(int val){
-		//YOUR CODE HERE
-		if (val < 0) return val * -1;
-		else return val;
-	}
+	 * @author Alistair
+     * Returns the absolute value an int value
+     * @param val
+     * @return the absolute value of val.
+     */
+    public int absoluteValueAt(int val){
+        return (val < 0) ? -val : val;
+    }
+
 	
 /******************************************************************/
 	
@@ -268,20 +267,15 @@ public class TestCodeV2 {
 	
 	
 	/**
-	 * @author Al-Shahna
-	 * Returns the maximum of val1 and val2
+	 * @author Alistait
+	 * Returns the maximum of two int values
 	 * @param val1
 	 * @param val2
-	 * @return
+	 * @return the larger of val1 and val2
 	 */
-	public static int maximumAJ(int val1, int val2){
-		//YOUR CODE HERE
-		if (val1 > val2) return val1;
-		else if (val2 > val1) return val2;
-		else return val1; // if they are equal just return the first number
+	public static int maximumAt(int val1, int val2){
+		return (val1 > val2) ? val1 : val2;
 	}
-	
-	
 /******************************************************************/
 	
 	/**
@@ -409,18 +403,16 @@ public class TestCodeV2 {
 	}
 	
 	/**
-	 * @author Al-Shahna
-	 * Returns the minimum of val1 and val2
+	 * @author Alistair
+	 * Returns the minimum of two int values
 	 * @param val1
 	 * @param val2
-	 * @return
+	 * @return the smaller of val1 and val2
 	 */
-	public static int minimumAJ(int val1, int val2){
-		//YOUR CODE HERE
-		if (val1 < val2) return val1;
-		else if (val2 < val1) return val2;
-		else return val1; // if they are equal just return the first number
+	public static int minimumAt(int val1, int val2){
+		return (val1 < val2) ? val1 : val2;
 	}
+
 	
 	
 /*******************************************************************/
@@ -587,37 +579,27 @@ public class TestCodeV2 {
 	
 	
 	/**
-	 * @author Al-Shahna
+	 * @author Alistair
 	 * Returns the value of the first argument raised to the power
 	 * of the second argument
 	 * @param val1 - the base
 	 * @param val2 - the exponent
 	 * @return val1^val2
 	 */
-	public static double powerAJ(double val1, double val2){
-		//YOUR CODE HERE
-		double result = 1;
-		// check if exponent is 0
-		if (val2 == 0) return result;
-			
-		result = val1;
-				
-		if (val2 > 0) {
-			// if val2 is positive
-			for (int i = 0; i < val2; i++) {
-				result = result*val1;
-			}
-		} else {
-			// if val2 is negative then return 1/result
-			val2 = val2*-1.0;
-			for (int i = 0; i < val2; i++) {
-				result = result*val1;
-			}
-			result = 1.0/result;
-		}
-		return result;
-
+	public static double powerAt(double val1, double val2){
+		// Rounds to integer powers
+        double working = val1;
+        int exp = int(val2);
+        if (exp == 0) {
+            return 1;
+        }
+        for (int i = 1; i < exp; i++) {
+            working *= val1;
+        }
+        return working;
 	}
+	
+
 	
 	/**************************************************************/
 	
@@ -755,18 +737,18 @@ public class TestCodeV2 {
 	}
 	
 	/**
-	 * @author Al-Shahna
+	 * @author Alistair
 	 * Swaps the element at pos1 with element at pos2 in array
 	 * @param pos1 - the position of one element to be swapped
 	 * @param pos2 - the position of another element to be swapped
 	 * @param array - the array where the elements are swapped
 	 */
-	public static void swapAJ(int pos1, int pos2, int[] array){
-		//YOUR CODE HERE
+	public static void swapAt(int pos1, int pos2, int[] array){
 		int temp = array[pos1];
-		array[pos1] = array[pos2];
-		array[pos2] = temp;
+        array[pos1] = array[pos2];
+        array[pos2] = temp;
 	}
+
 	
 	/*********************************************************/
 	
@@ -980,7 +962,7 @@ public class TestCodeV2 {
 	}
 	
 	/**
-	 * @author Al-Shahna
+	 * @author Alistair
 	 * Returns true if the two specified arrays of ints
 	 * are equal to one another. Two arrays are considered equal 
 	 * if both arrays contain the same number of elements, and all 
@@ -989,22 +971,18 @@ public class TestCodeV2 {
 	 * @param array2 - the other array to be tested for equality
 	 * @return true if the two arrays are equal
 	 */
-	public static boolean equalsAJ(int[] array1, int[] array2){
-		//YOUR CODE HERE
-		boolean result = false;
-		
-		// first check the arrays are of the same size
-		if(array1.size() != array2.size()) return result;
-		
-		result = true;
-		for (int i = 0; i < array1.size(); i++) {
-			if (array1[i] != array2[i]) {
-				result = false;
-				break;
-			}
-		}
-		
-		return result;		
+	public static boolean equalsAt(int[] array1, int[] array2){
+		if (array1.length != array2.length) {
+            return false;
+        }
+
+        for (int i = 0; i < array1.length; i++) {
+            if (array1[i] != array2[i]) {
+                return false;
+            }
+        }
+
+        return true;
 	}
 	
 	
@@ -1135,19 +1113,16 @@ public class TestCodeV2 {
 	}
 	
 	/**
-	 * @author Al-Shahna
+	 * @author Alistair
 	 * Assigns the specified int value to each element of the specified 
 	 * array of ints.
 	 * @param array - the array to be filled
 	 * @param val - the value to be stored in all elements of the array
 	 */
-	public static void fillArrayAJ(int[] array, int val){
-		//YOUR CODE HERE
-		assert(array.size() != 0);
-		
-		for (int i = 0; i<array.size(); i++) {
-			array[i] = val;
-		}
+	public static void fillArrayAt(int[] array, int val){
+		for (int i = 0; i < array.length; i++) {
+            array[i] = val;
+        }
 	}
 	
 	/*************************************************************/
@@ -1329,7 +1304,7 @@ public class TestCodeV2 {
 	}
 	
 	/**
-	 * @author Al-Shahna
+	 * @author Alistair
 	 * Assigns the specified int value to each element of the specified 
 	 * range of the specified array of ints. The range to be filled 
 	 * extends from index startIndex, inclusive, to index endIndex, 
@@ -1340,16 +1315,12 @@ public class TestCodeV2 {
 	 * @param endIndex - the index of the last element (exclusive) to be filled with the specified value
 	 */
 	
-	public static void fillArrayPartiallyAJ(int[] array, int val, int startIndex, int endIndex){
-		//YOUR CODE HERE
-		
-		assert (startIndex < endIndex); // since exclusive
-		assert (array.size() != 0);
-		assert (array.size() >= endIndex);
+	public static void fillArrayPartiallyAt(int[] array, int val, int startIndex, int endIndex){
 		for (int i = startIndex; i < endIndex; i++) {
-			array[i] = val;
-		}
+            array[i] = val;
+        }
 	}
+
 
 	
 	
@@ -1586,7 +1557,7 @@ public class TestCodeV2 {
 	}
 	
 	/**
-	 * @author Al-Shahna
+	 * @author Alistair
 	 * Copies the specified array, truncating or padding with zeros (if necessary) 
 	 * so the copy has the specified length. For all indices that are valid in both
 	 * the original array and the copy, the two arrays will contain identical values.
@@ -1597,20 +1568,15 @@ public class TestCodeV2 {
 	 * @param newLength - the length of the copy to be returned
 	 * @return a copy of the original array, truncated or padded with zeros to obtain the specified length
 	 */
-	public static int[] returnCopyAJ(int[] array, int newLength){
-		//YOUR CODE HERE
-		assert (array.size() != 0);
-		
-		int[] newArray = new int[newLength];
-		
-		for (int i = 0; i < newLength; i++) {
-			if (i <= array.length) {
-				newArray[i] = array[i]; // this will auto truncate if newLength < original size
-			} else {
-				newArray[i] = 0; // add padding
-			}
-		}
-		return newArray;
+	public static int[] returnCopyAt(int[] array, int newLength){
+		int[] out = new int[newLength];
+        int arrayEnd = minimumAt(array.length, newLength);
+        for (int i = 0; i < arrayEnd; i++) {
+            out[i] = array[i];
+        }
+        for (int i = arrayEnd; i < newLength; i++) {
+            out[i] = 0;
+        }
 	}
 
 	
@@ -1808,28 +1774,25 @@ public class TestCodeV2 {
 	}
 	
 	/**
-	 * @author Itrat
-	 * Returns a partial copy of the array (specified by startIndex and endIndex(not inclusive))
-	 * @param array
-	 * @param startIndex
-	 * @param endIndex
-	 * @return
+	 * @author Alistair
+	 * Copies the specified range of the specified array into a new array and 
+	 * returns the new array of length endIndex - startIndex
+	 * @param array - the array from which a range is to be copied
+	 * @param startIndex - the initial index of the range to be copied, inclusive
+	 * @param endIndex -  the final index of the range to be copied, exclusive. (This index may lie outside the array.)
+	 * @return a new array containing the specified range from the original array
 	 */
-	public static int[] returnCopyRangeI(int[] array, int startIndex, int endIndex){
-		if(startIndex < 0 || startIndex >= array.length || endIndex <0 || endIndex >= array.length){
-			System.out.println("startIndex and endIndex do not make sense");
-			return new int[0];
-		}
-		int newLength = endIndex - startIndex;
-		int[] newArray = new int[newLength];
-		int j = 0;
-		for(int i = startIndex; i<endIndex; i++){
-			newArray[j] = array[i];
-			j++;
-		}
-		return newArray;
+	public static int[] returnCopyRangeAt(int[] array, int startIndex, int endIndex){
+		if (endIndex < startIndex) {
+            return null;
+        }
+        int[] out = new int[endIndex - startIndex];
+        int arrayEnd = minimumAt(array.length, endIndex);
+        for (int i = startIndex; i < arrayEnd; i++) {
+            out[i] = array[i];
+        }
+        return out;
 	}
-	
 	
 	
 	/************************************************************/
@@ -1970,18 +1933,19 @@ public class TestCodeV2 {
 	}
 	
 	/**
-	 * @author Itrat
+	 * @author Alistair
 	 * Returns a list version of the array
-	 * @param array
-	 * @return
+	 * @param array the array to be converted
+	 * @return the list version of array
 	 */
-	public static List<Integer> convertToListI(int[] array){
-		ArrayList<Integer> arrList = new ArrayList<Integer>();
-		for(int a: array){
-			arrList.add(a);
-		}
-		return arrList;
+	public static List<Integer> convertToListAt(int[] array){
+		ArrayList<Integer> out = new ArrayList<Integer>(array.length);
+        for (int i = 0; i < array.length; i++) {
+            out.set(i, array[i]);
+        }
+        return out;
 	}
+	
 	
 	
 	/*************************************************************/
@@ -2241,24 +2205,47 @@ public class TestCodeV2 {
 	
 	
 	/**
-	 * @author Itrat
-	 * Return a string version of the array
-	 * @param array
-	 * @return
+	 * @author Alistair
+	 * Returns a string representation of the contents of the specified 
+	 * array. The string representation consists of a list of the array's 
+	 * elements, enclosed in square brackets ("[]"). Adjacent elements are
+	 * separated by the characters ", " (a comma followed by a space). 
+	 * Elements are converted to strings as by String.valueOf(int). 
+	 * Returns "null" if a is null.
+	 * @param array - the array whose string representation to return
+	 * @return a string representation of array
 	 */
-	public static String arrToStringI(int[] array){
-		String arrString = "[";
-		for(int i = 0; i<array.length; i++){
-			int a = array[i];
-			arrString += a;
-			if(i!=array.length-1){
-				arrString += ", ";
-			}
-		}
-		arrString += "]";
-		return arrString;
+	public static String arrToStringAt(int[] array){
+        if (array == null) {
+            return "null";
+        }
+        if (array.length == 0) {
+            return "[]";
+        }
+		// Assuming we can't use StringBuilder
+        int len = 2 + (array.length - 1)*2 + 1;
+        for (int i = 0; i < array.length; i++) {
+            len += String.valueOf(array[i]).length();
+        }
+        char[] out = new char[len];
+        out[0] = '[';
+        out[len-2] = ']';
+        out[len-1] = '\0';
+        int offset = 1;
+        for (int i = 0; i < array.length; i++) {
+            String nStr = String.valueOf(array[i]);
+            for (int j = 0; j < nStr.length(); j++) {
+                out[offset + j] = nStr.charAt(j);
+            }
+            offset += j;
+            if (i < array.length-1) {
+                out[offset++] = ',';
+                out[offset++] = ' ';
+            }
+        }
+        return String(out);
 	}
-	
+
 
 	/*public static void main(String[] args){
 		int val = -1;
