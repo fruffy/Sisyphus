@@ -14,10 +14,12 @@ import java.util.Set;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
+import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.utils.Pair;
 
 import datastructures.EntryStmt;
 import datastructures.NodeWrapper;
+import datastructures.ReturnNode;
 import jgrapht.graph.DirectedPseudograph;
 import jgrapht.graph.DefaultEdge;
 import jgrapht.graph.DirectedPseudograph;
@@ -204,6 +206,10 @@ public class DataDependencyGraphFinder {
 			ret2.addVertex(nw);
 		}
 		
+		//Manually add am exit node
+		NodeWrapper exitNode = new NodeWrapper(new ReturnNode());
+		ret2.addVertex(exitNode);
+		
 		for (NodeWrapper nw : exitSet.keySet()){
 			for (Pair<String, NodeWrapper> defPair : exitSet.get(nw)){
 				//If a def reaches a node, and that node references that variable
@@ -219,7 +225,15 @@ public class DataDependencyGraphFinder {
 					//System.out.println("Node " + nw.NODE + ", " + " doesn't contain " + defPair.a);
 				}
 			}
+			//If this is a return statement, then we have an edge to ExitNode
+			//The special node representing the "value" assigned to
+			//i.e. the value returned
+			if (nw.NODE instanceof ReturnStmt){
+				ret2.addEdge(nw, exitNode);
+			}
 		}
+		
+		
 		
 		return ret2;
 	}
