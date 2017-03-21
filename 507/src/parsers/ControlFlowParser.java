@@ -38,7 +38,7 @@ public class ControlFlowParser {
 	private DirectedPseudograph<NodeWrapper, DefaultEdge> cfg;
 	private List<NodeWrapper> previousNodes;
 	
-	private NodeWrapper specialInitNode;
+	private NodeWrapper initialNode;
 
 	/**
 	 * Build a new control flow graph.
@@ -60,6 +60,10 @@ public class ControlFlowParser {
 	public DirectedPseudograph<NodeWrapper, DefaultEdge> getCFG() {
 		return cfg;
 	}
+	
+	public NodeWrapper getInitialNode(){
+		return this.initialNode;
+	}
 
 	/**
 	 * Initialises an empty control flow graph which will be filled by the
@@ -78,11 +82,11 @@ public class ControlFlowParser {
 		// Remove them after initialising the graph
 		// TODO: Figure out a better way...
 
-		specialInitNode = new NodeWrapper(new EntryStmt());
-		this.cfg.addVertex(specialInitNode);
-		this.previousNodes.add(specialInitNode);
+		NodeWrapper initNode = new NodeWrapper(new EntryStmt());
+		this.cfg.addVertex(initNode);
+		this.previousNodes.add(initNode);
 		parseRec(methodBody);
-		this.cfg.removeVertex(specialInitNode);
+		this.cfg.removeVertex(initNode);
 	}
 
 	/**
@@ -99,8 +103,8 @@ public class ControlFlowParser {
 			init(entryNode.getChildNodes().get(0));
 		} else {
 			NodeWrapper initNode = new NodeWrapper(entryNode);
+			this.initialNode = initNode;
 			this.cfg.addVertex(initNode);
-			//this.cfg.addEdge(specialInitNode, initNode);
 			this.previousNodes.add(initNode);
 		}
 	}

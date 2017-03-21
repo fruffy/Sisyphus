@@ -91,6 +91,8 @@ public class DataDependencyGraphFinder {
 	private HashMap<NodeWrapper, Set<Pair<String, NodeWrapper>>> exitSet = new HashMap<NodeWrapper, Set<Pair<String, NodeWrapper>>>();
 	private HashMap<NodeWrapper, Set<Pair<String, NodeWrapper>>> entrySet = new HashMap<NodeWrapper, Set<Pair<String, NodeWrapper>>>();
 
+	private NodeWrapper initialNode;
+
 
 	static Set<Pair<String, NodeWrapper>> bottom(){
 		return new HashSet<Pair<String, NodeWrapper>>();
@@ -129,9 +131,12 @@ public class DataDependencyGraphFinder {
 	}
 
 
-	public DataDependencyGraphFinder(DirectedPseudograph<NodeWrapper, DefaultEdge> cfg, Method method){
+	public DataDependencyGraphFinder(DirectedPseudograph<NodeWrapper, DefaultEdge> cfg, 
+			Method method,
+			NodeWrapper initialNode){
 		this.cfg = cfg;
 		this.initialMethod = method;
+		this.initialNode = initialNode;
 		Set<NodeWrapper> cfgNodeWrappers = cfg.vertexSet();
 		ArrayList<Node> cfgNodeList = new ArrayList<Node>();
 		for(NodeWrapper n: cfgNodeWrappers){
@@ -161,7 +166,7 @@ public class DataDependencyGraphFinder {
 		
 
 			//Initial nodes have all free variables in their entry and exit sets
-			if (n instanceof EntryStmt){ 
+			if (n.equals(this.initialNode)){ 
 
 				HashSet<Pair<String, NodeWrapper>> allFrees = new HashSet<Pair<String, NodeWrapper>>();
 				for (String fv : ASTUtil.freeVars(initialMethod.getBody())){
@@ -176,12 +181,15 @@ public class DataDependencyGraphFinder {
 				}
 				entrySet.get(nw).addAll(allFrees);
 				exitSet.get(nw).addAll(allFrees);
+				//Initial node goes into the worklist
+				worklist.push(nw);
 			}
 			//Parameter nodes define their parameters
 			else if (n instanceof Parameter){
 				Parameter p = (Parameter)n;
 				entrySet.get(nw).add(new Pair<String, NodeWrapper>(p.getNameAsString(), nw));
 				exitSet.get(nw).add(new Pair<String, NodeWrapper>(p.getNameAsString(), nw));
+				
 			} else {
 				//Non special nodes go in the worklist
 				worklist.push(nw);
@@ -244,6 +252,10 @@ public class DataDependencyGraphFinder {
 
 		for (NodeWrapper nw : exitSet.keySet()){
 			ret2.addVertex(nw);
+		}
+		//Add all our params too
+		for (NodeWrapper p : paramNodes.values()){
+			ret2.addVertex(p);
 		}
 
 		for (NodeWrapper nw : exitSet.keySet()){
