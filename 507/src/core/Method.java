@@ -40,15 +40,15 @@ public class Method {
 	public Method(MethodDeclaration methodDeclaration) {
 		this.originalDecl = methodDeclaration.clone();
 		this.body = methodDeclaration.getBody().get();
-		System.out.println("FIRST RESULT +:\n" + this.body);
+		//System.out.println("FIRST RESULT +:\n" + this.body);
 		this.trimBody();
 		methodDeclaration = normalize(methodDeclaration);
 		this.methodName = methodDeclaration.getNameAsString();
 		this.parameters = methodDeclaration.getParameters();
 		this.returnType = methodDeclaration.getType();
-		System.out.println("SECOND RESULT +:\n" + this.body);
+		//System.out.println("SECOND RESULT +:\n" + this.body);
 		this.body = methodDeclaration.getBody().get();
-		System.out.println("LAST RESULT +:\n" + this.body);
+		//System.out.println("LAST RESULT +:\n" + this.body);
 
 	}
 	
