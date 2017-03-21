@@ -6,7 +6,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="examples/" kind="src" path="src"/>
+	<classpathentry excluding="examples/|examples/" kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/java-symbol-solver-core">
 		<accessrules>
 			<accessrule kind="nonaccessible" pattern="com/github/javaparser"/>

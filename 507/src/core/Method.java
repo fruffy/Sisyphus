@@ -1,10 +1,10 @@
 package core;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
 import java.util.List;
+
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedAcyclicGraph;
+import org.jgrapht.graph.DirectedPseudograph;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.MethodDeclaration;
@@ -14,14 +14,7 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.Type;
 
 import datastructures.NodeWrapper;
-import datastructures.PDGGraphViz;
 import dfg.DataDependencyGraphFinder;
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.Graph;
-import org.jgrapht.graph.DirectedAcyclicGraph;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DirectedPseudograph;
-import normalizers.Normalizer;
 import normalizers.StandardForm;
 import parsers.ControlDependencyParser;
 import parsers.ControlFlowParser;
@@ -40,21 +33,23 @@ public class Method {
 	private MethodDeclaration originalDecl;
 	private DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg;
 	private DirectedPseudograph<NodeWrapper, DefaultEdge> ddg;
-	private DirectedPseudograph<Node, DefaultEdge>  pdg;
+	private DirectedPseudograph<Node, DefaultEdge> pdg;
 	private NodeFeature nodeFeature;
 	private Method unNormalized;
 
 	public Method(MethodDeclaration methodDeclaration) {
 		this.originalDecl = methodDeclaration.clone();
 		this.body = methodDeclaration.getBody().get();
+		System.out.println("FIRST RESULT +:\n" + this.body);
 		this.trimBody();
 		methodDeclaration = normalize(methodDeclaration);
 		this.methodName = methodDeclaration.getNameAsString();
 		this.parameters = methodDeclaration.getParameters();
 		this.returnType = methodDeclaration.getType();
+		System.out.println("SECOND RESULT +:\n" + this.body);
 		this.body = methodDeclaration.getBody().get();
-		this.pdg = this.constructPDG();
-		//this.nodeFeature = this.constructMethodFeature();
+		System.out.println("LAST RESULT +:\n" + this.body);
+
 	}
 	
 	public void printComparison(){
@@ -90,14 +85,6 @@ public class Method {
 		return this.originalDecl.getSignature();
 	}
 
-	public BlockStmt getFilteredBody() {
-		BlockStmt filteredBody = (BlockStmt) this.body.clone();
-		for (Comment co : filteredBody.getAllContainedComments()) {
-			co.remove();
-		}
-
-		return filteredBody;
-	}
 
 	public void trimBody() {
 		for (Comment co :  this.body.getAllContainedComments()) {
@@ -105,38 +92,7 @@ public class Method {
 		}
 	}
 
-	public MethodDeclaration getFilteredMethod() {
-		MethodDeclaration methodDeclaration = this.originalDecl;
-		for (Comment co : methodDeclaration.getAllContainedComments()) {
-			co.remove();
-		}
 
-		return methodDeclaration;
-	}
-
-	/*
-	 * Do a traversal of the nodes of the method body without comments and
-	 * return the list
-	 */
-	public List<Node> getMethodNodes() {
-		List<Node> methodNodes = new ArrayList<Node>();
-		List<Node> queueNodes = new ArrayList<Node>();
-		queueNodes.add(this.getFilteredMethod());
-		while (!queueNodes.isEmpty()) {
-			Node current = queueNodes.remove(0);
-			// System.out.println("current: "+current+", class:
-			// "+current.getClass());
-			if (!(current instanceof Comment)) {
-				methodNodes.add(current);
-			}
-			List<Node> currentChildren = current.getChildNodes();
-			for (Node child : currentChildren) {
-				queueNodes.add(child);
-			}
-		}
-		return methodNodes;
-
-	}
 
 	/*
 	 * Combine the NodeFeatures of all Nodes into one NodeFeature at the root
@@ -162,12 +118,11 @@ public class Method {
 			nodeFeature.combineNodeFeatures(childMethodFeature);
 		}
 		return nodeFeature;
-
 	}
 
 	public NodeFeature getMethodFeature() {
 		//System.out.println("considering method name "+this.getMethodName());
-		BlockStmt root = this.getFilteredBody();
+		BlockStmt root = this.body;
 		NodeFeature methodFeature = getMethodFeature(root);
 		return methodFeature;
 	}
@@ -195,9 +150,9 @@ public class Method {
 	}
 
 	
-	public DirectedPseudograph<Node, DefaultEdge> constructPDG(){
+	public DirectedPseudograph<Node, DefaultEdge> constructPDG(Method m){
 		//System.out.println("Building pdg for method: "+this.getMethodName());
-		ControlFlowParser cfp = new ControlFlowParser(this);
+		ControlFlowParser cfp = new ControlFlowParser(m);
 		DirectedPseudograph<NodeWrapper, DefaultEdge> cfg = cfp.getCFG();
 		ControlDependencyParser cdp = new ControlDependencyParser(cfg);
 		cdg = cdp.getCDG();
@@ -225,18 +180,12 @@ public class Method {
 		return pdgNode;
 	
 	}
-	public void printCDGGraph() {
-		Graph<Node, DefaultEdge>graph  = this.pdg;
-		for (Node n : graph.vertexSet()) {
-			System.out.println(n);
-			for (DefaultEdge e : graph.outgoingEdgesOf(n)) {
-				System.out.println("\t --> " + graph.getEdgeTarget(e));
-			}
-		}
-		System.out.println("\n***************");
-	}
 	
 	public DirectedPseudograph<Node, DefaultEdge> getPDG(){
 		return this.pdg;
+	}
+	
+	public void initPDG(){
+		this.pdg = constructPDG(this);
 	}
 }

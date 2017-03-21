@@ -294,7 +294,8 @@ public class CloneDetector {
 		if (!checkParameters(method1.getMethodParameters(), method2.getMethodParameters())) {
 			return false;
 		}
-
+		method1.initPDG();
+		method2.initPDG();
 		DirectedPseudograph<Node, DefaultEdge> method1pdg = method1.getPDG();
 		DirectedPseudograph<Node, DefaultEdge> method2pdg = method2.getPDG();
 
@@ -332,7 +333,7 @@ public class CloneDetector {
 	 * that of method2
 	 */
 	public boolean matchMethodDeclaration(Method method1, Method method2) {
-		if (method1.getFilteredMethod().equals(method2.getFilteredMethod())) {
+		if (method1.getBody().equals(method2.getBody())) {
 			return true;
 		}
 		return false;
