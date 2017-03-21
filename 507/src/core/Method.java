@@ -196,7 +196,7 @@ public class Method {
 		DirectedPseudograph<NodeWrapper, DefaultEdge> cfg = cfp.getCFG();
 		ControlDependencyParser cdp = new ControlDependencyParser(cfg);
 		cdg = cdp.getCDG();
-		DataDependencyGraphFinder ddgf = new DataDependencyGraphFinder(cfg);
+		DataDependencyGraphFinder ddgf = new DataDependencyGraphFinder(cfg, this, cfp.getInitialNode());
 		ddg = ddgf.findReachingDefs();
 		
 		//combine cdg and ddg to pdg with Nodes as vertices rather
@@ -204,6 +204,12 @@ public class Method {
 		DirectedPseudograph<Node, DefaultEdge> pdgNode = new DirectedPseudograph<>(DefaultEdge.class);
 		for(NodeWrapper n: cdg.vertexSet()){
 			pdgNode.addVertex(n.NODE);
+		}
+		for(NodeWrapper n: ddg.vertexSet()){
+			if (!pdgNode.containsVertex(n.NODE)){
+				pdgNode.addVertex(n.NODE);
+			}
+			
 		}
 		for(DefaultEdge e: cdg.edgeSet()){
 			pdgNode.addEdge(cdg.getEdgeSource(e).NODE, cdg.getEdgeTarget(e).NODE);
