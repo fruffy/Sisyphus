@@ -121,8 +121,9 @@ public class Method {
 	}
 
 	public NodeFeature getMethodFeature() {
-		//System.out.println("considering method name "+this.getMethodName());
+		//System.out.println("In getMethodFeature() " +this.getMethodName());
 		BlockStmt root = this.body;
+		//System.out.println(root);
 		NodeFeature methodFeature = getMethodFeature(root);
 		return methodFeature;
 	}
