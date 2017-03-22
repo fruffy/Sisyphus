@@ -18,7 +18,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package com.github.javaparser.ast.expr;
 
 import com.github.javaparser.Range;
@@ -26,6 +25,10 @@ import com.github.javaparser.ast.AllFieldsConstructor;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.BooleanLiteralExprMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * The boolean literals.
@@ -66,9 +69,26 @@ public final class BooleanLiteralExpr extends LiteralExpr {
         return value;
     }
 
-    public BooleanLiteralExpr setValue(boolean value) {
+    public BooleanLiteralExpr setValue(final boolean value) {
         notifyPropertyChange(ObservableProperty.VALUE, this.value, value);
         this.value = value;
         return this;
+    }
+
+    @Override
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        return super.remove(node);
+    }
+
+    @Override
+    public BooleanLiteralExpr clone() {
+        return (BooleanLiteralExpr) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    public BooleanLiteralExprMetaModel getMetaModel() {
+        return JavaParserMetaModel.booleanLiteralExprMetaModel;
     }
 }

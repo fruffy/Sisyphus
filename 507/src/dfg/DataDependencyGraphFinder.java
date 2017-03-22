@@ -22,9 +22,9 @@ import core.Method;
 import datastructures.EntryStmt;
 import datastructures.NodeWrapper;
 import datastructures.ReturnNode;
-import jgrapht.graph.DirectedPseudograph;
-import jgrapht.graph.DefaultEdge;
-import jgrapht.graph.DirectedPseudograph;
+import org.jgrapht.graph.DirectedPseudograph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedPseudograph;
 import visitors.ASTUtil;
 
 /**

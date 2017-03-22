@@ -1,18 +1,16 @@
-
 bin
+#jre_library
 .manager
-target
 .settings
 *~
-/target
+target/
 .project'
-.classpath
+#.classpath
 .idea/
 *.iml
 release.properties
 .metadata
 .recommenders
-
 *.class
 
 # BlueJ files
@@ -27,3 +25,17 @@ release.properties
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+output.txt
+
+
+*.dot
+/.gradle/
+
+build/libs/
+build/
+
+javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/JavaParserMetaModel\.java
+
+experimental/
+
+examples/\.DS_Store

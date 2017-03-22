@@ -5,9 +5,9 @@ import java.util.Iterator;
 import datastructures.DominatorTree;
 import datastructures.EntryStmt;
 import datastructures.NodeWrapper;
-import jgrapht.DirectedGraph;
-import jgrapht.experimental.dag.DirectedAcyclicGraph;
-import jgrapht.graph.DefaultEdge;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DirectedAcyclicGraph;
+import org.jgrapht.graph.DefaultEdge;
 
 public class ControlDependencyParser {
 	private DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg;
@@ -20,10 +20,10 @@ public class ControlDependencyParser {
 	 * @return
 	 * 
 	 */
-	public ControlDependencyParser(DirectedGraph<NodeWrapper, DefaultEdge> cfg) {
+	public ControlDependencyParser(Graph<NodeWrapper, DefaultEdge> cfg) {
 		// this.cfg = cfg;
-		cdg = new DirectedAcyclicGraph<NodeWrapper, DefaultEdge>(DefaultEdge.class);
-		parse(cfg);
+			cdg = new DirectedAcyclicGraph<NodeWrapper, DefaultEdge>(DefaultEdge.class);
+			parse(cfg);
 	}
 
 	/**
@@ -33,23 +33,23 @@ public class ControlDependencyParser {
 		return cdg;
 	}
 
-	private void parse(DirectedGraph<NodeWrapper, DefaultEdge> cfg) {
-		DirectedAcyclicGraph<NodeWrapper, DefaultEdge> fdt = buildForwardDominanceTree(cfg);
-		buildControlDependenceGraph(cfg, fdt);
-
-	}
-
-	public DirectedAcyclicGraph<NodeWrapper, DefaultEdge> buildForwardDominanceTree(
-			DirectedGraph<NodeWrapper, DefaultEdge> cfg) {
+	public Graph<NodeWrapper, DefaultEdge> buildForwardDominanceTree(
+			Graph<NodeWrapper, DefaultEdge> cfg) {
+		if (cfg.vertexSet().size() == 0) {
+			return cfg;
+		}
 		DominatorTree<NodeWrapper, DefaultEdge> fdtBuilder = new DominatorTree<>(cfg,
 				cfg.vertexSet().iterator().next());
 		return fdtBuilder.getDominatorTree();
-		//DominatorTree2<NodeWrapper, DefaultEdge> fdtBuilder = new DominatorTree2<NodeWrapper, DefaultEdge>(cfg, cfg.vertexSet().iterator().next());
-		//return fdtBuilder.getDominationTree();
 	}
 
-	private void buildControlDependenceGraph(DirectedGraph<NodeWrapper, DefaultEdge> cfg,
-			DirectedAcyclicGraph<NodeWrapper, DefaultEdge> fdt) {
+	private void parse(Graph<NodeWrapper, DefaultEdge> cfg) {
+		Graph<NodeWrapper, DefaultEdge> fdt = buildForwardDominanceTree(cfg);
+		buildControlDependenceGraph(cfg, fdt);
+	}
+
+	private void buildControlDependenceGraph(Graph<NodeWrapper, DefaultEdge> cfg,
+			Graph<NodeWrapper, DefaultEdge> fdt) {
 		NodeWrapper entry = new NodeWrapper(new EntryStmt());
 		NodeWrapper previousNode = entry;
 		cdg.addVertex(entry);

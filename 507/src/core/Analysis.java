@@ -6,6 +6,7 @@ import java.util.List;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.type.Type;
 
+
 public class Analysis {
 	private ArrayList<Method[]> matches;
 	
@@ -85,8 +86,8 @@ public class Analysis {
 					trueMatch = true;
 				}
 				if(trueMatch){
-					System.out.println("True Match: "+ srcReturnType+" " +srcName +", "+
-										libReturnType+" "+libName);
+/*					System.out.println("True Match: "+ srcReturnType+" " +srcName +", "+
+										libReturnType+" "+libName);*/
 					countTP++;
 				}
 				else{

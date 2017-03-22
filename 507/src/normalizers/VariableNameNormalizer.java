@@ -2,31 +2,16 @@ package normalizers;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
-
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.VariableDeclarator;
-import com.github.javaparser.ast.expr.AnnotationExpr;
-import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.SimpleName;
-import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.nodeTypes.NodeWithAnnotations;
 import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.stmt.DoStmt;
-import com.github.javaparser.ast.stmt.ForStmt;
-import com.github.javaparser.ast.stmt.ForeachStmt;
-import com.github.javaparser.ast.stmt.IfStmt;
-import com.github.javaparser.ast.stmt.Statement;
-import com.github.javaparser.ast.stmt.SwitchStmt;
-import com.github.javaparser.ast.stmt.WhileStmt;
-import com.github.javaparser.ast.type.ReferenceType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
-import com.github.javaparser.ast.visitor.Visitable;
 import com.github.javaparser.utils.Pair;
 
 import datastructures.VariableEnv;
@@ -140,7 +125,7 @@ public class VariableNameNormalizer extends Normalizer {
 
 			//We don't visit the name for this variable, because we don't want to rename it yet
 			//i.e. we want to distinguish names in declarations from names in expressions
-			final SimpleName id = (SimpleName) vd.getName();
+			final SimpleName id = vd.getName();
 
 			//We generate a new, standardized name for this declaration, based on its type
 			String cleanTypeName = cleanTypeName(vd.getType());
@@ -161,7 +146,7 @@ public class VariableNameNormalizer extends Normalizer {
 			//visitComment(n, info);
 			visitAnnotations(p, info);
 
-			final SimpleName id = (SimpleName) p.getName();
+			final SimpleName id = p.getName();
 
 			visit(p.getType(), info);
 
@@ -239,6 +224,7 @@ public class VariableNameNormalizer extends Normalizer {
 		//System.err.println("Fixing names for " + this.startBlock);
 		Node ret = startBlock;
 		visit(ret, new VisitInfo(VariableEnv.empty(), new LinkedList<Pair<String, String>>()));
+		
 		//System.err.println("Changed body:\n" + startBlock);
 		//System.err.println("to:\n" + ret);
 		return ret;

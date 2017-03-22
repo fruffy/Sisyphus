@@ -18,13 +18,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  */
-
 package com.github.javaparser.ast.body;
 
 import com.github.javaparser.Range;
 import com.github.javaparser.ast.AllFieldsConstructor;
 import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.SimpleName;
@@ -34,21 +32,20 @@ import com.github.javaparser.ast.nodeTypes.NodeWithSimpleName;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
-
 import static com.github.javaparser.utils.Utils.assertNotNull;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.EnumConstantDeclarationMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
 
 /**
  * One of the values an enum can take. A(1) and B(2) in this example: <code>enum X { A(1), B(2) }</code>
  *
  * @author Julio Vilmar Gesser
  */
-public final class EnumConstantDeclaration extends BodyDeclaration<EnumConstantDeclaration> implements
-        NodeWithJavadoc<EnumConstantDeclaration>,
-        NodeWithSimpleName<EnumConstantDeclaration>,
-        NodeWithArguments<EnumConstantDeclaration> {
+public final class EnumConstantDeclaration extends BodyDeclaration<EnumConstantDeclaration> implements NodeWithJavadoc<EnumConstantDeclaration>, NodeWithSimpleName<EnumConstantDeclaration>, NodeWithArguments<EnumConstantDeclaration> {
 
     private SimpleName name;
 
@@ -57,29 +54,19 @@ public final class EnumConstantDeclaration extends BodyDeclaration<EnumConstantD
     private NodeList<BodyDeclaration<?>> classBody;
 
     public EnumConstantDeclaration() {
-        this(null,
-                new NodeList<>(),
-                new SimpleName(),
-                new NodeList<>(),
-                new NodeList<>());
+        this(null, new NodeList<>(), new SimpleName(), new NodeList<>(), new NodeList<>());
     }
 
     public EnumConstantDeclaration(String name) {
-        this(null,
-                new NodeList<>(),
-                new SimpleName(name),
-                new NodeList<>(),
-                new NodeList<>());
+        this(null, new NodeList<>(), new SimpleName(name), new NodeList<>(), new NodeList<>());
     }
 
     @AllFieldsConstructor
-    public EnumConstantDeclaration(NodeList<AnnotationExpr> annotations, SimpleName name, NodeList<Expression> arguments,
-                                   NodeList<BodyDeclaration<?>> classBody) {
+    public EnumConstantDeclaration(NodeList<AnnotationExpr> annotations, SimpleName name, NodeList<Expression> arguments, NodeList<BodyDeclaration<?>> classBody) {
         this(null, annotations, name, arguments, classBody);
     }
 
-    public EnumConstantDeclaration(Range range, NodeList<AnnotationExpr> annotations, SimpleName name, NodeList<Expression> arguments,
-                                   NodeList<BodyDeclaration<?>> classBody) {
+    public EnumConstantDeclaration(Range range, NodeList<AnnotationExpr> annotations, SimpleName name, NodeList<Expression> arguments, NodeList<BodyDeclaration<?>> classBody) {
         super(range, annotations);
         setName(name);
         setArguments(arguments);
@@ -109,33 +96,68 @@ public final class EnumConstantDeclaration extends BodyDeclaration<EnumConstantD
         return name;
     }
 
-    public EnumConstantDeclaration setArguments(NodeList<Expression> arguments) {
+    public EnumConstantDeclaration setArguments(final NodeList<Expression> arguments) {
+        assertNotNull(arguments);
         notifyPropertyChange(ObservableProperty.ARGUMENTS, this.arguments, arguments);
-        this.arguments = assertNotNull(arguments);
-        setAsParentNodeOf(this.arguments);
+        if (this.arguments != null)
+            this.arguments.setParentNode(null);
+        this.arguments = arguments;
+        setAsParentNodeOf(arguments);
         return this;
     }
 
-    public EnumConstantDeclaration setClassBody(NodeList<BodyDeclaration<?>> classBody) {
+    public EnumConstantDeclaration setClassBody(final NodeList<BodyDeclaration<?>> classBody) {
+        assertNotNull(classBody);
         notifyPropertyChange(ObservableProperty.CLASS_BODY, this.classBody, classBody);
-        this.classBody = assertNotNull(classBody);
-        setAsParentNodeOf(this.classBody);
+        if (this.classBody != null)
+            this.classBody.setParentNode(null);
+        this.classBody = classBody;
+        setAsParentNodeOf(classBody);
         return this;
     }
 
     @Override
-    public EnumConstantDeclaration setName(SimpleName name) {
+    public EnumConstantDeclaration setName(final SimpleName name) {
+        assertNotNull(name);
         notifyPropertyChange(ObservableProperty.NAME, this.name, name);
-        this.name = assertNotNull(name);
+        if (this.name != null)
+            this.name.setParentNode(null);
+        this.name = name;
         setAsParentNodeOf(name);
         return this;
     }
 
     @Override
     public List<NodeList<?>> getNodeLists() {
-        List<NodeList<?>> res = new LinkedList<>(super.getNodeLists());
-        res.add(arguments);
-        res.add(classBody);
-        return res;
+        return Arrays.asList(getArguments(), getClassBody(), getAnnotations());
+    }
+
+    @Override
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        for (int i = 0; i < arguments.size(); i++) {
+            if (arguments.get(i) == node) {
+                arguments.remove(i);
+                return true;
+            }
+        }
+        for (int i = 0; i < classBody.size(); i++) {
+            if (classBody.get(i) == node) {
+                classBody.remove(i);
+                return true;
+            }
+        }
+        return super.remove(node);
+    }
+
+    @Override
+    public EnumConstantDeclaration clone() {
+        return (EnumConstantDeclaration) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    public EnumConstantDeclarationMetaModel getMetaModel() {
+        return JavaParserMetaModel.enumConstantDeclarationMetaModel;
     }
 }

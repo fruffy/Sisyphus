@@ -4,13 +4,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.github.javaparser.ast.Node;
+import org.jgrapht.Graph;
 
-import jgrapht.ComponentNameProvider;
-import jgrapht.DOTExporter;
-import jgrapht.Graph;
-import jgrapht.IntegerComponentNameProvider;
-import jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.io.ComponentNameProvider;
+import org.jgrapht.io.DOTExporter;
+import org.jgrapht.io.IntegerComponentNameProvider;
+import com.github.javaparser.ast.Node;
 
 public class PDGGraphViz {
 	
@@ -72,7 +72,7 @@ public class PDGGraphViz {
 			DOTExporter<Node, DefaultEdge> export = 
 	    			new DOTExporter<Node, DefaultEdge>(new IntegerComponentNameProvider<>(), vertexNames, null);
 	    	
-			export.exportGraph(g, writer);
+			//export.exportGraph(g, writer);
 			writer.close();
 		} catch (IOException e) {
 			System.err.println("Couldn't write graph to file " + filename);

@@ -19,10 +19,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import jgrapht.DirectedGraph;
-import jgrapht.experimental.dag.DirectedAcyclicGraph;
-import jgrapht.graph.DefaultEdge;
-import jgrapht.traverse.DepthFirstIterator;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DirectedAcyclicGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.traverse.DepthFirstIterator;
 
 
 /**
@@ -32,7 +32,7 @@ import jgrapht.traverse.DepthFirstIterator;
  */
 public class DominatorTree<V, E> {
 
-	private DirectedGraph<V, E> graph;
+	private Graph<V, E> graph;
 	private List<V> vertexPreOrder;
 	private Map<V, V> idom = null;
 	private Map<V, Integer> preOrderMap;
@@ -55,11 +55,11 @@ public class DominatorTree<V, E> {
 	 * @param entry
 	 *            the entry node
 	 */
-	public DominatorTree(DirectedGraph<V, E> g, V entry) {
+	public DominatorTree(Graph<V, E> g, V entry) {
 		this(g, dfsPreOrder(g, entry));
 	}
 
-	private static <V, E> List<V> dfsPreOrder(DirectedGraph<V, E> g, V exit) {
+	private static <V, E> List<V> dfsPreOrder(Graph<V, E> g, V exit) {
 		DepthFirstIterator<V, E> iter = new DepthFirstIterator<V, E>(g, exit);
 		iter.setCrossComponentTraversal(false);
 		List<V> trav = new LinkedList<V>();
@@ -79,7 +79,7 @@ public class DominatorTree<V, E> {
 	 *            a pre-order DFS traversal of the graph. Its first node is the
 	 *            entry point of the graph.
 	 */
-	public DominatorTree(DirectedGraph<V, E> g, List<V> preOrder) {
+	public DominatorTree(Graph<V, E> g, List<V> preOrder) {
 		this.graph = g;
 		this.vertexPreOrder = preOrder;
 		// just making sure we have a non-empty graph,

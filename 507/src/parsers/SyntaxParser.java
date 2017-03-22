@@ -12,7 +12,6 @@ import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import core.Method;
-import jgrapht.graph.DirectedPseudograph;
 
 /*
  * The parser class
@@ -23,18 +22,13 @@ import jgrapht.graph.DirectedPseudograph;
 
 public class SyntaxParser {
 
-	private CompilationUnit cu;
-	private ArrayList<MethodDeclaration> methodDeclarationList;
-	//private CombinedTypeSolver t;
-
+	public CompilationUnit cu;
+	public ArrayList<MethodDeclaration> methodDeclarationList;
+	
 	public SyntaxParser(File inputFile) throws FileNotFoundException {
-		// this.t = new CombinedTypeSolver(new ReflectionTypeSolver(), new
-		// JavaParserTypeSolver(inputFile));
 		this.cu = JavaParser.parse(inputFile);
 		this.methodDeclarationList = this.getMethodDeclaration();
 	}
-
-	/********************************************************************************************/
 
 	/********************************************************************************************/
 	/*
@@ -68,14 +62,43 @@ public class SyntaxParser {
 	}
 
 	/*
+	 * Returns an arraylist of all MethodCallExpr objects from which we can gain
+	 * information about the methods in a file
+	 */
+	public ArrayList<MethodCallExpr> getMethodInvocation() {
+		ArrayList<MethodCallExpr> methodCallList = new ArrayList<MethodCallExpr>();
+		new VoidVisitorAdapter<Object>() {
+			@Override
+			public void visit(MethodCallExpr n, Object arg) {
+				super.visit(n, arg);
+				methodCallList.add(n);
+				// System.out.println(n.getName());
+			}
+		}.visit(this.cu, null);
+		return methodCallList;
+	}
+
+	/*
 	 * Returns an arraylist of Method objects from parsing information
 	 */
 	public ArrayList<Method> getMethods() {
 		ArrayList<Method> methodList = new ArrayList<Method>();
 		for (MethodDeclaration n : this.methodDeclarationList) {
-			Method nMethod = new Method(n);
+			try {
+				Method nMethod = new Method(n);
+	/*			System.out.print("Added: "+nMethod.getReturnType() + " " + nMethod.getMethodName() + " ( ");
+				for (Parameter par : nMethod.getMethodParameters()) {
+					System.out.print(par +" ");
+				}
+				System.out.println(")" + " "+ nMethod.getBody());*/
+				methodList.add(nMethod);
+				
+				}
+				catch (Exception e) { 
+					e.printStackTrace();
+				}
 			//System.out.println("normalizing method: "+nMethod.getMethodName());
-			methodList.add(nMethod.normalize());
+			//methodList.add(nMethod.normalize());
 		}
 		return methodList;
 	}
