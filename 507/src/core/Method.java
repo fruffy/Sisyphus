@@ -168,6 +168,12 @@ public class Method {
 		for(NodeWrapper n: cdg.vertexSet()){
 			pdgNode.addVertex(n.NODE);
 		}
+		for(NodeWrapper n: ddg.vertexSet()){
+			if (!pdgNode.containsVertex(n.NODE)){
+				pdgNode.addVertex(n.NODE);
+			}
+			
+		}
 		for(DefaultEdge e: cdg.edgeSet()){
 			pdgNode.addEdge(cdg.getEdgeSource(e).NODE, cdg.getEdgeTarget(e).NODE);
 		}
