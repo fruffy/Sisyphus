@@ -391,6 +391,7 @@ public class CloneDetector {
 	 * below the threshold
 	 */
 	public boolean matchMethodNodeFeatures(Method method1, Method method2, double threshold) {
+		//System.out.println("Considering "+method1.getMethodName()+" "+method2.getMethodName());
 		if (!method1.getReturnType().equals(method2.getReturnType())) {
 			return false;
 		}
@@ -408,6 +409,10 @@ public class CloneDetector {
 		feature1.makeComparableNodeFeatures(feature2);
 		HashMap<String, Integer> featureMap1 = feature1.getFeatureMap();
 		HashMap<String, Integer> featureMap2 = feature2.getFeatureMap();
+		/*System.out.println("featureMap1 ");
+		System.out.println(featureMap1);
+		System.out.println("featureMap2 ");
+		System.out.println(featureMap2);*/
 		int[] featureArray1 = new int[feature1.getFeatureVectorSize()];
 		int[] featureArray2 = new int[feature2.getFeatureVectorSize()];
 
@@ -422,20 +427,20 @@ public class CloneDetector {
 		// System.out.println("dist "+dist);
 		dist = match;
 		if (dist <= threshold) {
-			/*
-			 * System.out.println("Considering "+method1.getMethodName()+" "
-			 * +method2.getMethodName());
-			 * System.out.println("Method1 parameters"); List<Parameter> params1
-			 * = method1.getMethodParameters(); for(Parameter p: params1){
-			 * System.out.println(p.getType()); }
-			 * System.out.println("Method2 parameters"); List<Parameter> params2
-			 * = method2.getMethodParameters(); for(Parameter p: params2){
-			 * System.out.println(p.getType()); }
-			 * System.out.println("Return "+method1+" "+method2.getReturnType())
-			 * ; System.out.println("featureMap1 "+featureMap1);
-			 * System.out.println("featureMap2 "+featureMap2);
-			 * System.out.println("dist "+dist);
-			 */
+			//System.out.println("Matched");
+			
+			  /*System.out.println("Considering "+method1.getMethodName()+" " +method2.getMethodName());
+			  System.out.println("Method1 parameters"); 
+			  List<Parameter> params1= method1.getMethodParameters(); 
+			  for(Parameter p: params1){System.out.println(p.getType()); }
+			  System.out.println("Method2 parameters");
+			  List<Parameter> params2 = method2.getMethodParameters(); 
+			  for(Parameter p: params2){ System.out.println(p.getType()); }
+			  System.out.println("Return "+method1+" "+method2.getReturnType()); 
+			  System.out.println("featureMap1 "+featureMap1);
+			  System.out.println("featureMap2 "+featureMap2);
+			  System.out.println("dist "+dist);*/
+			 
 			return true;
 		}
 		return false;
