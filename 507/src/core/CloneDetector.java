@@ -90,6 +90,8 @@ public class CloneDetector {
 				match = 0;
 				if (matchMethodNodeFeatures(src, ref, 4)) {
 					Method[] matched = { src, ref };
+					//System.out.println("Considering Method "+src.getMethodName()+" "+ref.getMethodName());
+					//System.out.println("match "+match+" bestMatch "+bestMatch);
 					if (bestMatch > match) {
 						bestMatch = match;
 						matchedMethods.add(matched);
@@ -424,8 +426,7 @@ public class CloneDetector {
 		}
 
 		double dist = calculateDistance(featureArray1, featureArray2);
-		// System.out.println("dist "+dist);
-		dist = match;
+		match = dist;
 		if (dist <= threshold) {
 			//System.out.println("Matched");
 			
