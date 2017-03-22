@@ -14,10 +14,11 @@ public class CodeHelper {
 		File libFile1 = new File("Arrays.java");
 
 		File srcfile = new File(srcName);
+		File leetfile = new File("../examples/LeetcodeTest.java");
 
 		SyntaxParser libparser1, libparser2, libparser;
-		SyntaxParser srcparser;
-		ArrayList<Method> srcMethods, libMethods;
+		SyntaxParser srcparser,leetcodeparser;
+		ArrayList<Method> srcMethods, libMethods,leetcodeMethods;
 		if (!(srcfile.exists()) || srcfile.isDirectory()) {
 			System.out.println("Input file does not exist or is not a valid input.");
 			// Debug
@@ -38,6 +39,7 @@ public class CodeHelper {
 			libparser1 = new SyntaxParser(libFile1);
 			libparser2 = new SyntaxParser(libFile2);
 			srcparser = new SyntaxParser(srcfile);
+			leetcodeparser = new SyntaxParser(leetfile);
 		} catch (IOException e) {
 			new RuntimeException(e);
 			return;
@@ -47,6 +49,7 @@ public class CodeHelper {
 		srcMethods = srcparser.getMethods();
 		libMethods = libparser1.getMethods();
 		libMethods.addAll(libparser2.getMethods());
+		leetcodeMethods = leetcodeparser.getMethods();
 /*		for (Method method : libMethods) {
 			System.out.println(method.getMethodName());
 		}*/
@@ -59,7 +62,8 @@ public class CodeHelper {
 		int numParticipants = 12;
 		int numMethods = srcMethods.size()/numParticipants;
 		testCodeMatches(srcMethods,cloneDetect,numParticipants,numMethods);
-
+		
+		testLeetcodeMatches(leetcodeMethods,cloneDetect);
 	}
 	
 	/**
@@ -77,6 +81,8 @@ public class CodeHelper {
 		System.out.println("Number of true positives = "+tpFp[0]);
 		System.out.println("Number of false positives = "+tpFp[1]);
 		System.out.printf("Percentage of true positives %.2f%%\n", 100*tpFp[0]/(double)matchesPDG.size());
+		System.out.println("Percentage of true positives out of all possible true positives "+(tpFp[0]*100.0)/srcMethods.size());
+		System.out.println();
 		
 		System.out.println("ANALYSIS: AST");
 		ArrayList<Method> srcTest = new ArrayList<Method>();
@@ -88,7 +94,9 @@ public class CodeHelper {
 		System.out.println("Number of true positives = "+tpFp[0]);
 		System.out.println("Number of false positives = "+tpFp[1]);
 		System.out.printf("Percentage of true positives %.2f%%\n", 100*tpFp[0]/(double)matchesAST.size());
-
+		System.out.println("Percentage of true positives out of all possible true positives "+(tpFp[0]*100.0)/srcMethods.size());
+		System.out.println();
+		
 		System.out.println("ANALYSIS: AST Deckard");
 		ArrayList<Method> srcTest2 = new ArrayList<Method>();
 		srcTest2.add(srcMethods.get(55));
@@ -100,17 +108,8 @@ public class CodeHelper {
 		System.out.println("Number of true positives = "+tpFp[0]);
 		System.out.println("Number of false positives = "+tpFp[1]);
 		System.out.printf("Percentage of true positives %.2f%%\n", 100*tpFp[0]/(double)matchesDeckard.size());
-		System.out.println("Proportion of true positives out of all possible true positives "+tpFp[0]/(srcMethods.size()*1.0));
-
-		/*System.out.println("ANALYSIS: AST Simple Matching");
-		ArrayList<Method[]> matchesAST = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsAST(srcMethods);
-		Analysis analysisAST = new Analysis(matchesAST);
-		tpFp = analysisAST.tpfp();
-		System.out.println("Number of test code functions = "+ srcMethods.size());
-		System.out.println("Number of matches = "+matchesAST.size());
-		System.out.println("Number of true positives = "+tpFp[0]);
-		System.out.println("Number of false positives = "+tpFp[1]);
-		System.out.println("Ratiof of true positives to false positives "+ tpFp[0]/(tpFp[1]*1.0));*/
+		System.out.println("Percentage of true positives out of all possible true positives "+(tpFp[0]*100.0)/srcMethods.size());
+		System.out.println();
 	}
 	
 	/**
@@ -129,94 +128,131 @@ public class CodeHelper {
 			pIndex--;
 		}
 		System.out.println("Testing PDG matching between participants' code");
-		float[] tpProportion = new float[numMethods];
+		double[] tpProportion = new double[numMethods];
 		for(int n = 0; n<numMethods; n++){
 			for(int i = n*numParticipants; i<n*numParticipants + numParticipants; i++){
 				for(int j = i+1; j<n*numParticipants + numParticipants; j++){
-					/*System.out.println("i "+i+" j "+j);
-					System.out.println("Trying match between "+
-				srcMethods.get(i).getMethodName()+" "+srcMethods.get(j).getMethodName());*/
 					boolean match = cloneDetect.matchMethodPDGs(srcMethods.get(i), srcMethods.get(j));
-					//System.out.println("match "+match);
 					if(match){
 						tpProportion[n]++;
 					}
 				}
 			}
-			tpProportion[n] = tpProportion[n]/totalPossibleMatches;
+			tpProportion[n] = (tpProportion[n]*100.0)/totalPossibleMatches;
 		}
-	
-		System.out.println("Proportion of true positives out of all possible matches for each method:");
+		System.out.println("Percentage of true positives out of all possible matches for each method:");
 		for (int i = 0; i<tpProportion.length; i++){
 			System.out.print(tpProportion[i]+" ");
 		}
 		System.out.print("\n");
 		
+		System.out.println();
 		System.out.println("Testing AST matching between participants' code");
-		tpProportion = new float[numMethods];
+		tpProportion = new double[numMethods];
 		for(int n = 0; n<numMethods; n++){
 			for(int i = n*numParticipants; i<n*numParticipants + numParticipants; i++){
 				for(int j = i+1; j<n*numParticipants + numParticipants; j++){
-					/*System.out.println("i "+i+" j "+j);
-					System.out.println("Trying match between "+
-				srcMethods.get(i).getMethodName()+" "+srcMethods.get(j).getMethodName());*/
 					boolean match = cloneDetect.matchMethodDeclaration(srcMethods.get(i), srcMethods.get(j));
-					//System.out.println("match "+match);
 					if(match){
 						tpProportion[n]++;
 					}
 				}
 			}
-			tpProportion[n] = tpProportion[n]/totalPossibleMatches;
+			tpProportion[n] = (tpProportion[n]*100.0)/totalPossibleMatches;
 		}
 	
-		System.out.println("Proportion of true positives out of all possible matches for each method:");
+		System.out.println("Percentage of true positives out of all possible matches for each method:");
 		for (int i = 0; i<tpProportion.length; i++){
 			System.out.print(tpProportion[i]+" ");
 		}
 		System.out.print("\n");
 		
+		System.out.println();
 		System.out.println("Testing AST Deckard between participants' code");
-		tpProportion = new float[numMethods];
+		tpProportion = new double[numMethods];
 		for(int n = 0; n<numMethods; n++){
 			for(int i = n*numParticipants; i<n*numParticipants + numParticipants; i++){
 				for(int j = i+1; j<n*numParticipants + numParticipants; j++){
-					/*System.out.println("i "+i+" j "+j);
-					System.out.println("Trying match between "+
-				srcMethods.get(i).getMethodName()+" "+srcMethods.get(j).getMethodName());*/
 					boolean match = cloneDetect.matchMethodNodeFeatures(srcMethods.get(i), srcMethods.get(j),4.0);
-					//System.out.println("match "+match);
 					if(match){
 						tpProportion[n]++;
 					}
 				}
 			}
-			tpProportion[n] = tpProportion[n]/totalPossibleMatches;
+			tpProportion[n] = (tpProportion[n]*100.0)/totalPossibleMatches;
 		}
 	
-		System.out.println("Proportion of true positives out of all possible matches for each method:");
+		System.out.println("Percentage of true positives out of all possible matches for each method:");
 		for (int i = 0; i<tpProportion.length; i++){
 			System.out.print(tpProportion[i]+" ");
 		}
 		System.out.print("\n");
 	
 	}
+	
+	public static void testLeetcodeMatches(ArrayList<Method> srcMethods, CloneDetector cloneDetect){
 		
-		/*System.out.println("ANALYSIS: PDG Deckard");
-		ArrayList<Method[]> matchesPDGDeckard = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsPDGDeckard(srcMethods);
-		Analysis analysisPDGDeckard = new Analysis(matchesPDGDeckard);
-		int[] tpFp = analysisPDGDeckard.tpfp();
-		System.out.println("Number of test code functions = "+ srcMethods.size());
-		System.out.println("Number of matches = "+matchesPDGDeckard.size());
-		System.out.println("Number of true positives = "+tpFp[0]);
-		System.out.println("Number of false positives = "+tpFp[1]);
-		System.out.println("Ratiof of true positives to false positives "+ tpFp[0]/(tpFp[1]*1.0));*/
+		int numMethods = srcMethods.size();
+		int pIndex = numMethods;
+		int totalPossibleMatches = 0;
+		while(pIndex!=0){
+			totalPossibleMatches += pIndex;
+			pIndex--;
+		}
+		System.out.println("Testing PDG matching in Leetcode");
+		double tpProportion = 0.0;
+		for(int i = 0; i<numMethods; i++){
+			for(int j = i+1; j<numMethods; j++){
+				
+				boolean match = cloneDetect.matchMethodPDGs(srcMethods.get(i), srcMethods.get(j));
+				//System.out.println("match "+match);
+				if(match){
+					tpProportion++;
+				}
+			}
+		}
+		tpProportion = (tpProportion*100.0)/totalPossibleMatches;
+	
+		System.out.println("Percentage of true positives out of all possible matches for each method:");
+		System.out.println(tpProportion);
+		System.out.println();
 		
-		/*Method method1 = srcMethods.get(46);
-		Method method2 = libMethods.get(1);
-		method1.constructPDG();
+		System.out.println("Testing AST matching inLeetcode");
+		tpProportion = 0.0;
+		for(int i = 0; i<numMethods; i++){
+			for(int j = i+1; j<numMethods; j++){
+			
+				boolean match = cloneDetect.matchMethodDeclaration(srcMethods.get(i), srcMethods.get(j));
+				//System.out.println("match "+match);
+				if(match){
+					tpProportion++;
+				}
+			}
+		}
+		tpProportion = (tpProportion*100.0)/totalPossibleMatches;
+	
+		System.out.println("Percentage of true positives out of all possible matches for each method:");
+		System.out.println(tpProportion);
+		System.out.println();
 		
-		PDGGraphViz.writeDot(method1.getCdg(), "cdg.dot");
-		PDGGraphViz.writeDot(method1.getDdg(), "ddg.dot");
-		method1.printComparison();*/
+		System.out.println("Testing AST Deckard in LeetCode");
+		tpProportion = 0.0;
+		for(int i = 0; i<numMethods; i++){
+			for(int j = i+1; j<numMethods; j++){
+				boolean match = cloneDetect.matchMethodNodeFeatures(srcMethods.get(i), srcMethods.get(j),4);
+				//System.out.println("match "+match);
+				if(match){
+					tpProportion++;
+				}
+			}
+		}
+		tpProportion = (tpProportion*100.0)/totalPossibleMatches;
+	
+		System.out.println("Percentage of true positives out of all possible matches for each method:");
+		System.out.println(tpProportion);
+	
+	}
+	
+	
+		
 }

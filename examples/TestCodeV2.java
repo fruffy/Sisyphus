@@ -1,4 +1,3 @@
-package examples;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1896,6 +1895,7 @@ public class TestCodeV2 {
 		for (int i = arrayEnd; i < newLength; i++) {
 			out[i] = 0;
 		}
+		return out;
 	}
 	
 	/**
@@ -2411,7 +2411,7 @@ public class TestCodeV2 {
 	public static List<Integer> convertToListAJ(int[] array){
 		//YOUR CODE HERE
 		
-		List<Integer> arr = newArrayList<Integer>(array.length);
+		List<Integer> arr = new ArrayList<Integer>(array.length);
 		for (int i = 0; i<array.length; i++) {
 			arr.add(array[i]);
 		}
@@ -2735,7 +2735,7 @@ public class TestCodeV2 {
 	public static String arrToStringAJ(int[] array){
 		//YOUR CODE HERE
 		String result = "";
-		if (!array || array.length == 0) return null;
+		if (array.length == 0) return null;
 		result = "[";
 		for (int i = 0; i < array.length - 1; i++) {
 			result = result + String.valueOf(array[i]) + ", ";

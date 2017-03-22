@@ -23,7 +23,6 @@
  *
  */
 
-package examples;
 import java.util.Random;
 import sun.misc.DoubleConsts;
 

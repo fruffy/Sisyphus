@@ -1,7 +1,6 @@
-package examples;
+
 import java.util.List;
 
-import core.Method;
 
 public class TestCode {
 	

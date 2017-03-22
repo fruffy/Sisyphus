@@ -1,4 +1,3 @@
-package examples;
 
 public class JavaTest {
 	static class X {
