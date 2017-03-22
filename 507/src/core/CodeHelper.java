@@ -3,6 +3,7 @@ package core;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import parsers.SyntaxParser;
 
@@ -187,69 +188,111 @@ public class CodeHelper {
 			System.out.print(tpProportion[i]+" ");
 		}
 		System.out.print("\n");
+		System.out.println();
 	
 	}
 	
 	public static void testLeetcodeMatches(ArrayList<Method> srcMethods, CloneDetector cloneDetect){
 		
 		int numMethods = srcMethods.size();
-		int pIndex = numMethods;
+		int numDiffMethods = 5;
+		int participants = numMethods/numDiffMethods;
+		int pIndex = numMethods/numDiffMethods;
 		int totalPossibleMatches = 0;
 		while(pIndex!=0){
 			totalPossibleMatches += pIndex;
 			pIndex--;
 		}
 		System.out.println("Testing PDG matching in Leetcode");
-		double tpProportion = 0.0;
+		double tp[] = new double[numDiffMethods];
+		double fp[] = new double[numDiffMethods];
+		double tpProportion[] = new double[numDiffMethods];
 		for(int i = 0; i<numMethods; i++){
 			for(int j = i+1; j<numMethods; j++){
-				
-				boolean match = cloneDetect.matchMethodPDGs(srcMethods.get(i), srcMethods.get(j));
+				Method src1 = srcMethods.get(i);
+				Method src2 = srcMethods.get(j);
+				boolean match = cloneDetect.matchMethodPDGs(src1, src2);
 				//System.out.println("match "+match);
 				if(match){
-					tpProportion++;
+					String src1Name = src1.getMethodName();
+					String src2Name = src2.getMethodName();
+					if(src1Name.substring(0,src1Name.length()-2).equals(src2Name.substring(0,src2Name.length()-2))){
+						tp[i/participants]++;
+					}
+					else{
+						fp[i/participants]++;
+					}
 				}
 			}
+			tpProportion[i/participants] = (tp[i/participants]*100.0)/totalPossibleMatches;
 		}
-		tpProportion = (tpProportion*100.0)/totalPossibleMatches;
 	
 		System.out.println("Percentage of true positives out of all possible matches for each method:");
-		System.out.println(tpProportion);
+		System.out.println(Arrays.toString(tpProportion));
+		System.out.println("Number of false positives should be zero");
+		System.out.println(Arrays.toString(fp));
 		System.out.println();
 		
 		System.out.println("Testing AST matching inLeetcode");
-		tpProportion = 0.0;
+		tp = new double[numDiffMethods];
+		fp = new double[numDiffMethods];
+		tpProportion = new double[numDiffMethods];
 		for(int i = 0; i<numMethods; i++){
 			for(int j = i+1; j<numMethods; j++){
-			
-				boolean match = cloneDetect.matchMethodDeclaration(srcMethods.get(i), srcMethods.get(j));
+				Method src1 = srcMethods.get(i);
+				Method src2 = srcMethods.get(j);
+				boolean match = cloneDetect.matchMethodDeclaration(src1, src2);
 				//System.out.println("match "+match);
 				if(match){
-					tpProportion++;
+					String src1Name = src1.getMethodName();
+					String src2Name = src2.getMethodName();
+					if(src1Name.substring(0,src1Name.length()-2).equals(src2Name.substring(0,src2Name.length()-2))){
+						tp[i/participants]++;
+					}
+					else{
+						fp[i/participants]++;
+					}
 				}
 			}
+			tpProportion[i/participants] = (tp[i/participants]*100.0)/totalPossibleMatches;
 		}
-		tpProportion = (tpProportion*100.0)/totalPossibleMatches;
 	
 		System.out.println("Percentage of true positives out of all possible matches for each method:");
-		System.out.println(tpProportion);
+		System.out.println(Arrays.toString(tpProportion));
+		System.out.println("Number of false positives should be zero");
+		System.out.println(Arrays.toString(fp));
+		
 		System.out.println();
 		
 		System.out.println("Testing AST Deckard in LeetCode");
-		tpProportion = 0.0;
+		tp = new double[numDiffMethods];
+		fp = new double[numDiffMethods];
+		tpProportion = new double[numDiffMethods];
 		for(int i = 0; i<numMethods; i++){
 			for(int j = i+1; j<numMethods; j++){
-				boolean match = cloneDetect.matchMethodNodeFeatures(srcMethods.get(i), srcMethods.get(j),4);
+				Method src1 = srcMethods.get(i);
+				Method src2 = srcMethods.get(j);
+				boolean match = cloneDetect.matchMethodNodeFeatures(src1, src2,4);
 				//System.out.println("match "+match);
 				if(match){
-					tpProportion++;
+					String src1Name = src1.getMethodName();
+					String src2Name = src2.getMethodName();
+					if(src1Name.substring(0,src1Name.length()-2).equals(src2Name.substring(0,src2Name.length()-2))){
+						tp[i/participants]++;
+					}
+					else{
+						fp[i/participants]++;
+					}
 				}
 			}
+			tpProportion[i/participants] = (tp[i/participants]*100.0)/totalPossibleMatches;
 		}
-		tpProportion = (tpProportion*100.0)/totalPossibleMatches;
 	
 		System.out.println("Percentage of true positives out of all possible matches for each method:");
-		System.out.println(tpProportion);
+		System.out.println(Arrays.toString(tpProportion));
+		System.out.println("Number of false positives should be zero");
+		System.out.println(Arrays.toString(fp));
+		System.out.println();
 	
 	}
 	

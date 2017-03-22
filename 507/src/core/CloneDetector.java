@@ -92,7 +92,7 @@ public class CloneDetector {
 					Method[] matched = { src, ref };
 					//System.out.println("Considering Method "+src.getMethodName()+" "+ref.getMethodName());
 					//System.out.println("match "+match+" bestMatch "+bestMatch);
-					if (bestMatch > match) {
+					if (bestMatch >= match) {
 						bestMatch = match;
 						matchedMethods.add(matched);
 					}
@@ -132,7 +132,7 @@ public class CloneDetector {
 
 				if (matchMethodPDGs(src, ref)) {
 					Method[] matched = { src, ref };
-					if (bestMatch < match / mismatch) {
+					if (bestMatch <= match / mismatch) {
 						bestMatch = match / mismatch;
 						matchedMethods.add(matched);
 					}
