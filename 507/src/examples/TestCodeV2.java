@@ -6,7 +6,7 @@ import java.util.List;
 public class TestCodeV2 {
 
 	/**
-	 * @author Michael Returns the absolute value an int value
+	 * Returns the absolute value an int value
 	 * @param val
 	 * @return the absolute value of val.
 	 */
@@ -18,7 +18,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Gudbrand Returns the absolute value an int value
+	 * Returns the absolute value an int value
 	 * @param val
 	 * @return the absolute value of val.
 	 */
@@ -27,7 +27,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Clement Returns the absolute value an int value
+	 * Returns the absolute value an int value
 	 * @param val
 	 * @return the absolute value of val.
 	 */
@@ -43,7 +43,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Xing Returns the absolute value an int value
+	 * Returns the absolute value an int value
 	 * @param val
 	 * @return the absolute value of val.
 	 */
@@ -57,7 +57,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alex Returns the absolute value an int value
+	 * Returns the absolute value an int value
 	 * @param val
 	 * @return the absolute value of val.
 	 */
@@ -66,7 +66,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Devon Returns the absolute value an int value
+	 * Returns the absolute value an int value
 	 * @param val
 	 * @return the absolute value of val.
 	 */
@@ -78,7 +78,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Jenny Returns the absolute value an int value
+	 * Returns the absolute value an int value
 	 * @param val
 	 * @return the absolute value of val.
 	 */
@@ -87,7 +87,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Candace Returns the absolute value an int value
+	 * Returns the absolute value an int value
 	 * @param val
 	 * @return the absolute value of val.
 	 */
@@ -100,7 +100,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Arabelle Returns the absolute value an int value
+	 * Returns the absolute value an int value
 	 * @param val
 	 * @return the absolute value of val.
 	 */
@@ -108,8 +108,8 @@ public class TestCodeV2 {
 		return val > 0 ? val : -val;
 	}
 
-	/**
-	 * @author Alistair Returns the absolute value an int value
+	/** 
+	 * Returns the absolute value an int value
 	 * @param val
 	 * @return the absolute value of val.
 	 */
@@ -127,11 +127,23 @@ public class TestCodeV2 {
 		if( val < 0) val = -1 * val;
 		return val;
 	}
+	
+	/**
+	 * Returns the absolute value an int value
+	 * @param val
+	 * @return the absolute value of val.
+	 */
+	public int absoluteValueAJ(int val){
+		//YOUR CODE HERE
+		if (val < 0) return val * -1;
+		else return val;
+	}
+
 
 	/******************************************************************/
 
 	/**
-	 * @author Michael Returns the maximum of two int values
+	 * Returns the maximum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the larger of val1 and val2
@@ -145,7 +157,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Gudbrand Returns the maximum of two int values
+	 * Returns the maximum of two int values
 	 * @param val1
 	 * @param val2±±
 	 * @return the larger of val1 and val2
@@ -155,7 +167,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Clement Returns the maximum of two int values
+	 * Returns the maximum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the larger of val1 and val2
@@ -173,7 +185,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Xing Returns the maximum of two int values
+	 * Returns the maximum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the larger of val1 and val2
@@ -187,7 +199,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alex Returns the maximum of two int values
+	 * Returns the maximum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the larger of val1 and val2
@@ -197,7 +209,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Devon Returns the maximum of two int values
+	 * Returns the maximum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the larger of val1 and val2
@@ -210,7 +222,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Jenny Returns the maximum of two int values
+	 * Jenny Returns the maximum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the larger of val1 and val2
@@ -220,7 +232,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Candace Returns the maximum of two int values
+	 * Returns the maximum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the larger of val1 and val2
@@ -234,7 +246,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Arabelle Returns the maximum of two int values
+	 * Returns the maximum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the larger of val1 and val2
@@ -244,7 +256,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alistait Returns the maximum of two int values
+	 * Returns the maximum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the larger of val1 and val2
@@ -265,11 +277,24 @@ public class TestCodeV2 {
 		int s2 = val2- val1;
 		return (s2>>31)*val1 + (s1 >>31)*val2;
 	}
+	
+	/**
+	 * Returns the maximum of two int values
+	 * @param val1
+	 * @param val2
+	 * @return the larger of val1 and val2
+	 */
+	public static int maximumAJ(int val1, int val2){
+		//YOUR CODE HERE
+		if (val1 > val2) return val1;
+		else if (val2 > val1) return val2;
+		else return val1; // if they are equal just return the first number
+	}
 
 	/******************************************************************/
 
 	/**
-	 * @author Michael Returns the minimum of two int values
+	 * Returns the minimum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the smaller of val1 and val2
@@ -283,7 +308,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Gudbrand Returns the minimum of two int values
+	 * Returns the minimum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the smaller of val1 and val2
@@ -293,7 +318,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Clement Returns the minimum of two int values
+	 * Returns the minimum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the smaller of val1 and val2
@@ -310,7 +335,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Xing Returns the minimum of two int values
+	 * Returns the minimum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the smaller of val1 and val2
@@ -324,7 +349,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alex Returns the minimum of two int values
+	 * Returns the minimum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the smaller of val1 and val2
@@ -334,7 +359,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Devon Returns the minimum of two int values
+	 * Returns the minimum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the smaller of val1 and val2
@@ -347,7 +372,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Jenny Returns the minimum of two int values
+	 * Returns the minimum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the smaller of val1 and val2
@@ -357,7 +382,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Candace Returns the minimum of two int values
+	 * Returns the minimum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the smaller of val1 and val2
@@ -371,7 +396,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Arabelle Returns the minimum of two int values
+	 * Returns the minimum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the smaller of val1 and val2
@@ -381,7 +406,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alistair Returns the minimum of two int values
+	 * Returns the minimum of two int values
 	 * @param val1
 	 * @param val2
 	 * @return the smaller of val1 and val2
@@ -401,11 +426,24 @@ public class TestCodeV2 {
 		if(val2 <val1) return val2;
 		return val1;
  	}
+	
+	/**
+	 * Returns the minimum of two int values
+	 * @param val1
+	 * @param val2
+	 * @return the smaller of val1 and val2
+	 */
+	public static int minimumAJ(int val1, int val2){
+		//YOUR CODE HERE
+		if (val1 < val2) return val1;
+		else if (val2 < val1) return val2;
+		else return val1; // if they are equal just return the first number
+	}
 
 	/*******************************************************************/
 
 	/**
-	 * @author Michael Returns the value of the first argument raised to the
+	 * Returns the value of the first argument raised to the
 	 *         power of the second argument
 	 * @param val1
 	 *            - the base
@@ -418,7 +456,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Gudbrand Returns the value of the first argument raised to the
+	 * Returns the value of the first argument raised to the
 	 *         power of the second argument
 	 * @param val1
 	 *            - the base
@@ -431,7 +469,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Clement Returns the value of the first argument raised to the
+	 * Returns the value of the first argument raised to the
 	 *         power of the second argument
 	 * @param val1
 	 *            - the base
@@ -465,7 +503,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Xing Returns the value of the first argument raised to the power
+	 * Returns the value of the first argument raised to the power
 	 *         of the second argument
 	 * @param val1
 	 *            - the base
@@ -492,7 +530,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alex Returns the value of the first argument raised to the power
+	 * Returns the value of the first argument raised to the power
 	 *         of the second argument
 	 * @param val1
 	 *            - the base
@@ -512,7 +550,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Devon Returns the value of the first argument raised to the power
+	 * Returns the value of the first argument raised to the power
 	 *         of the second argument
 	 * @param val1
 	 *            - the base
@@ -529,7 +567,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Jenny Returns the value of the first argument raised to the power
+	 * Returns the value of the first argument raised to the power
 	 *         of the second argument
 	 * @param val1
 	 *            - the base
@@ -547,7 +585,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Candace Returns the value of the first argument raised to the
+	 * Returns the value of the first argument raised to the
 	 *         power of the second argument
 	 * @param val1
 	 *            - the base
@@ -561,7 +599,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Arabelle Returns the value of the first argument raised to the
+	 * Returns the value of the first argument raised to the
 	 *         power of the second argument
 	 * @param val1
 	 *            - the base
@@ -574,7 +612,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alistair Returns the value of the first argument raised to the
+	 * Returns the value of the first argument raised to the
 	 *         power of the second argument
 	 * @param val1
 	 *            - the base
@@ -607,11 +645,43 @@ public class TestCodeV2 {
 		return 1;
 
 	}
+	
+	/**
+	 * Returns the value of the first argument raised to the power
+	 * of the second argument
+	 * @param val1 - the base
+	 * @param val2 - the exponent
+	 * @return val1^val2
+	 */
+	public static double powerAJ(double val1, double val2){
+		//YOUR CODE HERE
+		double result = 1;
+		// check if exponent is 0
+		if (val2 == 0) return result;
+		
+		result = val1;
+		
+		if (val2 > 0) {
+			// if val2 is positive
+			for (int i = 0; i < val2; i++) {
+				result = result*val1;
+			}
+		} else {
+			// if val2 is negative then return 1/result
+			val2 = val2*-1.0;
+			for (int i = 0; i < val2; i++) {
+				result = result*val1;
+			}
+			result = 1.0/result;
+		}
+		return result;
+	}
+
 
 	/**************************************************************/
 
 	/**
-	 * @author Michael Swaps the element at pos1 with element at pos2 in array
+	 * Swaps the element at pos1 with element at pos2 in array
 	 * @param pos1
 	 *            - the position of one element to be swapped
 	 * @param pos2
@@ -626,7 +696,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Gudbrand Swaps the element at pos1 with element at pos2 in array
+	 * Swaps the element at pos1 with element at pos2 in array
 	 * @param pos1
 	 *            - the position of one element to be swapped
 	 * @param pos2
@@ -641,7 +711,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Clement Swaps the element at pos1 with element at pos2 in array
+	 * Swaps the element at pos1 with element at pos2 in array
 	 * @param pos1
 	 *            - the position of one element to be swapped
 	 * @param pos2
@@ -661,7 +731,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Xing Swaps the element at pos1 with element at pos2 in array
+	 * Swaps the element at pos1 with element at pos2 in array
 	 * @param pos1
 	 *            - the position of one element to be swapped
 	 * @param pos2
@@ -678,7 +748,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alex Swaps the element at pos1 with element at pos2 in array
+	 * Swaps the element at pos1 with element at pos2 in array
 	 * @param pos1
 	 *            - the position of one element to be swapped
 	 * @param pos2
@@ -693,7 +763,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Devon Swaps the element at pos1 with element at pos2 in array
+	 * Swaps the element at pos1 with element at pos2 in array
 	 * @param pos1
 	 *            - the position of one element to be swapped
 	 * @param pos2
@@ -708,7 +778,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Jenny Swaps the element at pos1 with element at pos2 in array
+	 * Swaps the element at pos1 with element at pos2 in array
 	 * @param pos1
 	 *            - the position of one element to be swapped
 	 * @param pos2
@@ -725,7 +795,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Candace Swaps the element at pos1 with element at pos2 in array
+	 * Swaps the element at pos1 with element at pos2 in array
 	 * @param pos1
 	 *            - the position of one element to be swapped
 	 * @param pos2
@@ -742,7 +812,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Arabelle Swaps the element at pos1 with element at pos2 in array
+	 * Swaps the element at pos1 with element at pos2 in array
 	 * @param pos1
 	 *            - the position of one element to be swapped
 	 * @param pos2
@@ -757,7 +827,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alistair Swaps the element at pos1 with element at pos2 in array
+	 * Swaps the element at pos1 with element at pos2 in array
 	 * @param pos1
 	 *            - the position of one element to be swapped
 	 * @param pos2
@@ -784,11 +854,24 @@ public class TestCodeV2 {
 		array[pos1] = array[pos2];
 		array[pos2] = tmp;
 	}
+	
+	/**
+	 * Swaps the element at pos1 with element at pos2 in array
+	 * @param pos1 - the position of one element to be swapped
+	 * @param pos2 - the position of another element to be swapped
+	 * @param array - the array where the elements are swapped
+	 */
+	public static void swapAJ(int pos1, int pos2, int[] array){
+		//YOUR CODE HERE
+		int temp = array[pos1];
+		array[pos1] = array[pos2];
+		array[pos2] = temp;
+	}
 
 	/*********************************************************/
 
 	/**
-	 * @author Michael Returns true if the two specified arrays of ints are
+	 * Returns true if the two specified arrays of ints are
 	 *         equal to one another. Two arrays are considered equal if both
 	 *         arrays contain the same number of elements, and all corresponding
 	 *         pairs of elements in the two arrays are equal.
@@ -812,7 +895,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Gudbrand Returns true if the two specified arrays of ints are
+	 * Returns true if the two specified arrays of ints are
 	 *         equal to one another. Two arrays are considered equal if both
 	 *         arrays contain the same number of elements, and all corresponding
 	 *         pairs of elements in the two arrays are equal.
@@ -834,7 +917,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Clement Returns true if the two specified arrays of ints are
+	 * Returns true if the two specified arrays of ints are
 	 *         equal to one another. Two arrays are considered equal if both
 	 *         arrays contain the same number of elements, and all corresponding
 	 *         pairs of elements in the two arrays are equal.
@@ -861,7 +944,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Xing Returns true if the two specified arrays of ints are equal
+	 * Returns true if the two specified arrays of ints are equal
 	 *         to one another. Two arrays are considered equal if both arrays
 	 *         contain the same number of elements, and all corresponding pairs
 	 *         of elements in the two arrays are equal.
@@ -885,7 +968,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alex Returns true if the two specified arrays of ints are equal
+	 * Returns true if the two specified arrays of ints are equal
 	 *         to one another. Two arrays are considered equal if both arrays
 	 *         contain the same number of elements, and all corresponding pairs
 	 *         of elements in the two arrays are equal.
@@ -905,7 +988,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Devon Returns true if the two specified arrays of ints are equal
+	 * Returns true if the two specified arrays of ints are equal
 	 *         to one another. Two arrays are considered equal if both arrays
 	 *         contain the same number of elements, and all corresponding pairs
 	 *         of elements in the two arrays are equal.
@@ -929,7 +1012,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Jenny Returns true if the two specified arrays of ints are equal
+	 * Returns true if the two specified arrays of ints are equal
 	 *         to one another. Two arrays are considered equal if both arrays
 	 *         contain the same number of elements, and all corresponding pairs
 	 *         of elements in the two arrays are equal.
@@ -952,7 +1035,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Candace Returns true if the two specified arrays of ints are
+	 * Returns true if the two specified arrays of ints are
 	 *         equal to one another. Two arrays are considered equal if both
 	 *         arrays contain the same number of elements, and all corresponding
 	 *         pairs of elements in the two arrays are equal.
@@ -979,7 +1062,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Arabelle Returns true if the two specified arrays of ints are
+	 * Returns true if the two specified arrays of ints are
 	 *         equal to one another. Two arrays are considered equal if both
 	 *         arrays contain the same number of elements, and all corresponding
 	 *         pairs of elements in the two arrays are equal.
@@ -1004,7 +1087,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alistair Returns true if the two specified arrays of ints are
+	 * Returns true if the two specified arrays of ints are
 	 *         equal to one another. Two arrays are considered equal if both
 	 *         arrays contain the same number of elements, and all corresponding
 	 *         pairs of elements in the two arrays are equal.
@@ -1045,11 +1128,39 @@ public class TestCodeV2 {
 		}
 		return true;
 	}
+	
+	
+	/**
+	 * Returns true if the two specified arrays of ints
+	 * are equal to one another. Two arrays are considered equal 
+	 * if both arrays contain the same number of elements, and all 
+	 * corresponding pairs of elements in the two arrays are equal. 
+	 * @param array1 -  one array to be tested for equality
+	 * @param array2 - the other array to be tested for equality
+	 * @return true if the two arrays are equal
+	 */
+	public static boolean equalsAJ(int[] array1, int[] array2){
+		//YOUR CODE HERE
+		boolean result = false;
+		
+		// first check the arrays are of the same size
+		if(array1.length != array2.length) return result;
+		
+		result = true;
+		for (int i = 0; i < array1.length; i++) {
+			if (array1[i] != array2[i]) {
+				result = false;
+				break;
+			}
+		}
+		
+		return result;		
+	}
 
 	/*************************************************************/
 
 	/**
-	 * @author Michael Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified array of ints.
 	 * @param array
 	 *            - the array to be filled
@@ -1063,7 +1174,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Gudbrand Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified array of ints.
 	 * @param array
 	 *            - the array to be filled
@@ -1078,7 +1189,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Clement Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified array of ints.
 	 * @param array
 	 *            - the array to be filled
@@ -1095,7 +1206,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Xing Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified array of ints.
 	 * @param array
 	 *            - the array to be filled
@@ -1110,7 +1221,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alex Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified array of ints.
 	 * @param array
 	 *            - the array to be filled
@@ -1123,7 +1234,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Devon Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified array of ints.
 	 * @param array
 	 *            - the array to be filled
@@ -1138,7 +1249,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Jenny Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified array of ints.
 	 * @param array
 	 *            - the array to be filled
@@ -1152,7 +1263,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Candace Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified array of ints.
 	 * @param array
 	 *            - the array to be filled
@@ -1167,7 +1278,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Arabelle Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified array of ints.
 	 * @param array
 	 *            - the array to be filled
@@ -1181,7 +1292,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alistair Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified array of ints.
 	 * @param array
 	 *            - the array to be filled
@@ -1205,11 +1316,26 @@ public class TestCodeV2 {
 		for(int i = 0; i < array.length; i++) array[i] = val;
 
 	}
+	
+	/**
+	 * Assigns the specified int value to each element of the specified 
+	 * array of ints.
+	 * @param array - the array to be filled
+	 * @param val - the value to be stored in all elements of the array
+	 */
+	public static void fillArrayAJ(int[] array, int val){
+		//YOUR CODE HERE
+		assert(array.length != 0);
+		
+		for (int i = 0; i<array.length; i++) {
+			array[i] = val;
+		}
+	}
 
 	/*************************************************************/
 
 	/**
-	 * @author Michael Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified range of the specified array of ints. The range to be
 	 *         filled extends from index startIndex, inclusive, to index
 	 *         endIndex, exclusive.
@@ -1232,7 +1358,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Gudbrand Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified range of the specified array of ints. The range to be
 	 *         filled extends from index startIndex, inclusive, to index
 	 *         endIndex, exclusive.
@@ -1255,7 +1381,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Clement Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified range of the specified array of ints. The range to be
 	 *         filled extends from index startIndex, inclusive, to index
 	 *         endIndex, exclusive.
@@ -1286,7 +1412,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Xing Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified range of the specified array of ints. The range to be
 	 *         filled extends from index startIndex, inclusive, to index
 	 *         endIndex, exclusive.
@@ -1310,7 +1436,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alex Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified range of the specified array of ints. The range to be
 	 *         filled extends from index startIndex, inclusive, to index
 	 *         endIndex, exclusive.
@@ -1333,7 +1459,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Devon Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified range of the specified array of ints. The range to be
 	 *         filled extends from index startIndex, inclusive, to index
 	 *         endIndex, exclusive.
@@ -1356,7 +1482,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Jenny Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified range of the specified array of ints. The range to be
 	 *         filled extends from index startIndex, inclusive, to index
 	 *         endIndex, exclusive.
@@ -1379,7 +1505,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Candace Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified range of the specified array of ints. The range to be
 	 *         filled extends from index startIndex, inclusive, to index
 	 *         endIndex, exclusive.
@@ -1403,7 +1529,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Arabelle Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified range of the specified array of ints. The range to be
 	 *         filled extends from index startIndex, inclusive, to index
 	 *         endIndex, exclusive.
@@ -1426,7 +1552,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alistair Assigns the specified int value to each element of the
+	 * Assigns the specified int value to each element of the
 	 *         specified range of the specified array of ints. The range to be
 	 *         filled extends from index startIndex, inclusive, to index
 	 *         endIndex, exclusive.
@@ -1469,10 +1595,31 @@ public class TestCodeV2 {
 
 	}
 	
+	/**
+	 * Assigns the specified int value to each element of the specified 
+	 * range of the specified array of ints. The range to be filled 
+	 * extends from index startIndex, inclusive, to index endIndex, 
+	 * exclusive.
+	 * @param array - the array to be filled
+	 * @param val - the value to be stored in all elements of the array
+	 * @param startIndex - the index of the first element (inclusive) to be filled with the specified value
+	 * @param endIndex - the index of the last element (exclusive) to be filled with the specified value
+	 */
+	
+	public static void fillArrayPartiallyAJ(int[] array, int val, int startIndex, int endIndex){
+		//YOUR CODE HERE
+		
+		assert (startIndex < endIndex); // since exclusive
+		assert (array.length != 0);
+		assert (array.length >= endIndex);
+		for (int i = startIndex; i < endIndex; i++) {
+			array[i] = val;
+		}
+	}
 	/*************************************************************/
 
 	/**
-	 * @author Michael Copies the specified array, truncating or padding with
+	 * Copies the specified array, truncating or padding with
 	 *         zeros (if necessary) so the copy has the specified length. For
 	 *         all indices that are valid in both the original array and the
 	 *         copy, the two arrays will contain identical values. For any
@@ -1505,7 +1652,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Gudbrand Copies the specified array, truncating or padding with
+	 * Copies the specified array, truncating or padding with
 	 *         zeros (if necessary) so the copy has the specified length. For
 	 *         all indices that are valid in both the original array and the
 	 *         copy, the two arrays will contain identical values. For any
@@ -1535,7 +1682,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Clement Copies the specified array, truncating or padding with
+	 * Copies the specified array, truncating or padding with
 	 *         zeros (if necessary) so the copy has the specified length. For
 	 *         all indices that are valid in both the original array and the
 	 *         copy, the two arrays will contain identical values. For any
@@ -1568,7 +1715,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Xing Copies the specified array, truncating or padding with zeros
+	 * Copies the specified array, truncating or padding with zeros
 	 *         (if necessary) so the copy has the specified length. For all
 	 *         indices that are valid in both the original array and the copy,
 	 *         the two arrays will contain identical values. For any indices
@@ -1593,7 +1740,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alex Copies the specified array, truncating or padding with zeros
+	 * Copies the specified array, truncating or padding with zeros
 	 *         (if necessary) so the copy has the specified length. For all
 	 *         indices that are valid in both the original array and the copy,
 	 *         the two arrays will contain identical values. For any indices
@@ -1619,7 +1766,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Devon Copies the specified array, truncating or padding with
+	 * Copies the specified array, truncating or padding with
 	 *         zeros (if necessary) so the copy has the specified length. For
 	 *         all indices that are valid in both the original array and the
 	 *         copy, the two arrays will contain identical values. For any
@@ -1649,7 +1796,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Jenny Copies the specified array, truncating or padding with
+	 * Copies the specified array, truncating or padding with
 	 *         zeros (if necessary) so the copy has the specified length. For
 	 *         all indices that are valid in both the original array and the
 	 *         copy, the two arrays will contain identical values. For any
@@ -1672,7 +1819,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Candace Copies the specified array, truncating or padding with
+	 * Copies the specified array, truncating or padding with
 	 *         zeros (if necessary) so the copy has the specified length. For
 	 *         all indices that are valid in both the original array and the
 	 *         copy, the two arrays will contain identical values. For any
@@ -1703,7 +1850,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Arabelle Copies the specified array, truncating or padding with
+	 * Copies the specified array, truncating or padding with
 	 *         zeros (if necessary) so the copy has the specified length. For
 	 *         all indices that are valid in both the original array and the
 	 *         copy, the two arrays will contain identical values. For any
@@ -1726,7 +1873,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alistair Copies the specified array, truncating or padding with
+	 * Copies the specified array, truncating or padding with
 	 *         zeros (if necessary) so the copy has the specified length. For
 	 *         all indices that are valid in both the original array and the
 	 *         copy, the two arrays will contain identical values. For any
@@ -1768,11 +1915,39 @@ public class TestCodeV2 {
 		for(int i = 0; i < newLength; i++) res[i] = (array.length <= i? 0:array[i]);
 			return res;
 	}
+	
+	/**
+	 * Copies the specified array, truncating or padding with zeros (if necessary) 
+	 * so the copy has the specified length. For all indices that are valid in both
+	 * the original array and the copy, the two arrays will contain identical values.
+	 * For any indices that are valid in the copy but not the original, the copy will 
+	 * contain 0. Such indices will exist if and only if the specified length is greater 
+	 * than that of the original array.
+	 * @param array - the array to be copied
+	 * @param newLength - the length of the copy to be returned
+	 * @return a copy of the original array, truncated or padded with zeros to obtain the specified length
+	 */
+	public static int[] returnCopyAJ(int[] array, int newLength){
+		//YOUR CODE HERE
+		assert (array.length != 0);
+		
+		int [] newArray = new int[newLength];
+		
+		for (int i = 0; i < newLength; i++) {
+			if (i <= array.length) {
+				newArray[i] = array[i]; // this will auto truncate if newLength < original size
+			} else {
+				newArray[i] = 0; // add padding
+			}
+		}
+		return newArray;
+	}
+	
 
 	/*************************************************************/
 
 	/**
-	 * @author Michael Copies the specified range of the specified array into a
+	 * Copies the specified range of the specified array into a
 	 *         new array and returns the new array
 	 * @param array
 	 *            - the array from which a range is to be copied
@@ -1795,7 +1970,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Gudbrand Copies the specified range of the specified array into a
+	 * Copies the specified range of the specified array into a
 	 *         new array and returns the new array
 	 * @param array
 	 *            - the array from which a range is to be copied
@@ -1819,7 +1994,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Clement Copies the specified range of the specified array into a
+	 * Copies the specified range of the specified array into a
 	 *         new array and returns the new array
 	 * @param array
 	 *            - the array from which a range is to be copied
@@ -1846,7 +2021,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Xing Copies the specified range of the specified array into a new
+	 * Copies the specified range of the specified array into a new
 	 *         array and returns the new array
 	 * @param array
 	 *            - the array from which a range is to be copied
@@ -1870,7 +2045,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alex Copies the specified range of the specified array into a new
+	 * Copies the specified range of the specified array into a new
 	 *         array and returns the new array
 	 * @param array
 	 *            - the array from which a range is to be copied
@@ -1904,7 +2079,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Devon Copies the specified range of the specified array into a
+	 * Copies the specified range of the specified array into a
 	 *         new array and returns the new array
 	 * @param array
 	 *            - the array from which a range is to be copied
@@ -1934,7 +2109,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Jenny Copies the specified range of the specified array into a
+	 * Copies the specified range of the specified array into a
 	 *         new array and returns the new array
 	 * @param array
 	 *            - the array from which a range is to be copied
@@ -1956,7 +2131,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Candace Copies the specified range of the specified array into a
+	 * Copies the specified range of the specified array into a
 	 *         new array and returns the new array
 	 * @param array
 	 *            - the array from which a range is to be copied
@@ -1978,7 +2153,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Arabelle Copies the specified range of the specified array into a
+	 * Copies the specified range of the specified array into a
 	 *         new array and returns the new array
 	 * @param array
 	 *            - the array from which a range is to be copied
@@ -2000,7 +2175,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alistair Copies the specified range of the specified array into a
+	 * Copies the specified range of the specified array into a
 	 *         new array and returns the new array of length endIndex -
 	 *         startIndex
 	 * @param array
@@ -2040,11 +2215,38 @@ public class TestCodeV2 {
 		for(int i = startIndex; i <= endIndex; i++) res[i- startIndex] = array[i];
 			return res;
 	}
-
+	
+	
+	/**
+	 * Copies the specified range of the specified array into a new array and 
+	 * returns the new array of length endIndex - startIndex
+	 * @param array - the array from which a range is to be copied
+	 * @param startIndex - the initial index of the range to be copied, inclusive
+	 * @param endIndex -  the final index of the range to be copied, exclusive. (This index may lie outside the array.)
+	 * @return a new array containing the specified range from the original array
+	 */
+	public static int[] returnCopyRangeAJ(int[] array, int startIndex, int endIndex){
+		//YOUR CODE HERE
+		// determine the length of the new array
+		if (endIndex >= array.length) {
+			endIndex = array.length;
+		}
+		assert (startIndex <= array.length);
+		int newLength = endIndex - startIndex;
+		
+		int[] newArray = new int[newLength];
+		
+		int j = 0;
+		for (int i = startIndex; i < endIndex; i++) {
+			newArray[j] = array[i];
+			j++;
+		}
+		return newArray;
+	}
 	/************************************************************/
 
 	/**
-	 * @author Michael Returns a list version of the array
+	 * Returns a list version of the array
 	 * @param array
 	 *            the array to be converted
 	 * @return the list version of array
@@ -2058,7 +2260,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Gudbrand Returns a list version of the array
+	 * Returns a list version of the array
 	 * @param array
 	 *            the array to be converted
 	 * @return the list version of array
@@ -2073,7 +2275,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Clement Returns a list version of the array
+	 * Returns a list version of the array
 	 * @param array
 	 *            the array to be converted
 	 * @return the list version of array
@@ -2092,7 +2294,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Xing Returns a list version of the array
+	 * Returns a list version of the array
 	 * @param array
 	 *            the array to be converted
 	 * @return the list version of array
@@ -2107,7 +2309,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alex Returns a list version of the array
+	 * Returns a list version of the array
 	 * @param array
 	 *            the array to be converted
 	 * @return the list version of array
@@ -2120,7 +2322,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Devon Returns a list version of the array
+	 * Returns a list version of the array
 	 * @param array
 	 *            the array to be converted
 	 * @return the list version of array
@@ -2134,7 +2336,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Jenny Returns a list version of the array
+	 * Returns a list version of the array
 	 * @param array
 	 *            the array to be converted
 	 * @return the list version of array
@@ -2148,7 +2350,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Candace Returns a list version of the array
+	 * Returns a list version of the array
 	 * @param array
 	 *            the array to be converted
 	 * @return the list version of array
@@ -2162,7 +2364,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Arabelle Returns a list version of the array
+	 * Returns a list version of the array
 	 * @param array
 	 *            the array to be converted
 	 * @return the list version of array
@@ -2176,7 +2378,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alistair Returns a list version of the array
+	 * Returns a list version of the array
 	 * @param array
 	 *            the array to be converted
 	 * @return the list version of array
@@ -2200,11 +2402,27 @@ public class TestCodeV2 {
 		for(int i = 0 ; i< array.length; i++) res.add(array[i]);
 		return res;
 	}
+	
+	/**
+	 * Returns a list version of the array
+	 * @param array the array to be converted
+	 * @return the list version of array
+	 */
+	public static List<Integer> convertToListAJ(int[] array){
+		//YOUR CODE HERE
+		
+		List<Integer> arr = newArrayList<Integer>(array.length);
+		for (int i = 0; i<array.length; i++) {
+			arr.add(array[i]);
+		}
+		return arr;		
+	}
+	
 
 	/*************************************************************/
 
 	/**
-	 * @author Michael Returns a string representation of the contents of the
+	 * Returns a string representation of the contents of the
 	 *         specified array. The string representation consists of a list of
 	 *         the array's elements, enclosed in square brackets ("[]").
 	 *         Adjacent elements are separated by the characters ", " (a comma
@@ -2224,7 +2442,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Gudbrand Returns a string representation of the contents of the
+	 * Returns a string representation of the contents of the
 	 *         specified array. The string representation consists of a list of
 	 *         the array's elements, enclosed in square brackets ("[]").
 	 *         Adjacent elements are separated by the characters ", " (a comma
@@ -2249,7 +2467,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Clement Returns a string representation of the contents of the
+	 * Returns a string representation of the contents of the
 	 *         specified array. The string representation consists of a list of
 	 *         the array's elements, enclosed in square brackets ("[]").
 	 *         Adjacent elements are separated by the characters ", " (a comma
@@ -2285,7 +2503,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Xing Returns a string representation of the contents of the
+	 * Returns a string representation of the contents of the
 	 *         specified array. The string representation consists of a list of
 	 *         the array's elements, enclosed in square brackets ("[]").
 	 *         Adjacent elements are separated by the characters ", " (a comma
@@ -2309,7 +2527,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alex Returns a string representation of the contents of the
+	 * Returns a string representation of the contents of the
 	 *         specified array. The string representation consists of a list of
 	 *         the array's elements, enclosed in square brackets ("[]").
 	 *         Adjacent elements are separated by the characters ", " (a comma
@@ -2333,7 +2551,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Devon Returns a string representation of the contents of the
+	 * Returns a string representation of the contents of the
 	 *         specified array. The string representation consists of a list of
 	 *         the array's elements, enclosed in square brackets ("[]").
 	 *         Adjacent elements are separated by the characters ", " (a comma
@@ -2358,7 +2576,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Jenny Returns a string representation of the contents of the
+	 * Returns a string representation of the contents of the
 	 *         specified array. The string representation consists of a list of
 	 *         the array's elements, enclosed in square brackets ("[]").
 	 *         Adjacent elements are separated by the characters ", " (a comma
@@ -2385,7 +2603,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Candace Returns a string representation of the contents of the
+	 * Returns a string representation of the contents of the
 	 *         specified array. The string representation consists of a list of
 	 *         the array's elements, enclosed in square brackets ("[]").
 	 *         Adjacent elements are separated by the characters ", " (a comma
@@ -2413,7 +2631,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Arabelle Returns a string representation of the contents of the
+	 * Returns a string representation of the contents of the
 	 *         specified array. The string representation consists of a list of
 	 *         the array's elements, enclosed in square brackets ("[]").
 	 *         Adjacent elements are separated by the characters ", " (a comma
@@ -2443,7 +2661,7 @@ public class TestCodeV2 {
 	}
 
 	/**
-	 * @author Alistair Returns a string representation of the contents of the
+	 * Returns a string representation of the contents of the
 	 *         specified array. The string representation consists of a list of
 	 *         the array's elements, enclosed in square brackets ("[]").
 	 *         Adjacent elements are separated by the characters ", " (a comma
@@ -2504,31 +2722,25 @@ public class TestCodeV2 {
 		return sb.append("]").toString();
 	}
 
-	/*
-	 * public static void main(String[] args){ int val = -1;
-	 * System.out.println("Absolute value of "+ val +" is "+absoluteValue(val));
-	 * System.out.println("Minimum of 2 and 3 is "+minimum(2,3));
-	 * System.out.println("Maximum of 2 and 3 is "+maximum(2,3));
-	 * 
-	 * System.out.println("Testing the array methods"); int[] array1 =
-	 * {1,2,3,4,5,6}; int[] array2 = {1,2,3,4,5,6};
-	 * System.out.println("array1: " + arrToString(array1));
-	 * System.out.println("array2: " + arrToString(array2));
-	 * System.out.println("array1 equal to array2? "+ equals(array1,array2));
-	 * array2[3] = 0; System.out.println("array1: " + arrToString(array1));
-	 * System.out.println("array2: " + arrToString(array2));
-	 * System.out.println("array1 equal to array2? "+ equals(array1,array2));
-	 * fillArray(array1,-1);
-	 * System.out.println("After filling array1 with -1: "+arrToString(array1));
-	 * fillArrayPartially(array1,0,0,3);
-	 * System.out.println("After filling array1 with 0 from index 0 to 3: "
-	 * +arrToString(array1)); int[] arrayCopy = returnCopy(array1);
-	 * System.out.println("After copying array1 to arrayCopy: "+arrToString(
-	 * arrayCopy)); arrayCopy = returnPartialCopy(array1,0,3); System.out.
-	 * println("After copying array1 to arrayCopy paritally from index 0 to 3: "
-	 * +arrToString(arrayCopy)); List<Integer> arrList = convertToList(array1);
-	 * System.out.println("ArrayList version of array1: "+ arrList);
-	 * 
-	 * }
+	/**
+	 * Returns a string representation of the contents of the specified 
+	 * array. The string representation consists of a list of the array's 
+	 * elements, enclosed in square brackets ("[]"). Adjacent elements are
+	 * separated by the characters ", " (a comma followed by a space). 
+	 * Elements are converted to strings as by String.valueOf(int). 
+	 * Returns "null" if a is null.
+	 * @param array - the array whose string representation to return
+	 * @return a string representation of array
 	 */
+	public static String arrToStringAJ(int[] array){
+		//YOUR CODE HERE
+		String result = "";
+		if (!array || array.length == 0) return null;
+		result = "[";
+		for (int i = 0; i < array.length - 1; i++) {
+			result = result + String.valueOf(array[i]) + ", ";
+		}
+		result = result + String.valueOf(array[array.length - 1]) + "]";
+		return result;
+	}
 }
