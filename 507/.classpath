@@ -5,6 +5,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/javaparser-core"/>
 	<classpathentry excluding="examples/|examples/" kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/java-symbol-solver-core">
 		<accessrules>
@@ -15,8 +16,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/java-symbol-solver-model"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jgrapht-core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jgrapht-io"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/javaparser-core"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/javaparser-core-generators"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/javaparser-metamodel-generator"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

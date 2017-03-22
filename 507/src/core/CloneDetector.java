@@ -10,15 +10,11 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.type.Type;
 
-import datastructures.BackEdge;
 import datastructures.EntryStmt;
-import datastructures.NodeWrapper;
 import datastructures.PDGGraphViz;
 import org.jgrapht.DirectedGraph;
-import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedPseudograph;
-import parsers.ControlFlowParser;
 
 /*
  * The detector class
@@ -86,18 +82,22 @@ public class CloneDetector {
 			System.out.println("Warning: Method library not initialised, nothing to compare to!");
 			return matchedMethods;
 		}
+		double bestMatch;
 		for (Method src : srcMethods) {
 			int count = 0;
+			bestMatch = Integer.MAX_VALUE;
 			for (Method ref : methodLibrary) {
+				match = 0;
 				if (matchMethodNodeFeatures(src, ref, 4)) {
 					Method[] matched = { src, ref };
-					/*
-					 * System.out.println("Match! " + src.getSignature() +
-					 * " with return type " + src.getReturnType() +
-					 * " can be replaced by " + ref.getSignature()+
-					 * " with return type " + ref.getReturnType());
-					 */
-					matchedMethods.add(matched);
+					if (bestMatch > match) {
+						bestMatch = match;
+						matchedMethods.add(matched);
+					}
+					/*System.out.println("Match! " + src.getSignature() + " with return type " + src.getReturnType()
+							+ " can be replaced by " + ref.getSignature() + " with return type " + ref.getReturnType());*/
+
+					//matchedMethods.add(matched);
 				}
 				count++;
 
@@ -121,25 +121,28 @@ public class CloneDetector {
 			System.out.println("Warning: Method library not initialised, nothing to compare to!");
 			return matchedMethods;
 		}
+		double bestMatch = 0;
 		for (Method src : srcMethods) {
+			bestMatch = 0;
 			for (Method ref : methodLibrary) {
 				mismatch = 0;
 				match = 0;
-				if (matchMethodPDGs(src, ref)) {
 
+				if (matchMethodPDGs(src, ref)) {
 					Method[] matched = { src, ref };
-					/*
-					 * System.out.print("Match! " + src.getSignature() +
-					 * " with return type " + src.getReturnType() +
-					 * " can be replaced by " + ref.getSignature()+
-					 * " with return type " + ref.getReturnType());
-					 */
-					// System.out.printf(" Confidence %.2f%%\n",
-					// match/mismatch);
-					matchedMethods.add(matched);
+					if (bestMatch < match / mismatch) {
+						bestMatch = match / mismatch;
+						matchedMethods.add(matched);
+					}
+					/*System.out.print("Match! " + src.getSignature() + " with return type " + src.getReturnType()
+							+ " can be replaced by " + ref.getSignature() + " with return type " + ref.getReturnType());*/
+
+					//System.out.printf(" Confidence %.2f%%\n", match / mismatch);
+					// matchedMethods.add(matched);
 				}
 			}
 		}
+		// return matchedMethods;
 		return matchedMethods;
 
 	}
@@ -218,8 +221,8 @@ public class CloneDetector {
 				for (DefaultEdge edge2 : edges2Set) {
 					if (compareEdgeAttributes(method1pdg, method2pdg, edge1, edge2)) {
 						maxGraph.addVertex(method1pdg.getEdgeTarget(edge1));
-						match++;
 						if (!maxGraph.containsEdge(v1, method1pdg.getEdgeTarget(edge1))) {
+							match++;
 							maxGraph.addEdge(v1, method1pdg.getEdgeTarget(edge1));
 							lastMatched1[0] = method1pdg.getEdgeTarget(edge1);
 							lastMatched2[0] = method2pdg.getEdgeTarget(edge1);
@@ -417,6 +420,7 @@ public class CloneDetector {
 
 		double dist = calculateDistance(featureArray1, featureArray2);
 		// System.out.println("dist "+dist);
+		dist = match;
 		if (dist <= threshold) {
 			/*
 			 * System.out.println("Considering "+method1.getMethodName()+" "

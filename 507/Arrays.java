@@ -4620,7 +4620,7 @@ public class Arrays {
         return buf.toString();
     }
 
-   private static void deepToString(Object[] a, StringBuilder buf,
+/*   private static void deepToString(Object[] a, StringBuilder buf,
                                      Set<Object[]> dejaVu) {
         if (a == null) {
             buf.append("null");
@@ -4676,7 +4676,7 @@ public class Arrays {
         buf.append(']');
         dejaVu.remove(a);
     }
-
+*/
     /**
      * Set all elements of the specified array, using the provided
      * generator function to compute each element.

@@ -9,7 +9,7 @@ import parsers.SyntaxParser;
 public class CodeHelper {
 	public static void main(String[] args) {
 		
-		String srcName = "src/examples/TestCodeV2.java";
+		String srcName = "../examples/TestCodeV2.java";
 		File libFile2 = new File("Math.java");
 		File libFile1 = new File("Arrays.java");
 
@@ -81,7 +81,7 @@ public class CodeHelper {
 		System.out.println("Number of matches = "+matchesPDG.size());
 		System.out.println("Number of true positives = "+tpFp[0]);
 		System.out.println("Number of false positives = "+tpFp[1]);
-		System.out.println("Ratiof of true positives to false positives "+ tpFp[0]/(tpFp[1]*1.0));
+		System.out.printf("Percentage of true positives %.2f%%\n", 100*tpFp[0]/(double)matchesPDG.size());
 		
 		System.out.println("ANALYSIS: AST");
 		ArrayList<Method> srcTest = new ArrayList<Method>();
@@ -92,6 +92,7 @@ public class CodeHelper {
 		System.out.println("Number of matches = "+matchesAST.size());
 		System.out.println("Number of true positives = "+tpFp[0]);
 		System.out.println("Number of false positives = "+tpFp[1]);
+		System.out.printf("Percentage of true positives %.2f%%\n", 100*tpFp[0]/(double)matchesAST.size());
 
 
 		System.out.println("ANALYSIS: AST Deckard");
@@ -104,7 +105,7 @@ public class CodeHelper {
 		System.out.println("Number of matches = "+matchesDeckard.size());
 		System.out.println("Number of true positives = "+tpFp[0]);
 		System.out.println("Number of false positives = "+tpFp[1]);
-		System.out.println("Ratiof of true positives to false positives "+ tpFp[0]/(tpFp[1]*1.0));
+		System.out.printf("Percentage of true positives %.2f%%\n", 100*tpFp[0]/(double)matchesDeckard.size());
 		
 		/*System.out.println("ANALYSIS: AST Simple Matching");
 		ArrayList<Method[]> matchesAST = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsAST(srcMethods);

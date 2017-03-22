@@ -31,15 +31,15 @@ import com.github.javaparser.symbolsolver.model.resolution.SymbolReference;
 import com.github.javaparser.symbolsolver.model.resolution.UnsolvedSymbolException;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
-import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 
 public class MethodSolver {
 	CombinedTypeSolver typeSolver;
 	BlockStmt methodBody;
 	int counter;
 	Set<String> canaryMethods;
+	int maxDepth;
 
-	public MethodSolver(BlockStmt methodBody) {
+	public MethodSolver(BlockStmt methodBody, int maxDepth) {
 		this.methodBody = methodBody;
 		this.typeSolver = new CombinedTypeSolver();
 		this.typeSolver.add(new JavaParserTypeSolver(new File("../jre_library")));
@@ -48,6 +48,7 @@ public class MethodSolver {
 		// this.typeSolver.add(new JavaParserTypeSolver(new File("./")));
 		//this.typeSolver.add(new ReflectionTypeSolver());
 		this.counter = 0;
+		this.maxDepth = maxDepth;
 		this.canaryMethods = new HashSet<String>();
 		processMethod();
 	}
@@ -85,14 +86,13 @@ public class MethodSolver {
 		SymbolReference<MethodDeclaration> methodRef = facade.solve(methodCallExpr);
 		Optional<com.github.javaparser.ast.body.MethodDeclaration> methodCallAncestor = methodCallExpr
 				.getAncestorOfType(com.github.javaparser.ast.body.MethodDeclaration.class);
-		System.out.println(methodCallExpr.getName());
 		Node returnNode = null;
 		if (methodRef.isSolved()) {
 			MethodDeclaration methodDecl = methodRef.getCorrespondingDeclaration();
-			System.out.println("CHECKING..." + methodDecl.getSignature() + " vs " + methodCallAncestor.get().getSignature());
+			//System.out.println("CHECKING..." + methodDecl.getSignature() + " vs " + methodCallAncestor.get().getSignature());
 			if (!methodCallAncestor.isPresent()
 					|| methodDecl.getName().equals(methodCallAncestor.get().getName())) {
-				System.out.println("Redundant Call!");
+				System.err.println("Redundant Call!");
 				//return null;
 				return new NameExpr(methodCallExpr.getName());
 			}
@@ -116,7 +116,7 @@ public class MethodSolver {
 						this.canaryMethods.add(methodDecl.getQualifiedSignature());
 						//declarationBody.get().accept(new MethodResolveVisitor(), JavaParserFacade.get(typeSolver));
 					} else {
-						System.out.println("Cycle Detected!");
+						System.err.println("Cycle Detected!");
 						return new NameExpr(methodCallExpr.getName());
 					}
 					this.canaryMethods.clear();
@@ -135,14 +135,14 @@ public class MethodSolver {
 						replaceMethod(attachmentBody, methodCallParent, methodCallAssignment, newBody);
 					} else {
 						// TODO: Find way to handle additional combinations
-						System.out.println("ALERT: METHOD CALL IS NOT RESOLVED: " + methodCallExpr.getNameAsString()
+						System.err.println("ALERT: METHOD CALL IS NOT RESOLVED: " + methodCallExpr.getNameAsString()
 								+ ": " + methodCallParent.getClass());
 						return new NameExpr(methodCallExpr.getName());
 					}
 					return returnNode;
 				}
 			} else {
-				System.out.println("DEBUG GOT THIS METHOD WRONG " + methodDecl.getClass());
+				System.err.println("GOT THIS METHOD WRONG " + methodDecl.getClass());
 			}
 		} else {
 			System.out.println("Could not solve method call: " + methodCallExpr.getNameAsString());
@@ -193,7 +193,7 @@ public class MethodSolver {
 			((IfStmt) methodCallParent).setThenStmt(newBody);
 		} else if (methodCallParent instanceof ForStmt || methodCallParent instanceof ForeachStmt) {
 			// TODO: Find way to handle ForStmts and ForEachStmts
-			System.out.println("Damn");
+			System.err.println("Damn");
 		} else {
 			int childIndex = ((BlockStmt) methodCallParent).getStatements().indexOf(attachmentBody) + 1;
 			for (Node n : newBody.getChildNodes()) {

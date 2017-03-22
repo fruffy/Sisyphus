@@ -18,6 +18,7 @@ import dfg.DataDependencyGraphFinder;
 import normalizers.StandardForm;
 import parsers.ControlDependencyParser;
 import parsers.ControlFlowParser;
+import parsers.MethodSolver;
 import visitors.ASTUtil;
 
 /*
@@ -42,6 +43,7 @@ public class Method {
 		this.body = methodDeclaration.getBody().get();
 		//System.out.println("FIRST RESULT +:\n" + this.body);
 		this.trimBody();
+		//resolveMethodCalls(methodDeclaration, 3);
 		methodDeclaration = normalize(methodDeclaration);
 		this.methodName = methodDeclaration.getNameAsString();
 		this.parameters = methodDeclaration.getParameters();
@@ -126,10 +128,6 @@ public class Method {
 		NodeFeature methodFeature = getMethodFeature(root);
 		return methodFeature;
 	}
-	
-	/*public NodeFeature getMethodFeature(){
-		return this.nodeFeature;
-	}*/
 
 	/**
 	 * Return a new method that is equivalent to this method, but normalized by
@@ -147,6 +145,10 @@ public class Method {
 	
 	public boolean containsCallTo(String function){
 		return ASTUtil.occursFree(this.body, function);
+	}
+	
+	public void resolveMethodCalls(MethodDeclaration methodDecl, int maxDepth) {
+		new MethodSolver(methodDecl.getBody().get(), maxDepth);
 	}
 
 	

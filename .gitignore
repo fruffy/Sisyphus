@@ -37,3 +37,5 @@ build/
 javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/JavaParserMetaModel\.java
 
 experimental/
+
+examples/\.DS_Store
