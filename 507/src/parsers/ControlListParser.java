@@ -38,7 +38,7 @@ public class ControlListParser {
 			// Debug
 
 			System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-			System.out.println(m.toString());
+			System.out.println(m.getBody().toString());
 			System.out.println("Control Flow Raw Content ");
 			printGraph(m, cfg);
 			System.out.println("Forward Dominator Raw Content ");
