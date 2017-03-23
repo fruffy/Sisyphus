@@ -6,15 +6,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedPseudograph;
+
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.type.Type;
 
 import datastructures.EntryStmt;
 import datastructures.PDGGraphViz;
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DirectedPseudograph;
 
 /*
  * The detector class
@@ -53,12 +54,9 @@ public class CloneDetector {
 			for (Method ref : methodLibrary) {
 				if (matchMethodDeclaration(src, ref)) {
 					Method[] matched = { src, ref };
-					/*
-					 * System.out.println("Match! " + src.getSignature() +
-					 * " with return type " + src.getReturnType() +
-					 * " can be replaced by " + ref.getSignature()+
-					 * " with return type " + ref.getReturnType());
-					 */
+					System.out.println("Match! " + src.getSignature() + " with return type " + src.getReturnType()
+							+ " can be replaced by " + ref.getSignature() + " with return type " + ref.getReturnType());
+
 					matchedMethods.add(matched);
 				}
 
@@ -84,25 +82,24 @@ public class CloneDetector {
 		}
 		double bestMatch;
 		for (Method src : srcMethods) {
-			int count = 0;
+			Method[] finalMatched = null;
 			bestMatch = Integer.MAX_VALUE;
-			for (Method ref : methodLibrary) {
-				match = 0;
+			this.match = 0;
+			for (Method ref : this.methodLibrary) {
 				if (matchMethodNodeFeatures(src, ref, 4)) {
 					Method[] matched = { src, ref };
-					//System.out.println("Considering Method "+src.getMethodName()+" "+ref.getMethodName());
-					//System.out.println("match "+match+" bestMatch "+bestMatch);
-					if (bestMatch >= match) {
-						bestMatch = match;
-						matchedMethods.add(matched);
+
+					if (bestMatch >= this.match) {
+						bestMatch = this.match;
+						finalMatched = matched;
 					}
-					/*System.out.println("Match! " + src.getSignature() + " with return type " + src.getReturnType()
-							+ " can be replaced by " + ref.getSignature() + " with return type " + ref.getReturnType());*/
-
-					//matchedMethods.add(matched);
+					// matchedMethods.add(matched);
 				}
-				count++;
-
+			}
+			if (finalMatched != null) {
+				matchedMethods.add(finalMatched);
+				System.out.println("Match! " + finalMatched[0].getSignature() + " with return type " + finalMatched[0].getReturnType()
+						+ " can be replaced by " + finalMatched[1].getSignature() + " with return type " + finalMatched[1].getReturnType());
 			}
 		}
 		return matchedMethods;
@@ -125,26 +122,27 @@ public class CloneDetector {
 		}
 		double bestMatch = 0;
 		for (Method src : srcMethods) {
+			Method[] finalMatched = null;
 			bestMatch = 0;
+			this.mismatch = 0;
+			this.match = 0;
 			for (Method ref : methodLibrary) {
-				mismatch = 0;
-				match = 0;
-
 				if (matchMethodPDGs(src, ref)) {
 					Method[] matched = { src, ref };
 					if (bestMatch <= match / mismatch) {
 						bestMatch = match / mismatch;
-						matchedMethods.add(matched);
+						finalMatched = matched;
 					}
-					/*System.out.print("Match! " + src.getSignature() + " with return type " + src.getReturnType()
-							+ " can be replaced by " + ref.getSignature() + " with return type " + ref.getReturnType());*/
-
-					//System.out.printf(" Confidence %.2f%%\n", match / mismatch);
-					//matchedMethods.add(matched);
 				}
+				// matchedMethods.add(matched);
+			}
+			if (finalMatched != null) {
+				matchedMethods.add(finalMatched);
+				System.out.print("Match! " + finalMatched[0].getSignature() + " with return type " + finalMatched[0].getReturnType()
+						+ " can be replaced by " + finalMatched[1].getSignature() + " with return type " + finalMatched[1].getReturnType());
+				System.out.printf(" Confidence %.2f%%\n", match / mismatch);
 			}
 		}
-		// return matchedMethods;
 		return matchedMethods;
 
 	}
@@ -159,8 +157,8 @@ public class CloneDetector {
 	 * @param edge2
 	 * @return
 	 */
-	private boolean compareEdgeAttributes(DirectedGraph<Node, DefaultEdge> method1pdg,
-			DirectedGraph<Node, DefaultEdge> method2pdg, DefaultEdge edge1, DefaultEdge edge2) {
+	private boolean compareEdgeAttributes(Graph<Node, DefaultEdge> method1pdg,
+			Graph<Node, DefaultEdge> method2pdg, DefaultEdge edge1, DefaultEdge edge2) {
 		if (!(method1pdg.getEdgeSource(edge1) instanceof EntryStmt
 				&& method2pdg.getEdgeSource(edge2) instanceof EntryStmt)) {
 			if (!method1pdg.getEdgeSource(edge1).equals(method2pdg.getEdgeSource(edge2))) {
@@ -213,10 +211,10 @@ public class CloneDetector {
 		if ((edges1Set.size() == 0 && edges2Set.size() == 0) || (l[0] >= k)) {
 			mapSuccess = true;
 		} else if (edges1Set.size() == 0 || edges2Set.size() == 0) {
-			//method1pdg.outgoingEdgesOf(lastMatched1[0]);
-			//int height1 = this.height(lastMatched1[0], method1pdg);
-			//int height2 = this.height(lastMatched2[0], method2pdg);
-			//matchedPdgHeight[0] += l[0] + Math.max(height1, height2);
+			// method1pdg.outgoingEdgesOf(lastMatched1[0]);
+			// int height1 = this.height(lastMatched1[0], method1pdg);
+			// int height2 = this.height(lastMatched2[0], method2pdg);
+			// matchedPdgHeight[0] += l[0] + Math.max(height1, height2);
 			mapSuccess = false;
 		} else {
 			for (DefaultEdge edge1 : edges1Set) {
@@ -224,7 +222,7 @@ public class CloneDetector {
 					if (compareEdgeAttributes(method1pdg, method2pdg, edge1, edge2)) {
 						maxGraph.addVertex(method1pdg.getEdgeTarget(edge1));
 						if (!maxGraph.containsEdge(v1, method1pdg.getEdgeTarget(edge1))) {
-							match++;
+							this.match++;
 							maxGraph.addEdge(v1, method1pdg.getEdgeTarget(edge1));
 							lastMatched1[0] = method1pdg.getEdgeTarget(edge1);
 							lastMatched2[0] = method2pdg.getEdgeTarget(edge1);
@@ -239,11 +237,11 @@ public class CloneDetector {
 					}
 				}
 			}
-			//method1pdg.outgoingEdgesOf(lastMatched1[0]);
-			//method2pdg.outgoingEdgesOf(lastMatched2[0]);
-			//int height1 = this.height(lastMatched1[0], method1pdg);
-			//int height2 = this.height(lastMatched2[0], method2pdg);
-			//matchedPdgHeight[0] += l[0] + Math.max(height1, height2);
+			// method1pdg.outgoingEdgesOf(lastMatched1[0]);
+			// method2pdg.outgoingEdgesOf(lastMatched2[0]);
+			// int height1 = this.height(lastMatched1[0], method1pdg);
+			// int height2 = this.height(lastMatched2[0], method2pdg);
+			// matchedPdgHeight[0] += l[0] + Math.max(height1, height2);
 		}
 		return mapSuccess;
 
@@ -268,7 +266,7 @@ public class CloneDetector {
 		int maxHeight = 0;
 		for (DefaultEdge edge : edgeSet) {
 			Node target = g.getEdgeTarget(edge);
-			if (!(target.equals(root))) {
+			if (!(target.equals(root)) && !(target.equals(g.getEdgeSource(edge)))) {
 				int height = height(target, g);
 				if (height > maxHeight) {
 					maxHeight = height;
@@ -307,6 +305,9 @@ public class CloneDetector {
 		// Get the root nodes of the method pdg's
 		Iterator<Node> iter1 = method1pdg.vertexSet().iterator();
 		Iterator<Node> iter2 = method2pdg.vertexSet().iterator();
+		if (!(iter1.hasNext() && iter2.hasNext())) {
+			return false;
+		}
 		Node v1 = iter1.next();
 		Node v2 = iter2.next();
 		if (!(v1 instanceof EntryStmt && v2 instanceof EntryStmt) && !v1.equals(v2)) {
@@ -393,7 +394,8 @@ public class CloneDetector {
 	 * below the threshold
 	 */
 	public boolean matchMethodNodeFeatures(Method method1, Method method2, double threshold) {
-		//System.out.println("Considering "+method1.getMethodName()+" "+method2.getMethodName());
+		// System.out.println("Considering "+method1.getMethodName()+"
+		// "+method2.getMethodName());
 		if (!method1.getReturnType().equals(method2.getReturnType())) {
 			return false;
 		}
@@ -411,10 +413,10 @@ public class CloneDetector {
 		feature1.makeComparableNodeFeatures(feature2);
 		HashMap<String, Integer> featureMap1 = feature1.getFeatureMap();
 		HashMap<String, Integer> featureMap2 = feature2.getFeatureMap();
-		/*System.out.println("featureMap1 ");
-		System.out.println(featureMap1);
-		System.out.println("featureMap2 ");
-		System.out.println(featureMap2);*/
+		/*
+		 * System.out.println("featureMap1 "); System.out.println(featureMap1);
+		 * System.out.println("featureMap2 "); System.out.println(featureMap2);
+		 */
 		int[] featureArray1 = new int[feature1.getFeatureVectorSize()];
 		int[] featureArray2 = new int[feature2.getFeatureVectorSize()];
 
@@ -428,20 +430,23 @@ public class CloneDetector {
 		double dist = calculateDistance(featureArray1, featureArray2);
 		this.match = dist;
 		if (dist <= threshold) {
-			//System.out.println("Matched");
-			
-			  /*System.out.println("Considering "+method1.getMethodName()+" " +method2.getMethodName());
-			  System.out.println("Method1 parameters"); 
-			  List<Parameter> params1= method1.getMethodParameters(); 
-			  for(Parameter p: params1){System.out.println(p.getType()); }
-			  System.out.println("Method2 parameters");
-			  List<Parameter> params2 = method2.getMethodParameters(); 
-			  for(Parameter p: params2){ System.out.println(p.getType()); }
-			  System.out.println("Return "+method1+" "+method2.getReturnType()); 
-			  System.out.println("featureMap1 "+featureMap1);
-			  System.out.println("featureMap2 "+featureMap2);
-			  System.out.println("dist "+dist);*/
-			 
+			// System.out.println("Matched");
+
+			/*
+			 * System.out.println("Considering "+method1.getMethodName()+" "
+			 * +method2.getMethodName());
+			 * System.out.println("Method1 parameters"); List<Parameter>
+			 * params1= method1.getMethodParameters(); for(Parameter p:
+			 * params1){System.out.println(p.getType()); }
+			 * System.out.println("Method2 parameters"); List<Parameter> params2
+			 * = method2.getMethodParameters(); for(Parameter p: params2){
+			 * System.out.println(p.getType()); }
+			 * System.out.println("Return "+method1+" "+method2.getReturnType())
+			 * ; System.out.println("featureMap1 "+featureMap1);
+			 * System.out.println("featureMap2 "+featureMap2);
+			 * System.out.println("dist "+dist);
+			 */
+
 			return true;
 		}
 		return false;

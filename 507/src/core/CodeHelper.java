@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import parsers.ControlListParser;
 import parsers.SyntaxParser;
@@ -12,34 +13,25 @@ public class CodeHelper {
 	public static void main(String[] args) {
 		
 		String srcName = "../examples/TestCodeV2.java";
-		File libFile2 = new File("Math.java");
-		File libFile1 = new File("Arrays.java");
 
 		File srcfile = new File(srcName);
 		File leetfile = new File("../examples/LeetcodeTest.java");
-
+		List<File> libCollection = SourceCodeCollector.listClasses(new File("../jre_library/java"));
 		SyntaxParser libparser1, libparser2, libparser;
 		SyntaxParser srcparser,leetcodeparser;
 		ArrayList<Method> srcMethods, libMethods,leetcodeMethods;
 		if (!(srcfile.exists()) || srcfile.isDirectory()) {
-			System.out.println("Input file does not exist or is not a valid input.");
-			// Debug
-			/* System.out.println("Working Directory = " +
-			 System.getProperty("user.dir"));*/
+			System.err.println("Input file does not exist or is not a valid input.");
 			return;
-		}
-		if (!(libFile1.exists()) || libFile1.isDirectory()) {
-			System.out.println("Error reading reference library.");
-			// Debug
-			// System.out.asdasdaprintln("Working Directory = " +
-			// System.getProperty("user.dir"));
+		}		
+		if (libCollection.isEmpty()) {
+			System.err.println("Error reading reference library.");
 			return;
 		}
 
 		// initialize java parser for both library and source code.
 		try {
-			libparser1 = new SyntaxParser(libFile1);
-			libparser2 = new SyntaxParser(libFile2);
+			libparser = new SyntaxParser(libCollection);
 			srcparser = new SyntaxParser(srcfile);
 			leetcodeparser = new SyntaxParser(leetfile);
 		} catch (IOException e) {
@@ -49,8 +41,7 @@ public class CodeHelper {
 
 		// testing(srcparser, libparser);
 		srcMethods = srcparser.getMethods();
-		libMethods = libparser1.getMethods();
-		libMethods.addAll(libparser2.getMethods());
+		libMethods = libparser.getMethods();
 		leetcodeMethods = leetcodeparser.getMethods();
 /*		for (Method method : libMethods) {
 			System.out.println(method.getMethodName());
@@ -60,12 +51,12 @@ public class CodeHelper {
 		ControlListParser test = new ControlListParser(srcMethods);
 		CloneDetector cloneDetect = new CloneDetector(libMethods);
 		matchSrcWithLib(srcMethods,cloneDetect);
-		
+/*		
 		int numParticipants = 13;
 		int numMethods = srcMethods.size()/numParticipants;
 		testCodeMatches(srcMethods,cloneDetect,numParticipants,numMethods);
 
-		testLeetcodeMatches(leetcodeMethods,cloneDetect);
+		testLeetcodeMatches(leetcodeMethods,cloneDetect);*/
 	}
 	
 	/**
