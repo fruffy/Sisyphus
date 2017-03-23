@@ -140,7 +140,7 @@ public class CloneDetector {
 							+ " can be replaced by " + ref.getSignature() + " with return type " + ref.getReturnType());*/
 
 					//System.out.printf(" Confidence %.2f%%\n", match / mismatch);
-					// matchedMethods.add(matched);
+					//matchedMethods.add(matched);
 				}
 			}
 		}
@@ -213,10 +213,10 @@ public class CloneDetector {
 		if ((edges1Set.size() == 0 && edges2Set.size() == 0) || (l[0] >= k)) {
 			mapSuccess = true;
 		} else if (edges1Set.size() == 0 || edges2Set.size() == 0) {
-			method1pdg.outgoingEdgesOf(lastMatched1[0]);
-			int height1 = this.height(lastMatched1[0], method1pdg);
-			int height2 = this.height(lastMatched2[0], method2pdg);
-			matchedPdgHeight[0] += l[0] + Math.max(height1, height2);
+			//method1pdg.outgoingEdgesOf(lastMatched1[0]);
+			//int height1 = this.height(lastMatched1[0], method1pdg);
+			//int height2 = this.height(lastMatched2[0], method2pdg);
+			//matchedPdgHeight[0] += l[0] + Math.max(height1, height2);
 			mapSuccess = false;
 		} else {
 			for (DefaultEdge edge1 : edges1Set) {
@@ -239,11 +239,11 @@ public class CloneDetector {
 					}
 				}
 			}
-			method1pdg.outgoingEdgesOf(lastMatched1[0]);
-			method2pdg.outgoingEdgesOf(lastMatched2[0]);
-			int height1 = this.height(lastMatched1[0], method1pdg);
-			int height2 = this.height(lastMatched2[0], method2pdg);
-			matchedPdgHeight[0] += l[0] + Math.max(height1, height2);
+			//method1pdg.outgoingEdgesOf(lastMatched1[0]);
+			//method2pdg.outgoingEdgesOf(lastMatched2[0]);
+			//int height1 = this.height(lastMatched1[0], method1pdg);
+			//int height2 = this.height(lastMatched2[0], method2pdg);
+			//matchedPdgHeight[0] += l[0] + Math.max(height1, height2);
 		}
 		return mapSuccess;
 
@@ -426,7 +426,7 @@ public class CloneDetector {
 		}
 
 		double dist = calculateDistance(featureArray1, featureArray2);
-		match = dist;
+		this.match = dist;
 		if (dist <= threshold) {
 			//System.out.println("Matched");
 			
