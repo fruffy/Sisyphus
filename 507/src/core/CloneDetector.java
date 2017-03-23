@@ -85,8 +85,8 @@ public class CloneDetector {
 			Method[] finalMatched = null;
 			int count = 0;
 			bestMatch = Integer.MAX_VALUE;
+			match = 0;
 			for (Method ref : methodLibrary) {
-				match = 0;
 				if (matchMethodNodeFeatures(src, ref, 4)) {
 					Method[] matched = { src, ref };
 
@@ -126,9 +126,9 @@ public class CloneDetector {
 		for (Method src : srcMethods) {
 			Method[] finalMatched = null;
 			bestMatch = 0;
+			mismatch = 0;
+			match = 0;
 			for (Method ref : methodLibrary) {
-				mismatch = 0;
-				match = 0;
 
 				if (matchMethodPDGs(src, ref)) {
 					Method[] matched = { src, ref };
