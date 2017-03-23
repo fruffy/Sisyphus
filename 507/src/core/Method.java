@@ -35,8 +35,6 @@ public class Method {
 	private DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg;
 	private DirectedPseudograph<NodeWrapper, DefaultEdge> ddg;
 	private DirectedPseudograph<Node, DefaultEdge> pdg;
-	private NodeFeature nodeFeature;
-	private Method unNormalized;
 
 	public Method(MethodDeclaration methodDeclaration) {
 		this.originalDecl = methodDeclaration.clone();
@@ -48,21 +46,12 @@ public class Method {
 			return;
 		}
 		this.body = methodDeclaration.getBody().get();
-		//System.out.println("FIRST RESULT +:\n" + this.body);
+		System.out.println("BEFORE: ***********************************************\n" + this.body);
 		this.trimBody();
 		//resolveMethodCalls(methodDeclaration, 3);
 		methodDeclaration = normalize(methodDeclaration);
-		//System.out.println("SECOND RESULT +:\n" + this.body);
-		this.body = methodDeclaration.getBody().get();
-		//System.out.println("LAST RESULT +:\n" + this.body);
+		System.out.println("AFTER: ++++++++++++++++++++++++++++++++++++++++++++++++\n" + this.body);
 
-	}
-	
-	public void printComparison(){
-		System.out.println("Method before normalizing:");
-		System.out.println(unNormalized.originalDecl);
-		System.out.println("Method after normalizing:");
-		System.out.println(this.originalDecl);
 	}
 	
 	public DirectedAcyclicGraph<NodeWrapper, DefaultEdge> getCdg(){

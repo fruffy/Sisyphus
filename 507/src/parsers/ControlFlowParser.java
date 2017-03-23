@@ -9,6 +9,8 @@ import org.jgrapht.graph.DirectedPseudograph;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.nodeTypes.NodeWithBlockStmt;
+import com.github.javaparser.ast.nodeTypes.NodeWithBody;
+import com.github.javaparser.ast.nodeTypes.NodeWithStatements;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.BreakStmt;
 import com.github.javaparser.ast.stmt.CatchClause;
@@ -22,7 +24,7 @@ import com.github.javaparser.ast.stmt.WhileStmt;
 
 import core.Method;
 import datastructures.BackEdge;
-import datastructures.EntryExpr;
+import datastructures.EntryStmt;
 import datastructures.NodeWrapper;
 
 /**
@@ -78,7 +80,7 @@ public class ControlFlowParser {
 		// Remove them after initialising the graph
 		// TODO: Figure out a better way...
 
-		NodeWrapper initNode = new NodeWrapper(new EntryExpr());
+		NodeWrapper initNode = new NodeWrapper(new EntryStmt());
 		this.cfg.addVertex(initNode);
 		this.previousNodes.add(initNode);
 		parseRec(methodBody);
@@ -129,8 +131,9 @@ public class ControlFlowParser {
 		if (statement.getChildNodes().size() == 0) {
 			return null;
 		}
+		System.out.println(statement.getClass().toString());
 		NodeWrapper currentNode = new NodeWrapper(statement);
-		if (statement instanceof NodeWithBlockStmt<?>) {
+		if (statement instanceof NodeWithStatements) {
 			List<Node> children = currentNode.NODE.getChildNodes();
 			for (Node child : children) {
 				currentNode = new NodeWrapper(child);
@@ -164,7 +167,6 @@ public class ControlFlowParser {
 				}
 			}
 		} else {
-			currentNode = new NodeWrapper(statement);
 			refreshPreviousNodes(currentNode);
 		}
 		return currentNode;

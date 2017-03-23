@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.jgrapht.DirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedPseudograph;
 
@@ -14,7 +14,7 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.type.Type;
 
-import datastructures.EntryExpr;
+import datastructures.EntryStmt;
 import datastructures.PDGGraphViz;
 
 /*
@@ -83,24 +83,22 @@ public class CloneDetector {
 		double bestMatch;
 		for (Method src : srcMethods) {
 			Method[] finalMatched = null;
-			int count = 0;
 			bestMatch = Integer.MAX_VALUE;
-			match = 0;
-			for (Method ref : methodLibrary) {
+			this.match = 0;
+			for (Method ref : this.methodLibrary) {
 				if (matchMethodNodeFeatures(src, ref, 4)) {
 					Method[] matched = { src, ref };
 
-					if (bestMatch >= match) {
-						bestMatch = match;
+					if (bestMatch >= this.match) {
+						bestMatch = this.match;
 						finalMatched = matched;
 					}
 					// matchedMethods.add(matched);
 				}
-				count++;
 			}
 			if (finalMatched != null) {
 				matchedMethods.add(finalMatched);
-				System.out.print("Match! " + finalMatched[0].getSignature() + " with return type " + finalMatched[0].getReturnType()
+				System.out.println("Match! " + finalMatched[0].getSignature() + " with return type " + finalMatched[0].getReturnType()
 						+ " can be replaced by " + finalMatched[1].getSignature() + " with return type " + finalMatched[1].getReturnType());
 			}
 		}
@@ -126,10 +124,9 @@ public class CloneDetector {
 		for (Method src : srcMethods) {
 			Method[] finalMatched = null;
 			bestMatch = 0;
-			mismatch = 0;
-			match = 0;
+			this.mismatch = 0;
+			this.match = 0;
 			for (Method ref : methodLibrary) {
-
 				if (matchMethodPDGs(src, ref)) {
 					Method[] matched = { src, ref };
 					if (bestMatch <= match / mismatch) {
@@ -144,7 +141,6 @@ public class CloneDetector {
 				System.out.print("Match! " + finalMatched[0].getSignature() + " with return type " + finalMatched[0].getReturnType()
 						+ " can be replaced by " + finalMatched[1].getSignature() + " with return type " + finalMatched[1].getReturnType());
 				System.out.printf(" Confidence %.2f%%\n", match / mismatch);
-				// matchedMethods.add(matched);
 			}
 		}
 		return matchedMethods;
@@ -161,10 +157,10 @@ public class CloneDetector {
 	 * @param edge2
 	 * @return
 	 */
-	private boolean compareEdgeAttributes(DirectedGraph<Node, DefaultEdge> method1pdg,
-			DirectedGraph<Node, DefaultEdge> method2pdg, DefaultEdge edge1, DefaultEdge edge2) {
-		if (!(method1pdg.getEdgeSource(edge1) instanceof EntryExpr
-				&& method2pdg.getEdgeSource(edge2) instanceof EntryExpr)) {
+	private boolean compareEdgeAttributes(Graph<Node, DefaultEdge> method1pdg,
+			Graph<Node, DefaultEdge> method2pdg, DefaultEdge edge1, DefaultEdge edge2) {
+		if (!(method1pdg.getEdgeSource(edge1) instanceof EntryStmt
+				&& method2pdg.getEdgeSource(edge2) instanceof EntryStmt)) {
 			if (!method1pdg.getEdgeSource(edge1).equals(method2pdg.getEdgeSource(edge2))) {
 				return false;
 			}
@@ -226,7 +222,7 @@ public class CloneDetector {
 					if (compareEdgeAttributes(method1pdg, method2pdg, edge1, edge2)) {
 						maxGraph.addVertex(method1pdg.getEdgeTarget(edge1));
 						if (!maxGraph.containsEdge(v1, method1pdg.getEdgeTarget(edge1))) {
-							match++;
+							this.match++;
 							maxGraph.addEdge(v1, method1pdg.getEdgeTarget(edge1));
 							lastMatched1[0] = method1pdg.getEdgeTarget(edge1);
 							lastMatched2[0] = method2pdg.getEdgeTarget(edge1);
@@ -314,7 +310,7 @@ public class CloneDetector {
 		}
 		Node v1 = iter1.next();
 		Node v2 = iter2.next();
-		if (!(v1 instanceof EntryExpr && v2 instanceof EntryExpr) && !v1.equals(v2)) {
+		if (!(v1 instanceof EntryStmt && v2 instanceof EntryStmt) && !v1.equals(v2)) {
 			return false;
 		}
 		// Initialize maximal graphs

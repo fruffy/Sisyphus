@@ -16,7 +16,7 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.utils.Pair;
 
-import datastructures.EntryExpr;
+import datastructures.EntryStmt;
 import datastructures.NodeWrapper;
 import visitors.ASTUtil;
 
@@ -153,7 +153,7 @@ public class DataDependencyGraphFinder {
 			Set<Pair<String, NodeWrapper>> newEntry = entrySet.get(currentNode);
 			Set<Pair<String, NodeWrapper>> newExit = exitSet.get(currentNode);
 
-			if (currentNode.NODE instanceof EntryExpr){ 
+			if (currentNode.NODE instanceof EntryStmt){ 
 				//TODO set to free vars of graph
 				
 			}
