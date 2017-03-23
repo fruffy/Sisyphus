@@ -28,7 +28,6 @@ import core.Method;
 import datastructures.EntryStmt;
 import datastructures.NodeWrapper;
 import datastructures.PDGGraphViz;
-import datastructures.ReturnNode;
 import org.jgrapht.graph.DirectedPseudograph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedPseudograph;
@@ -369,7 +368,7 @@ public class DataDependencyGraphFinder {
 		}
 
 		//Manually add am exit node
-		NodeWrapper exitNode = new NodeWrapper(new ReturnNode());
+		NodeWrapper exitNode = new NodeWrapper(new SimpleName("//[RETURNED VALUE]"));
 		ret2.addVertex(exitNode);
 
 		HashMap<String, NodeWrapper> freeNodes = new HashMap<String, NodeWrapper>();
