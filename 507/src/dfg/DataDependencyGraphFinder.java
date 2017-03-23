@@ -258,7 +258,6 @@ public class DataDependencyGraphFinder {
 		Set<NodeWrapper> cfgNodeWrappers = cfg.vertexSet();
 		this.allNodes = new HashSet<NodeWrapper>();
 		for(NodeWrapper n: cfgNodeWrappers){
-			System.err.println("All nodes, contains " + n.NODE);
 			allNodes.add(n);
 		}
 
@@ -272,13 +271,12 @@ public class DataDependencyGraphFinder {
 		//Get the function parameters
 		//Create a DFG node for each one
 
-		System.err.println("Making DDG for " + this.initialMethod.getBody());
+		//System.err.println("Making DDG for " + this.initialMethod.getBody());
 
 		//Set the reaching defs to bottom (empty set) for each node
 		//Add all nodes to our worklist initially, since we need to update values for each node
 		for (NodeWrapper nw : allNodes){
 			Node n = nw.NODE;
-			System.err.println("Adding node " + n);
 
 			this.entrySet.put(nw, bottom());
 			this.exitSet.put(nw, bottom());
@@ -286,13 +284,12 @@ public class DataDependencyGraphFinder {
 
 			//Initial nodes have all free variables in their entry and exit sets
 			if (this.initialNode != null && this.initialNode == nw){ 
-				System.err.println("INIT MATCH");
 				ReachingDefs allFrees = new ReachingDefs();
-				for (NodeWrapper anyNode : this.allNodes){
-					for (String fv : ASTUtil.freeVars(anyNode.NODE)){
+				//for (NodeWrapper anyNode : this.allNodes){
+					for (String fv : ASTUtil.freeVars(this.initialMethod.getBody())){
 						allFrees.addDefFor(fv, new NodeWrapper(new SimpleName("//INITIAL VALUE OF " + fv)));
 					}
-				}
+				//}
 				//HashSet<String> x = ASTUtil.freeVars(initialMethod.getBody());
 				//for (String fv : ASTUtil.freeVars(initialMethod.getBody())){
 				//	allFrees.addDefFor(fv, new NodeWrapper(new SimpleName("//INITIAL VALUE OF " + fv)));
@@ -379,7 +376,6 @@ public class DataDependencyGraphFinder {
 
 
 		for (NodeWrapper nw : entrySet.keySet()){
-			System.err.println("Entries for " + nw.NODE);
 			for (Entry<String, HashSet<NodeWrapper>> defPair : entrySetFor(nw).entries()){
 
 				for (NodeWrapper defLoc : defPair.getValue()){
@@ -406,7 +402,7 @@ public class DataDependencyGraphFinder {
 			}
 		}
 
-		System.err.println("Made DDG:\n" + PDGGraphViz.stringDot(ret2));
+		//System.err.println("Made DDG:\n" + PDGGraphViz.stringDot(ret2));
 
 
 		return ret2;

@@ -2,6 +2,8 @@ package normalizers;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
+
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.Parameter;
@@ -194,8 +196,8 @@ public class VariableNameNormalizer extends Normalizer {
 
 			//Where we'll store the modified statements from our list after we process them
 
-
-			for (Node stmt : ASTUtil.orderedChildNodes(n)){
+			List<Node> orderedChildren = ASTUtil.orderedChildNodes(n); 
+			for (Node stmt : orderedChildren){
 
 				//Make the map where we store declarations from the statement, so we can use them later on
 				LinkedList<Pair<String, String>> childDecls = new LinkedList<Pair<String, String>>();
