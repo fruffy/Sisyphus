@@ -8,7 +8,7 @@ import normalizers.Normalizer;
 
 public class StandardForm {
 	public static Node toStandardForm(Node node){
-		//System.err.println("Changed body:\n" + node);
+		System.err.println("Changed body:\n" + node);
 				
 		LinkedList<Normalizer> norms = new LinkedList<Normalizer>();
 		norms.addLast(new VariableNameNormalizer());
@@ -18,7 +18,7 @@ public class StandardForm {
 		ListNormalizer norm = new ListNormalizer(norms);
 		norm.initialize(node);
 		Node ret = norm.result();
-		//System.err.println("to:\n" + ret);
+		System.err.println("to:\n" + ret);
 		return ret;
 	}
 }
