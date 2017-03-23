@@ -144,7 +144,7 @@ public class LoopNormalizer extends Normalizer {
 			//Comment comment = modifyNode(n.getComment(), arg);
 
 			//Make a while loop from our Do-While loop i.e. same cond and body
-			WhileStmt loop = new WhileStmt(condition, body);
+			WhileStmt loop = new WhileStmt(condition.clone(), body.clone());
 
 			//Finally, return a block with an initial body run appended to the loop
 

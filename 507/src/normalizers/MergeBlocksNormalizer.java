@@ -26,7 +26,7 @@ public class MergeBlocksNormalizer extends Normalizer {
 
 		@Override
 		public Visitable visit(BlockStmt n, Object arg) {
-			NodeList<Statement> newStatementList = new NodeList<Statement>();
+			BlockStmt ret = new BlockStmt(); 
 			for (Statement stmt : n.getStatements()){
 				Statement newStmt = (Statement)stmt.accept(this, arg);
 				if (newStmt != null) {
@@ -37,19 +37,16 @@ public class MergeBlocksNormalizer extends Normalizer {
 						freshener.initialize(newStmt);
 						BlockStmt freshened = (BlockStmt)(freshener.result());
 						for (Statement subStmt : freshened.getStatements() ){
-							newStatementList.add(subStmt);
+							ret.addStatement(subStmt);
 						}
 					}
 					else{
-						newStatementList.add(newStmt);
+						ret.addStatement(newStmt);
 					}
 				}
 			}
 
-			//Comment comment = n.getComment();
-			BlockStmt r = new BlockStmt(n.getRange().orElse(null), newStatementList);
-			//r.setComment(comment);
-			return r;
+			return ret;
 		}
 
 		private <N extends Node> NodeList<N> cloneList(NodeList<N> list, Object arg) {
