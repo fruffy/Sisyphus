@@ -31,20 +31,20 @@ public class ControlListParser {
 			ControlDependencyParser cdgParse = new ControlDependencyParser(cfg);
 			DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg = cdgParse.getCDG();
 			Graph<NodeWrapper, DefaultEdge> fdt = cdgParse.buildForwardDominanceTree(cfg);
-/*
+
 			this.cfgList.add(cfg);
 			this.cdgList.add(cdg);
 			this.fdtList.add(fdt);
 			// Debug
-			
-			 System.out.println(
-			 "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-			 System.out.println(m.getFilteredBody().toString());
-			 System.out.println("Control Flow Raw Content "); printGraph(m,
-			 cfg); //System.out.println("Forward Dominator Raw Content ");
-			 //printGraph(m, fdt);
-			 System.out.println("Control Dependence Raw Content ");
-			 printGraph(m, cdg);*/
+
+			System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+			System.out.println(m.toString());
+			System.out.println("Control Flow Raw Content ");
+			printGraph(m, cfg);
+			System.out.println("Forward Dominator Raw Content ");
+			printGraph(m, fdt);
+			System.out.println("Control Dependence Raw Content ");
+			printGraph(m, cdg);
 		}
 	}
 

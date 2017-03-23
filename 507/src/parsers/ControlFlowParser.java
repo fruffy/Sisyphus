@@ -147,9 +147,9 @@ public class ControlFlowParser {
 			else {
 				addGraphElements(currentNode);
 				if (currentNode.NODE instanceof ReturnStmt) {
-					if(((ReturnStmt)currentNode.NODE).getExpression().isPresent()) {
+/*					if(((ReturnStmt)currentNode.NODE).getExpression().isPresent()) {
 						parseRec(((ReturnStmt)currentNode.NODE).getExpression().get());
-					}
+					}*/
 					// Everything after is dead code, no need to proceed
 					return null;
 				} else  if ( currentNode.NODE instanceof BreakStmt || currentNode.NODE instanceof ContinueStmt) {
