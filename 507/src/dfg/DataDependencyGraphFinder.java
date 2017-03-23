@@ -1,36 +1,27 @@
 package dfg;
 
-import java.awt.List;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.TreeMap;
-// java.util.HashSet;
-import java.util.TreeSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
+
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedPseudograph;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.SimpleName;
 import com.github.javaparser.ast.expr.UnaryExpr;
-import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 //import datastructures.NicePair;
 
 import core.Method;
-import datastructures.EntryStmt;
 import datastructures.NodeWrapper;
-import datastructures.PDGGraphViz;
-import org.jgrapht.graph.DirectedPseudograph;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DirectedPseudograph;
 import visitors.ASTUtil;
 
 /**

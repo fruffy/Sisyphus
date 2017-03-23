@@ -14,7 +14,6 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.Type;
 
 import datastructures.NodeWrapper;
-import datastructures.PDGGraphViz;
 import dfg.DataDependencyGraphFinder;
 import normalizers.StandardForm;
 import parsers.ControlDependencyParser;
@@ -50,9 +49,9 @@ public class Method {
 		System.out.println("BEFORE: ***********************************************\n" + this.body);
 		this.trimBody();
 		//resolveMethodCalls(methodDeclaration, 3);
-		methodDeclaration = normalize(methodDeclaration);
+		normalize(methodDeclaration);
+		this.body = methodDeclaration.getBody().get();
 		System.out.println("AFTER: ++++++++++++++++++++++++++++++++++++++++++++++++\n" + this.body);
-
 	}
 	
 	public DirectedAcyclicGraph<NodeWrapper, DefaultEdge> getCdg(){
@@ -128,8 +127,8 @@ public class Method {
 	 * Return a new method that is equivalent to this method, but normalized by
 	 * the given normalizer
 	 */
-	public MethodDeclaration normalize(MethodDeclaration methodDecl) {
-		return (MethodDeclaration)StandardForm.toStandardForm(methodDecl);
+	public void normalize(MethodDeclaration methodDecl) {
+		StandardForm.toStandardForm(methodDecl);
 /*		ret.unNormalized = this;
 		return ret;*/
 	}

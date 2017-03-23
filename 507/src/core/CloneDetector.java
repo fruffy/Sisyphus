@@ -86,7 +86,7 @@ public class CloneDetector {
 			bestMatch = Integer.MAX_VALUE;
 			this.match = 0;
 			for (Method ref : this.methodLibrary) {
-				if (matchMethodNodeFeatures(src, ref, 4)) {
+				if (matchMethodNodeFeatures(src, ref, 20)) {
 					Method[] matched = { src, ref };
 
 					if (bestMatch >= this.match) {
@@ -124,9 +124,9 @@ public class CloneDetector {
 		for (Method src : srcMethods) {
 			Method[] finalMatched = null;
 			bestMatch = 0;
-			this.mismatch = 0;
-			this.match = 0;
 			for (Method ref : methodLibrary) {
+				this.mismatch = 0;
+				this.match = 0;
 				if (matchMethodPDGs(src, ref)) {
 					Method[] matched = { src, ref };
 					if (bestMatch <= match / mismatch) {
