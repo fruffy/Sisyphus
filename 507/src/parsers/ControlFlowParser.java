@@ -8,8 +8,6 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedPseudograph;
 
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.nodeTypes.NodeWithBlockStmt;
-import com.github.javaparser.ast.nodeTypes.NodeWithBody;
 import com.github.javaparser.ast.nodeTypes.NodeWithStatements;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.BreakStmt;
@@ -127,46 +125,50 @@ public class ControlFlowParser {
 	// - Switch Case
 	// - Do Statements
 	// - maybe parallel programming primitives?
-	private NodeWrapper parseRec(Node statement) {
+	private NodeWrapper parseRec(Statement statement) {
 		if (statement.getChildNodes().size() == 0) {
+			System.err.println("Empty Statement!" + statement.toString());
 			return null;
 		}
-		System.out.println(statement.getClass().toString());
 		NodeWrapper currentNode = new NodeWrapper(statement);
 		if (statement instanceof NodeWithStatements) {
 			List<Node> children = currentNode.NODE.getChildNodes();
 			for (Node child : children) {
-				currentNode = new NodeWrapper(child);
-				// Handle conditionals
-				if (currentNode.NODE instanceof IfStmt) {
-					currentNode = parseIfStmt((IfStmt) currentNode.NODE);
-				} else if (currentNode.NODE instanceof ForStmt) {
-					currentNode = parseForLoop((ForStmt) currentNode.NODE);
-				} else if (currentNode.NODE instanceof WhileStmt) {
-					currentNode = parseWhileLoop((WhileStmt) currentNode.NODE);
-				} else if (currentNode.NODE instanceof TryStmt) {
-					parseTryCatch((TryStmt) currentNode.NODE);
-				}
-				// Handle default case
-				else {
-					addGraphElements(currentNode);
-					if (currentNode.NODE instanceof ReturnStmt) {
-						/*
-						 * if(((ReturnStmt)currentNode.NODE).getExpression().
-						 * isPresent()) {
-						 * parseRec(((ReturnStmt)currentNode.NODE).getExpression
-						 * ().get()); }
-						 */
-						// Everything after is dead code, no need to proceed
-						return null;
-					} else if (currentNode.NODE instanceof BreakStmt || currentNode.NODE instanceof ContinueStmt) {
-						return null;
-					}
-					// Clear the current list and add next predecessor
-					refreshPreviousNodes(currentNode);
-				}
+				currentNode = parseRecNode(child);
 			}
 		} else {
+			addGraphElements(currentNode);
+		}
+		return currentNode;
+	}
+
+	private NodeWrapper parseRecNode(Node child) {
+		NodeWrapper currentNode = new NodeWrapper(child);
+		// Handle conditionals
+		if (currentNode.NODE instanceof IfStmt) {
+			currentNode = parseIfStmt((IfStmt) currentNode.NODE);
+		} else if (currentNode.NODE instanceof ForStmt) {
+			currentNode = parseForLoop((ForStmt) currentNode.NODE);
+		} else if (currentNode.NODE instanceof WhileStmt) {
+			currentNode = parseWhileLoop((WhileStmt) currentNode.NODE);
+		} else if (currentNode.NODE instanceof TryStmt) {
+			parseTryCatch((TryStmt) currentNode.NODE);
+			return null;
+		} else { // Handle default case
+			addGraphElements(currentNode);
+			if (currentNode.NODE instanceof ReturnStmt) {
+				/*
+				 * if(((ReturnStmt)currentNode.NODE).getExpression().
+				 * isPresent()) {
+				 * parseRec(((ReturnStmt)currentNode.NODE).getExpression
+				 * ().get()); }
+				 */
+				// Everything after is dead code, no need to proceed
+				return null;
+			} else if (currentNode.NODE instanceof BreakStmt || currentNode.NODE instanceof ContinueStmt) {
+				return null;
+			}
+			// Clear the current list and add next predecessor
 			refreshPreviousNodes(currentNode);
 		}
 		return currentNode;
@@ -217,7 +219,9 @@ public class ControlFlowParser {
 		}
 		// Parse the body of the for statement
 		exitNode = parseRec(currentNode.getBody());
-		refreshPreviousNodes(exitNode);
+		if (exitNode != null) {
+			refreshPreviousNodes(exitNode);
+		}
 		// These operations will run after the loop
 		// Add them to the control flow and save the last node
 		for (Node n : currentNode.getUpdate()) {
@@ -227,7 +231,11 @@ public class ControlFlowParser {
 		}
 		// Connect the entry of the for loop (condition) with the exit operation
 		refreshPreviousNodes(entryNode);
-		addGraphElements(exitNode, new BackEdge());
+		if (exitNode == null) {
+			System.err.println("Invalid For Statement");
+		} else {
+			addGraphElements(exitNode, new BackEdge());
+		}
 		this.previousNodes = tempNodes;
 		return entryNode;
 	}
@@ -235,8 +243,9 @@ public class ControlFlowParser {
 	/**
 	 * This method is a specialised version of parseRec. It handles the control
 	 * flow of a try catch statement and collects all the possible exit points
-	 * in a tempNodes List. The returned node of parseTryCatch may be added to a
-	 * list which forms a collection of entry nodes for the subsequent element.
+	 * in a tempNodes List. As it is extremely hard to accurately gauge the exit
+	 * node of a try statement we use the last try Statement as typical exit
+	 * 
 	 */
 	private void parseTryCatch(TryStmt currentNode) {
 		List<NodeWrapper> tempNodes = new ArrayList<NodeWrapper>();
@@ -305,7 +314,9 @@ public class ControlFlowParser {
 		if (targetNode == null) {
 			return;
 		}
-		this.cfg.addVertex(targetNode);
+		if (!(this.cfg.addVertex(targetNode))) {
+			System.err.println("ERROR: Adding Vertex to the graph failed!");
+		}
 		for (NodeWrapper srcNode : this.previousNodes) {
 			if (srcNode != null) {
 				this.cfg.addEdge(srcNode, targetNode);
