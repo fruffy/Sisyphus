@@ -68,8 +68,17 @@ public class DataDependencyGraphFinder {
 	}
 
 	private class ReachingDefs{
+		
+		
+		
 		private TreeMap<String, HashSet<NodeWrapper>> innerMap = 
 				new TreeMap<String, HashSet<NodeWrapper>>();
+		
+		public ReachingDefs(){}
+		
+		public ReachingDefs(ReachingDefs that){
+			this.innerMap = new TreeMap<String, HashSet<NodeWrapper>>(that.innerMap);
+		}
 
 		public HashSet<NodeWrapper> defsFor(String var){
 			HashSet<NodeWrapper> reaching = this.innerMap.get(var);
@@ -81,9 +90,11 @@ public class DataDependencyGraphFinder {
 
 		public void addDefFor(String var, NodeWrapper nw){
 			HashSet<NodeWrapper> reaching = this.innerMap.get(var);
-			if (var != null){
-				reaching.add(nw);
+			if (reaching == null){
+				reaching = new HashSet<NodeWrapper>();
+				this.innerMap.put(var, reaching);
 			}
+			reaching.add(nw);
 			this.innerMap.put(var, new HashSet<NodeWrapper>());
 			this.innerMap.get(var).add(nw);
 		}
@@ -111,6 +122,33 @@ public class DataDependencyGraphFinder {
 
 		public Set<Entry<String, HashSet<NodeWrapper>>> entries(){
 			return this.innerMap.entrySet();
+		}
+		
+		@Override
+		public String toString(){
+			return this.innerMap.toString();
+		}
+		
+		@Override
+		public boolean equals(Object arg){
+			ReachingDefs that = (ReachingDefs)arg;
+			return this.subsetOf(that) && that.subsetOf(this);
+		}
+		
+		public boolean subsetOf(ReachingDefs that){
+			for (Entry<String, HashSet<NodeWrapper>> thatEntry : that.entries()){
+				if (!this.innerMap.containsKey(thatEntry.getKey())){
+					return thatEntry.getValue().isEmpty();
+				}
+				else {
+					for (NodeWrapper def : thatEntry.getValue()) {
+						if (!this.innerMap.get(thatEntry.getKey()).contains(def)){
+							return false;
+						}
+					}
+				}
+			}
+			return true;
 		}
 
 
@@ -285,11 +323,9 @@ public class DataDependencyGraphFinder {
 			ReachingDefs currentExit = exitSet.get(currentNode);
 
 			ReachingDefs newEntry = 
-					new ReachingDefs();
-			newEntry.addAll(this.entrySetFor(currentNode));
+					new ReachingDefs(currentEntry);
 			ReachingDefs newExit = 
-					new ReachingDefs();
-			newExit.addAll(exitSetFor(currentNode));
+					new ReachingDefs(currentExit);
 
 
 
@@ -329,16 +365,15 @@ public class DataDependencyGraphFinder {
 			this.entrySet.put(currentNode, newEntry);
 			exitSet.put(currentNode, newExit);
 
-			if (currentNode.toString().equals("datastructures.NodeWrapper@ee23fc61")){
-				System.err.println("FOO");
-			}
 
 			//If we changed, add all our successors to the worklist
 			if (!newExit.equals(currentExit)){
 				Set<DefaultEdge> outgoingEdges = cfg.outgoingEdgesOf(currentNode);
+				System.err.println("Not equal between " + currentExit + "  and  " + newExit);
 				for (DefaultEdge edge : outgoingEdges){
 					worklist.push(cfg.getEdgeTarget(edge));
-					System.err.println("Adding " + cfg.getEdgeTarget(edge).NODE + " to worklist");
+					System.err.println("***Adding " + cfg.getEdgeTarget(edge).NODE + " to worklist");
+					
 				}
 
 			}
