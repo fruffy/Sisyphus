@@ -138,6 +138,7 @@ public class ControlFlowParser {
 	// - maybe parallel programming primitives?
 	private NodeWrapper parseRec(Statement statement) {
 		if (statement.getChildNodes().size() == 0) {
+			System.out.println(statement.getClass());
 			System.err.println("Empty Statement!" + statement.toString());
 			return null;
 		}
