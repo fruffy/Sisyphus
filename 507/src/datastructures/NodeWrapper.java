@@ -2,7 +2,7 @@ package datastructures;
 
 import com.github.javaparser.ast.Node;
 
-public class NodeWrapper {
+public class NodeWrapper implements Comparable {
 	public Node NODE;
 
 	public NodeWrapper(Node n) {
@@ -22,6 +22,11 @@ public class NodeWrapper {
 	@Override
     public int hashCode() {
 		return this.NODE.hashCode();
+	}
+
+	@Override
+	public int compareTo(Object arg0) {
+		return ((Integer)this.hashCode()).compareTo(arg0.hashCode()); 
 	}
 
 }

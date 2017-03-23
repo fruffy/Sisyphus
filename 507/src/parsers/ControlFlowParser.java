@@ -83,11 +83,15 @@ public class ControlFlowParser {
 		// Initialise the graph with an empty statement and list
 		// Remove them after initialising the graph
 		// TODO: Figure out a better way...
+		
 
 		NodeWrapper initNode = new NodeWrapper(new EntryStmt());
 		this.cfg.addVertex(initNode);
 		this.previousNodes.add(initNode);
 		parseRec(methodBody);
+		for (DefaultEdge e : this.cfg.outgoingEdgesOf(initNode)){
+			this.initialNode = this.cfg.getEdgeTarget(e);
+		}
 		this.cfg.removeVertex(initNode);
 	}
 

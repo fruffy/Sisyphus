@@ -2,6 +2,7 @@ package datastructures;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 
 import org.jgrapht.Graph;
@@ -13,7 +14,7 @@ import org.jgrapht.io.IntegerComponentNameProvider;
 import com.github.javaparser.ast.Node;
 
 public class PDGGraphViz {
-	
+
 	private static class NodeWrapperName implements ComponentNameProvider<NodeWrapper>{
 
 		@Override
@@ -24,10 +25,10 @@ public class PDGGraphViz {
 			}
 			return ret;
 		}
-	
-	
+
+
 	}
-	
+
 	private static class NodeName implements ComponentNameProvider<Node>{
 
 		@Override
@@ -38,48 +39,87 @@ public class PDGGraphViz {
 			}
 			return ret;
 		}
-	
-	
+
+
 	}
-	
+
 	public static void writeDot(Graph<NodeWrapper, DefaultEdge> g, String filename){
-    	Writer writer;
+		Writer writer;
 		try {
 			writer = new FileWriter(filename);
-			
+
 			ComponentNameProvider<NodeWrapper> vertexNames = new NodeWrapperName();
-			
+
 			DOTExporter<NodeWrapper, DefaultEdge> export = 
-	    			new DOTExporter<NodeWrapper, DefaultEdge>(new IntegerComponentNameProvider<>(), vertexNames, null);
-	    	
+					new DOTExporter<NodeWrapper, DefaultEdge>(new IntegerComponentNameProvider<>(), vertexNames, null);
+
 			export.exportGraph(g, writer);
 			writer.close();
 		} catch (IOException e) {
 			System.err.println("Couldn't write graph to file " + filename);
 		}
-    	
-    	
-    	
-    }
-	
+
+
+
+	}
+
 	public static void writeDotNode(Graph<Node, DefaultEdge> g, String filename){
-    	Writer writer;
+		Writer writer;
 		try {
 			writer = new FileWriter(filename);
-			
+
 			ComponentNameProvider<Node> vertexNames = new NodeName();
-			
+
 			DOTExporter<Node, DefaultEdge> export = 
-	    			new DOTExporter<Node, DefaultEdge>(new IntegerComponentNameProvider<>(), vertexNames, null);
-	    	
+					new DOTExporter<Node, DefaultEdge>(new IntegerComponentNameProvider<>(), vertexNames, null);
+
 			//export.exportGraph(g, writer);
 			writer.close();
 		} catch (IOException e) {
 			System.err.println("Couldn't write graph to file " + filename);
 		}
-    	
-    	
-    	
-    }
+
+
+
+	}
+
+	public static String stringDotNode(Graph<Node, DefaultEdge> g){
+		Writer writer = null;
+		try {
+			writer = new StringWriter();
+
+			ComponentNameProvider<Node> vertexNames = new NodeName();
+
+			DOTExporter<Node, DefaultEdge> export = 
+					new DOTExporter<Node, DefaultEdge>(new IntegerComponentNameProvider<>(), vertexNames, null);
+
+			export.exportGraph(g, writer);
+			writer.close();
+		} catch (IOException e) {
+			System.err.println("Couldn't write graph to string " );
+		}
+
+		return writer.toString();
+
+
+
+	}
+
+	public static String stringDot(Graph<NodeWrapper, DefaultEdge> g){
+		Writer writer = new StringWriter();
+
+
+		ComponentNameProvider<NodeWrapper> vertexNames = new NodeWrapperName();
+
+		DOTExporter<NodeWrapper, DefaultEdge> export = 
+				new DOTExporter<NodeWrapper, DefaultEdge>(new IntegerComponentNameProvider<>(), vertexNames, null);
+
+		export.exportGraph(g, writer);
+
+		return writer.toString();
+
+
+
+	}
 
 }
