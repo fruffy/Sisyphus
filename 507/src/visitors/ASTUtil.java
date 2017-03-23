@@ -6,6 +6,7 @@ import java.util.List;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.SimpleName;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
@@ -34,7 +35,8 @@ public class ASTUtil {
 		//TODO check if actually free, right now just checking if occurs at all
 		HashSet<String> ret = new HashSet<String>();
 		String nodeString = node.toString();
-		if ((node instanceof SimpleName) && !gamma.contains(nodeString)){
+		if ((node instanceof NameExpr) && !gamma.contains(((NameExpr)node).getNameAsString())){
+			
 			ret.add(nodeString);
 		}
 		

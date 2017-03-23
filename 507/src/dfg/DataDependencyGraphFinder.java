@@ -4,6 +4,7 @@ import java.awt.List;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
 // java.util.HashSet;
@@ -15,9 +16,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.AssignExpr;
+import com.github.javaparser.ast.expr.SimpleName;
+import com.github.javaparser.ast.expr.UnaryExpr;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 //import datastructures.NicePair;
@@ -36,6 +38,9 @@ import visitors.ASTUtil;
  * Based on "Reaching Definitions" from Principles of Program Analysis
  * by Nielson, Nielson and Hankin
  * pp 43-44
+ * 
+ * 
+ * This is a bit of a mess. Here be dragons.
  *
  */
 public class DataDependencyGraphFinder {
@@ -54,6 +59,10 @@ public class DataDependencyGraphFinder {
 			VariableDeclarator vd = (VariableDeclarator)node;
 			ret.add(vd.getNameAsString());
 		}
+		else if (node instanceof UnaryExpr){
+			UnaryExpr ue = (UnaryExpr)node;
+			ret.add(ue.getExpression().toString());
+		}
 
 		for (Node child : node.getChildNodes()){
 			recursivelyGetAssignments(child, ret);
@@ -63,19 +72,18 @@ public class DataDependencyGraphFinder {
 	private static LinkedList<String> assignmentsWithin(Node n){
 		LinkedList<String> ret = new LinkedList<String>();
 		recursivelyGetAssignments(n, ret);
-		System.err.println("Assignments within " + n + ": " + ret);
 		return ret;
 	}
 
 	private class ReachingDefs{
-		
-		
-		
+
+
+
 		private TreeMap<String, HashSet<NodeWrapper>> innerMap = 
 				new TreeMap<String, HashSet<NodeWrapper>>();
-		
+
 		public ReachingDefs(){}
-		
+
 		public ReachingDefs(ReachingDefs that){
 			this.innerMap = new TreeMap<String, HashSet<NodeWrapper>>(that.innerMap);
 		}
@@ -123,18 +131,18 @@ public class DataDependencyGraphFinder {
 		public Set<Entry<String, HashSet<NodeWrapper>>> entries(){
 			return this.innerMap.entrySet();
 		}
-		
+
 		@Override
 		public String toString(){
 			return this.innerMap.toString();
 		}
-		
+
 		@Override
 		public boolean equals(Object arg){
 			ReachingDefs that = (ReachingDefs)arg;
 			return this.subsetOf(that) && that.subsetOf(this);
 		}
-		
+
 		public boolean subsetOf(ReachingDefs that){
 			for (Entry<String, HashSet<NodeWrapper>> thatEntry : that.entries()){
 				if (!this.innerMap.containsKey(thatEntry.getKey())){
@@ -186,11 +194,12 @@ public class DataDependencyGraphFinder {
 	private final Method initialMethod;
 
 	private final DirectedPseudograph<NodeWrapper, DefaultEdge> cfg;
-	private final Set<Node> allNodes;
+	private final Set<NodeWrapper> allNodes;
 	private Worklist worklist;
 
 	private TreeMap<NodeWrapper, ReachingDefs> exitSet = new TreeMap<NodeWrapper, ReachingDefs>();
 	private TreeMap<NodeWrapper, ReachingDefs> entrySet = new TreeMap<NodeWrapper, ReachingDefs>();
+
 
 	private NodeWrapper initialNode;
 
@@ -247,68 +256,52 @@ public class DataDependencyGraphFinder {
 		this.initialMethod = method;
 		this.initialNode = initialNode;
 		Set<NodeWrapper> cfgNodeWrappers = cfg.vertexSet();
-		ArrayList<Node> cfgNodeList = new ArrayList<Node>();
+		this.allNodes = new HashSet<NodeWrapper>();
 		for(NodeWrapper n: cfgNodeWrappers){
-			cfgNodeList.add(n.NODE);
+			System.err.println("All nodes, contains " + n.NODE);
+			allNodes.add(n);
 		}
-		this.allNodes = new HashSet<Node>(cfgNodeList);
+
 		this.worklist = new Worklist();
 
 
-		System.err.println("\n\n\n************\nDDG Method:\n" + this.initialMethod.getBody());
-		System.err.println("*** CFG:\n" + PDGGraphViz.stringDot(cfg));
 
 	}
 
 	public DirectedPseudograph<NodeWrapper, DefaultEdge> findReachingDefs(){
 		//Get the function parameters
 		//Create a DFG node for each one
-		TreeMap<String, NodeWrapper> paramNodes = new TreeMap<String, NodeWrapper>();
-		for (Parameter p : initialMethod.getMethodParameters()){
-			paramNodes.put(p.getNameAsString(), new NodeWrapper(p));
-			//Add parameter to our node list
-			allNodes.add(p);
-		}
+
+		System.err.println("Making DDG for " + this.initialMethod.getBody());
 
 		//Set the reaching defs to bottom (empty set) for each node
 		//Add all nodes to our worklist initially, since we need to update values for each node
-		for (Node n : allNodes){
+		for (NodeWrapper nw : allNodes){
+			Node n = nw.NODE;
+			System.err.println("Adding node " + n);
 
-			NodeWrapper nw = new NodeWrapper(n);
-			System.err.println("Creating sets for " + n + " addr " + nw);
 			this.entrySet.put(nw, bottom());
-			exitSet.put(nw, bottom());
+			this.exitSet.put(nw, bottom());
 
 
 			//Initial nodes have all free variables in their entry and exit sets
-			if (n.equals(this.initialNode)){ 
-
+			if (this.initialNode != null && this.initialNode == nw){ 
+				System.err.println("INIT MATCH");
 				ReachingDefs allFrees = new ReachingDefs();
-				for (String fv : ASTUtil.freeVars(initialMethod.getBody())){
-					//All non-parameters are free variables
-					//That are initially defined at the initial node
-					NodeWrapper paramNode = paramNodes.get(fv);
-					if (paramNode == null){
-						allFrees.addDefFor(fv, nw);
-					} else {
-						allFrees.addDefFor(fv, paramNode);
+				for (NodeWrapper anyNode : this.allNodes){
+					for (String fv : ASTUtil.freeVars(anyNode.NODE)){
+						allFrees.addDefFor(fv, new NodeWrapper(new SimpleName("//INITIAL VALUE OF " + fv)));
 					}
 				}
+				//HashSet<String> x = ASTUtil.freeVars(initialMethod.getBody());
+				//for (String fv : ASTUtil.freeVars(initialMethod.getBody())){
+				//	allFrees.addDefFor(fv, new NodeWrapper(new SimpleName("//INITIAL VALUE OF " + fv)));
+				//}
 				this.entrySetFor(nw).addAll(allFrees);
-				exitSetFor(nw).addAll(allFrees);
-				//Initial node goes into the worklist
-				worklist.push(nw);
 			}
-			//Parameter nodes define their parameters
-			else if (n instanceof Parameter){
-				Parameter p = (Parameter)n;
-				this.entrySetFor(nw).addDefFor(p.getNameAsString(), nw);
-				exitSetFor(nw).addDefFor(p.getNameAsString(), nw);
 
-			} else {
-				//Non special nodes go in the worklist
-				worklist.push(nw);
-			}
+			worklist.push(nw);
+
 		}
 
 
@@ -316,9 +309,6 @@ public class DataDependencyGraphFinder {
 		//Keep updating by the dataflow equations until nothing is on our worklist
 		while (!worklist.isEmpty()){
 			NodeWrapper currentNode = worklist.pop();
-			System.err.println("Entry Set: " + this.entrySet);
-			System.err.println("Entry set contains node? " + this.entrySet.containsKey(currentNode));
-			System.err.println("Worklist popped " + currentNode.NODE + " addr " + currentNode);
 			ReachingDefs currentEntry = this.entrySet.get(currentNode);
 			ReachingDefs currentExit = exitSet.get(currentNode);
 
@@ -337,11 +327,8 @@ public class DataDependencyGraphFinder {
 				if(exitSetFor(previousNode)!=null){
 					newEntry.addAll(exitSetFor(previousNode));
 				}
-				System.err.println("Adding " + exitSetFor(previousNode) 
-				+ " from " + previousNode.NODE + " to entry for " + currentNode.NODE);
 			}
 
-			System.err.println("New entry after union " + newEntry);
 
 
 			//Our exit set: add everything from entry that wasn't killed
@@ -351,17 +338,12 @@ public class DataDependencyGraphFinder {
 					newExit.addAllFor(varAndDefs.getKey(), varAndDefs.getValue());
 				}
 			}
-			System.err.println("Adding newly generated set " + genSet(currentNode) + " for node " + currentNode.NODE);
 			newExit.addAll(genSet(currentNode));
 
-			if (newEntry == null && newExit == null){
-				throw new RuntimeException("Null sets");
-			}
+
 
 			//Update our new entry and exit values
 			//System.out.println("ddg exitset "+exitSet);
-			System.err.println("New entry set " + newEntry + " for " + currentNode);
-			System.err.println("New exit set " + newExit + " for " + currentNode);
 			this.entrySet.put(currentNode, newEntry);
 			exitSet.put(currentNode, newExit);
 
@@ -369,16 +351,13 @@ public class DataDependencyGraphFinder {
 			//If we changed, add all our successors to the worklist
 			if (!newExit.equals(currentExit)){
 				Set<DefaultEdge> outgoingEdges = cfg.outgoingEdgesOf(currentNode);
-				System.err.println("Not equal between " + currentExit + "  and  " + newExit);
 				for (DefaultEdge edge : outgoingEdges){
 					worklist.push(cfg.getEdgeTarget(edge));
-					System.err.println("***Adding " + cfg.getEdgeTarget(edge).NODE + " to worklist");
-					
+
 				}
 
 			}
 			else {
-				System.err.println("No need to update. New: " + newExit + "  , old  " + currentExit);
 			}
 
 		}
@@ -396,13 +375,13 @@ public class DataDependencyGraphFinder {
 		NodeWrapper exitNode = new NodeWrapper(new ReturnNode());
 		ret2.addVertex(exitNode);
 
-		//Add all our params too
-		for (NodeWrapper p : paramNodes.values()){
-			ret2.addVertex(p);
-		}
+		HashMap<String, NodeWrapper> freeNodes = new HashMap<String, NodeWrapper>();
 
-		for (NodeWrapper nw : exitSet.keySet()){
-			for (Entry<String, HashSet<NodeWrapper>> defPair : exitSetFor(nw).entries()){
+
+		for (NodeWrapper nw : entrySet.keySet()){
+			System.err.println("Entries for " + nw.NODE);
+			for (Entry<String, HashSet<NodeWrapper>> defPair : entrySetFor(nw).entries()){
+
 				for (NodeWrapper defLoc : defPair.getValue()){
 					//If a def reaches a node, and that node references that variable
 					//then we have an edge
@@ -417,6 +396,7 @@ public class DataDependencyGraphFinder {
 						//System.out.println("Node " + nw.NODE + ", " + " doesn't contain " + defPair.a);
 					}
 				}
+
 			}
 			//If this is a return statement, then we have an edge to ExitNode
 			//The special node representing the "value" assigned to
@@ -427,6 +407,7 @@ public class DataDependencyGraphFinder {
 		}
 
 		System.err.println("Made DDG:\n" + PDGGraphViz.stringDot(ret2));
+
 
 		return ret2;
 	}

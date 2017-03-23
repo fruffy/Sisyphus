@@ -14,6 +14,7 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.Type;
 
 import datastructures.NodeWrapper;
+import datastructures.PDGGraphViz;
 import dfg.DataDependencyGraphFinder;
 import normalizers.StandardForm;
 import parsers.ControlDependencyParser;
