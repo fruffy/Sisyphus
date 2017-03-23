@@ -8,6 +8,7 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedPseudograph;
 
 import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.nodeTypes.NodeWithBlockStmt;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.BreakStmt;
 import com.github.javaparser.ast.stmt.CatchClause;
@@ -21,7 +22,7 @@ import com.github.javaparser.ast.stmt.WhileStmt;
 
 import core.Method;
 import datastructures.BackEdge;
-import datastructures.EntryStmt;
+import datastructures.EntryExpr;
 import datastructures.NodeWrapper;
 
 /**
@@ -77,7 +78,7 @@ public class ControlFlowParser {
 		// Remove them after initialising the graph
 		// TODO: Figure out a better way...
 
-		NodeWrapper initNode = new NodeWrapper(new EntryStmt());
+		NodeWrapper initNode = new NodeWrapper(new EntryExpr());
 		this.cfg.addVertex(initNode);
 		this.previousNodes.add(initNode);
 		parseRec(methodBody);
@@ -129,37 +130,43 @@ public class ControlFlowParser {
 			return null;
 		}
 		NodeWrapper currentNode = new NodeWrapper(statement);
-		List<Node> children = currentNode.NODE.getChildNodes();
-		for (Node child : children) {		
-			currentNode = new NodeWrapper(child);
-			// Handle conditionals
-			if (currentNode.NODE instanceof IfStmt) {
-				currentNode = parseIfStmt((IfStmt) currentNode.NODE);
-			} else if (currentNode.NODE instanceof ForStmt) {
-				currentNode = parseForLoop((ForStmt) currentNode.NODE);
-			} else if (currentNode.NODE instanceof WhileStmt) {
-				currentNode = parseWhileLoop((WhileStmt) currentNode.NODE);
-			}
-			else if (currentNode.NODE instanceof TryStmt) {
-				parseTryCatch((TryStmt) currentNode.NODE);
-			}
-			// Handle default case
-			else {
-				addGraphElements(currentNode);
-				if (currentNode.NODE instanceof ReturnStmt) {
-/*					if(((ReturnStmt)currentNode.NODE).getExpression().isPresent()) {
-						parseRec(((ReturnStmt)currentNode.NODE).getExpression().get());
-					}*/
-					// Everything after is dead code, no need to proceed
-					return null;
-				} else  if ( currentNode.NODE instanceof BreakStmt || currentNode.NODE instanceof ContinueStmt) {
-					return null;
+		if (statement instanceof NodeWithBlockStmt<?>) {
+			List<Node> children = currentNode.NODE.getChildNodes();
+			for (Node child : children) {
+				currentNode = new NodeWrapper(child);
+				// Handle conditionals
+				if (currentNode.NODE instanceof IfStmt) {
+					currentNode = parseIfStmt((IfStmt) currentNode.NODE);
+				} else if (currentNode.NODE instanceof ForStmt) {
+					currentNode = parseForLoop((ForStmt) currentNode.NODE);
+				} else if (currentNode.NODE instanceof WhileStmt) {
+					currentNode = parseWhileLoop((WhileStmt) currentNode.NODE);
+				} else if (currentNode.NODE instanceof TryStmt) {
+					parseTryCatch((TryStmt) currentNode.NODE);
 				}
-				// Clear the current list and add next predecessor
-				refreshPreviousNodes(currentNode);
+				// Handle default case
+				else {
+					addGraphElements(currentNode);
+					if (currentNode.NODE instanceof ReturnStmt) {
+						/*
+						 * if(((ReturnStmt)currentNode.NODE).getExpression().
+						 * isPresent()) {
+						 * parseRec(((ReturnStmt)currentNode.NODE).getExpression
+						 * ().get()); }
+						 */
+						// Everything after is dead code, no need to proceed
+						return null;
+					} else if (currentNode.NODE instanceof BreakStmt || currentNode.NODE instanceof ContinueStmt) {
+						return null;
+					}
+					// Clear the current list and add next predecessor
+					refreshPreviousNodes(currentNode);
+				}
 			}
+		} else {
+			currentNode = new NodeWrapper(statement);
+			refreshPreviousNodes(currentNode);
 		}
-
 		return currentNode;
 	}
 
@@ -172,12 +179,13 @@ public class ControlFlowParser {
 		addGraphElements(entryNode);
 		refreshPreviousNodes(entryNode);
 		tempNodes.add(entryNode);
-		
+
 		// Parse the body of the for statement
 		exitNode = parseRec(currentNode.getBody());
 		if (exitNode != null) {
-			//It can happen that a while statement is empty and the control flow is in the condition clause
-			//TODO: Figure out a way to handle this 
+			// It can happen that a while statement is empty and the control
+			// flow is in the condition clause
+			// TODO: Figure out a way to handle this
 			refreshPreviousNodes(entryNode);
 			addGraphElements(exitNode, new BackEdge());
 		}
@@ -292,7 +300,7 @@ public class ControlFlowParser {
 	 *            The node the newly created edge will point to.
 	 */
 	private void addGraphElements(NodeWrapper targetNode) {
-		if(targetNode == null){
+		if (targetNode == null) {
 			return;
 		}
 		this.cfg.addVertex(targetNode);

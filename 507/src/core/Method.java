@@ -40,14 +40,18 @@ public class Method {
 
 	public Method(MethodDeclaration methodDeclaration) {
 		this.originalDecl = methodDeclaration.clone();
+		this.methodName = methodDeclaration.getNameAsString();
+		this.parameters = methodDeclaration.getParameters();
+		this.returnType = methodDeclaration.getType();
+		if (!(methodDeclaration.getBody().isPresent())) {
+			System.err.println("WARNING: Empty Method");
+			return;
+		}
 		this.body = methodDeclaration.getBody().get();
 		//System.out.println("FIRST RESULT +:\n" + this.body);
 		this.trimBody();
 		//resolveMethodCalls(methodDeclaration, 3);
 		methodDeclaration = normalize(methodDeclaration);
-		this.methodName = methodDeclaration.getNameAsString();
-		this.parameters = methodDeclaration.getParameters();
-		this.returnType = methodDeclaration.getType();
 		//System.out.println("SECOND RESULT +:\n" + this.body);
 		this.body = methodDeclaration.getBody().get();
 		//System.out.println("LAST RESULT +:\n" + this.body);
@@ -162,9 +166,13 @@ public class Method {
 		DataDependencyGraphFinder ddgf = new DataDependencyGraphFinder(cfg);
 		ddg = ddgf.findReachingDefs();
 		
+
 		//combine cdg and ddg to pdg with Nodes as vertices rather
 		//than NodeWrappers
 		DirectedPseudograph<Node, DefaultEdge> pdgNode = new DirectedPseudograph<>(DefaultEdge.class);
+		if (m.getBody() == null) {
+			return pdgNode;
+		}
 		for(NodeWrapper n: cdg.vertexSet()){
 			pdgNode.addVertex(n.NODE);
 		}

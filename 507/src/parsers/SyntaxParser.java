@@ -3,6 +3,7 @@ package parsers;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
@@ -22,42 +23,33 @@ import core.Method;
 
 public class SyntaxParser {
 
-	public CompilationUnit cu;
-	public ArrayList<MethodDeclaration> methodDeclarationList;
-	
+	private ArrayList<MethodDeclaration> methodDeclarationList;
+
 	public SyntaxParser(File inputFile) throws FileNotFoundException {
-		this.cu = JavaParser.parse(inputFile);
-		this.methodDeclarationList = this.getMethodDeclaration();
+		this.methodDeclarationList = this.getMethodDeclaration(inputFile);
 	}
 
-	/********************************************************************************************/
-	/*
-	 * Functions imported from the javaparser lib
-	 */
-	public void parse() {
-		new VoidVisitorAdapter<Object>() {
-			@Override
-			public void visit(MethodCallExpr n, Object arg) {
-				super.visit(n, arg);
-				System.out.println(" [L " + n.getBegin() + "] " + n);
-			}
-		}.visit(this.cu, null);
+	public SyntaxParser(List<File> inputFiles) throws FileNotFoundException {
+		this.methodDeclarationList = this.getMethodDeclarations(inputFiles);
 	}
 
 	/*
 	 * Returns an arraylist of all MethodCallExpr objects from which we can gain
 	 * information about the methods in a file
 	 */
-	public ArrayList<MethodDeclaration> getMethodDeclaration() {
+	private ArrayList<MethodDeclaration> getMethodDeclaration(File inputFile) throws FileNotFoundException {
+
 		ArrayList<MethodDeclaration> methodDecList = new ArrayList<MethodDeclaration>();
+		CompilationUnit compilationUnit = JavaParser.parse(inputFile);
 		new VoidVisitorAdapter<Object>() {
 			@Override
 			public void visit(MethodDeclaration n, Object arg) {
 				super.visit(n, arg);
-				methodDecList.add(n);
-				// System.out.println(n.getName());
+				if (n.getBody().isPresent()) {
+					methodDecList.add(n);
+				}
 			}
-		}.visit(this.cu, null);
+		}.visit(compilationUnit, null);
 		return methodDecList;
 	}
 
@@ -65,17 +57,21 @@ public class SyntaxParser {
 	 * Returns an arraylist of all MethodCallExpr objects from which we can gain
 	 * information about the methods in a file
 	 */
-	public ArrayList<MethodCallExpr> getMethodInvocation() {
-		ArrayList<MethodCallExpr> methodCallList = new ArrayList<MethodCallExpr>();
-		new VoidVisitorAdapter<Object>() {
-			@Override
-			public void visit(MethodCallExpr n, Object arg) {
-				super.visit(n, arg);
-				methodCallList.add(n);
-				// System.out.println(n.getName());
-			}
-		}.visit(this.cu, null);
-		return methodCallList;
+	private ArrayList<MethodDeclaration> getMethodDeclarations(List<File> inputFiles) throws FileNotFoundException {
+		ArrayList<MethodDeclaration> methodDecList = new ArrayList<MethodDeclaration>();
+		for (File file : inputFiles) {
+			CompilationUnit compilationUnit = JavaParser.parse(file);
+			new VoidVisitorAdapter<Object>() {
+				@Override
+				public void visit(MethodDeclaration n, Object arg) {
+					super.visit(n, arg);
+					if (n.getBody().isPresent()) {
+						methodDecList.add(n);
+					}
+				}
+			}.visit(compilationUnit, null);
+		}
+		return methodDecList;
 	}
 
 	/*
@@ -86,41 +82,11 @@ public class SyntaxParser {
 		for (MethodDeclaration n : this.methodDeclarationList) {
 			try {
 				Method nMethod = new Method(n);
-	/*			System.out.print("Added: "+nMethod.getReturnType() + " " + nMethod.getMethodName() + " ( ");
-				for (Parameter par : nMethod.getMethodParameters()) {
-					System.out.print(par +" ");
-				}
-				System.out.println(")" + " "+ nMethod.getBody());*/
 				methodList.add(nMethod);
-				
-				}
-				catch (Exception e) { 
-					e.printStackTrace();
-				}
-			//System.out.println("normalizing method: "+nMethod.getMethodName());
-			//methodList.add(nMethod.normalize());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return methodList;
 	}
-
-	/* Returns an arraylist of method names in the class */
-	public ArrayList<String> getMethodNames() {
-		ArrayList<Method> methodList = this.getMethods();
-		ArrayList<String> methodNames = new ArrayList<String>();
-		for (Method call : methodList) {
-			methodNames.add(call.getMethodName());
-		}
-		return methodNames;
-	}
-
-	/* Returns an arraylist of method return types in the class */
-	public ArrayList<Type> getReturnTypes() {
-		ArrayList<Method> methodList = this.getMethods();
-		ArrayList<Type> returnTypes = new ArrayList<Type>();
-		for (Method call : methodList) {
-			returnTypes.add(call.getReturnType());
-		}
-		return returnTypes;
-	}
-	
 }

@@ -3,7 +3,7 @@ package parsers;
 import java.util.Iterator;
 
 import datastructures.DominatorTree;
-import datastructures.EntryStmt;
+import datastructures.EntryExpr;
 import datastructures.NodeWrapper;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DirectedAcyclicGraph;
@@ -50,7 +50,7 @@ public class ControlDependencyParser {
 
 	private void buildControlDependenceGraph(Graph<NodeWrapper, DefaultEdge> cfg,
 			Graph<NodeWrapper, DefaultEdge> fdt) {
-		NodeWrapper entry = new NodeWrapper(new EntryStmt());
+		NodeWrapper entry = new NodeWrapper(new EntryExpr());
 		NodeWrapper previousNode = entry;
 		cdg.addVertex(entry);
 		Iterator<NodeWrapper> vertexIterator = cfg.vertexSet().iterator();
