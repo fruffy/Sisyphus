@@ -140,7 +140,7 @@ public class CloneDetector {
 							+ " can be replaced by " + ref.getSignature() + " with return type " + ref.getReturnType());*/
 
 					//System.out.printf(" Confidence %.2f%%\n", match / mismatch);
-					// matchedMethods.add(matched);
+					//matchedMethods.add(matched);
 				}
 			}
 		}
@@ -426,7 +426,7 @@ public class CloneDetector {
 		}
 
 		double dist = calculateDistance(featureArray1, featureArray2);
-		match = dist;
+		this.match = dist;
 		if (dist <= threshold) {
 			//System.out.println("Matched");
 			

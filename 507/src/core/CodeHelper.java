@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import parsers.ControlListParser;
 import parsers.SyntaxParser;
 
 public class CodeHelper {
@@ -56,14 +57,14 @@ public class CodeHelper {
 		}*/
 		//ArrayList<Method> libTest = new ArrayList<Method>();
 		//libTest.add(libMethods.get(223));
-
+		ControlListParser test = new ControlListParser(srcMethods);
 		CloneDetector cloneDetect = new CloneDetector(libMethods);
 		matchSrcWithLib(srcMethods,cloneDetect);
 		
 		int numParticipants = 12;
 		int numMethods = srcMethods.size()/numParticipants;
 		testCodeMatches(srcMethods,cloneDetect,numParticipants,numMethods);
-		
+
 		testLeetcodeMatches(leetcodeMethods,cloneDetect);
 	}
 	
@@ -82,9 +83,8 @@ public class CodeHelper {
 		System.out.println("Number of true positives = "+tpFp[0]);
 		System.out.println("Number of false positives = "+tpFp[1]);
 		System.out.printf("Percentage of true positives %.2f%%\n", 100*tpFp[0]/(double)matchesPDG.size());
-		System.out.println("Percentage of true positives out of all possible true positives "+(tpFp[0]*100.0)/srcMethods.size());
-		System.out.println();
-		
+		System.out.printf("Percentage of actual matches %.2f%%\n", 100*tpFp[0]/(double)srcMethods.size());
+
 		System.out.println("ANALYSIS: AST");
 		ArrayList<Method> srcTest = new ArrayList<Method>();
 		ArrayList<Method[]> matchesAST = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsAST(srcMethods);
@@ -95,9 +95,9 @@ public class CodeHelper {
 		System.out.println("Number of true positives = "+tpFp[0]);
 		System.out.println("Number of false positives = "+tpFp[1]);
 		System.out.printf("Percentage of true positives %.2f%%\n", 100*tpFp[0]/(double)matchesAST.size());
-		System.out.println("Percentage of true positives out of all possible true positives "+(tpFp[0]*100.0)/srcMethods.size());
-		System.out.println();
-		
+		System.out.printf("Percentage of actual matches %.2f%%\n", 100*tpFp[0]/(double)srcMethods.size());
+
+
 		System.out.println("ANALYSIS: AST Deckard");
 		ArrayList<Method> srcTest2 = new ArrayList<Method>();
 		srcTest2.add(srcMethods.get(55));
@@ -109,8 +109,7 @@ public class CodeHelper {
 		System.out.println("Number of true positives = "+tpFp[0]);
 		System.out.println("Number of false positives = "+tpFp[1]);
 		System.out.printf("Percentage of true positives %.2f%%\n", 100*tpFp[0]/(double)matchesDeckard.size());
-		System.out.println("Percentage of true positives out of all possible true positives "+(tpFp[0]*100.0)/srcMethods.size());
-		System.out.println();
+		System.out.printf("Percentage of actual matches %.2f%%\n", 100*tpFp[0]/(double)srcMethods.size());
 	}
 	
 	/**
