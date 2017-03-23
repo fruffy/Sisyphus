@@ -1,17 +1,23 @@
 package core;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.jgrapht.graph.DirectedPseudograph;
 
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.Type;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import datastructures.NodeWrapper;
 import datastructures.PDGGraphViz;
@@ -20,6 +26,7 @@ import normalizers.StandardForm;
 import parsers.ControlDependencyParser;
 import parsers.ControlFlowParser;
 import parsers.MethodSolver;
+import parsers.SyntaxParser;
 import visitors.ASTUtil;
 
 /*
@@ -46,12 +53,16 @@ public class Method {
 			System.err.println("WARNING: Empty Method");
 			return;
 		}
+		
+		//System.out.println("BEFORE: ***********************************************\n" + this.body);
 		this.body = methodDeclaration.getBody().get();
-		System.out.println("BEFORE: ***********************************************\n" + this.body);
 		this.trimBody();
 		//resolveMethodCalls(methodDeclaration, 3);
+
+		
 		methodDeclaration = normalize(methodDeclaration);
-		System.out.println("AFTER: ++++++++++++++++++++++++++++++++++++++++++++++++\n" + this.body);
+		this.body = methodDeclaration.getBody().get();
+		//System.out.println("AFTER: ++++++++++++++++++++++++++++++++++++++++++++++++\n" + this.body);
 
 	}
 	
@@ -130,8 +141,7 @@ public class Method {
 	 */
 	public MethodDeclaration normalize(MethodDeclaration methodDecl) {
 		return (MethodDeclaration)StandardForm.toStandardForm(methodDecl);
-/*		ret.unNormalized = this;
-		return ret;*/
+		
 	}
 	
 	public boolean isRecursive(){
