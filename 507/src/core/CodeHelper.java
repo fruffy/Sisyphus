@@ -60,7 +60,7 @@ public class CodeHelper {
 		CloneDetector cloneDetect = new CloneDetector(libMethods);
 		matchSrcWithLib(srcMethods,cloneDetect);
 		
-		int numParticipants = 12;
+		int numParticipants = 13;
 		int numMethods = srcMethods.size()/numParticipants;
 		testCodeMatches(srcMethods,cloneDetect,numParticipants,numMethods);
 		
