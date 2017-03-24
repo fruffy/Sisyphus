@@ -2,23 +2,27 @@ package core;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
+//import com.thoughtworks.xstream.XStream;
+//import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import parsers.ControlListParser;
 import parsers.SyntaxParser;
 
 public class CodeHelper {
+	
+	
 	public static void main(String[] args) throws IOException {
 
 		String srcName = "../examples/TestCodeV2.java";
@@ -73,7 +77,7 @@ public class CodeHelper {
 		//srcparser = (SyntaxParser)xstream.fromXML(new FileInputStream(temp));
 		ControlListParser test = new ControlListParser(srcMethods);
 		CloneDetector cloneDetect = new CloneDetector(libMethods);
-		matchSrcWithLib(srcMethods, cloneDetect);
+		matchSrcWithLib(srcMethods, cloneDetect,srcMethods.size(),libMethods.size());
 
 		/*
 		 * int numParticipants = 13; int numMethods =
@@ -90,43 +94,59 @@ public class CodeHelper {
 	 * @param srcMethods
 	 * @param cloneDetect
 	 */
-	public static void matchSrcWithLib(ArrayList<Method> srcMethods, CloneDetector cloneDetect) {
-		System.out.println("ANALYSIS: PDG");
+	public static void matchSrcWithLib(ArrayList<Method> srcMethods, CloneDetector cloneDetect, int numSrcMethods, int numLibMethods) {
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter("results.txt");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		out.println("ANALYSIS: PDG");
 		ArrayList<Method[]> matchesPDG = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsPDG(srcMethods);
-		Analysis analysisPDG = new Analysis(matchesPDG);
+		Analysis analysisPDG = new Analysis(matchesPDG,numSrcMethods,numLibMethods);
 		int[] tpFp = analysisPDG.tpfp();
-		System.out.println("Number of test code functions = " + srcMethods.size());
-		System.out.println("Number of matches = " + matchesPDG.size());
-		System.out.println("Number of true positives = " + tpFp[0]);
-		System.out.println("Number of false positives = " + tpFp[1]);
-		System.out.printf("Percentage of true positives %.2f%%\n", 100 * tpFp[0] / (double) matchesPDG.size());
-		System.out.printf("Percentage of actual matches %.2f%%\n", 100 * tpFp[0] / (double) srcMethods.size());
+		out.println("Number of test code functions = " + srcMethods.size());
+		out.println("Number of matches = " + matchesPDG.size());
+		out.println("Number of true positives = " + tpFp[0]);
+		out.println("Number of false positives = " + tpFp[1]);
+		out.println("Number of true negatives = " + tpFp[2]);
+		out.println("Number of false negatives = " + tpFp[3]);
+		out.printf("Percentage of true positives %.2f%%\n", 100 * tpFp[0] / (double) matchesPDG.size());
+		out.printf("Percentage of actual matches %.2f%%\n", 100 * tpFp[0] / (double) srcMethods.size());
 
-		System.out.println("ANALYSIS: AST");
+		out.println("ANALYSIS: AST");
 		ArrayList<Method> srcTest = new ArrayList<Method>();
 		ArrayList<Method[]> matchesAST = (ArrayList<Method[]>) cloneDetect.findSimiliarMethodsAST(srcMethods);
-		Analysis analysisAST = new Analysis(matchesAST);
+		Analysis analysisAST = new Analysis(matchesAST,numSrcMethods,numLibMethods);
 		tpFp = analysisAST.tpfp();
-		System.out.println("Number of test code functions = " + srcMethods.size());
-		System.out.println("Number of matches = " + matchesAST.size());
-		System.out.println("Number of true positives = " + tpFp[0]);
-		System.out.println("Number of false positives = " + tpFp[1]);
-		System.out.printf("Percentage of true positives %.2f%%\n", 100 * tpFp[0] / (double) matchesAST.size());
-		System.out.printf("Percentage of actual matches %.2f%%\n", 100 * tpFp[0] / (double) srcMethods.size());
+		out.println("Number of test code functions = " + srcMethods.size());
+		out.println("Number of matches = " + matchesAST.size());
+		out.println("Number of true positives = " + tpFp[0]);
+		out.println("Number of false positives = " + tpFp[1]);
+		out.println("Number of true negatives = " + tpFp[2]);
+		out.println("Number of false negatives = " + tpFp[3]);
+		out.printf("Percentage of true positives %.2f%%\n", 100 * tpFp[0] / (double) matchesAST.size());
+		out.printf("Percentage of actual matches %.2f%%\n", 100 * tpFp[0] / (double) srcMethods.size());
 
-		System.out.println("ANALYSIS: AST Deckard");
+		out.println("ANALYSIS: AST Deckard");
 		ArrayList<Method> srcTest2 = new ArrayList<Method>();
 		srcTest2.add(srcMethods.get(55));
 		ArrayList<Method[]> matchesDeckard = (ArrayList<Method[]>) cloneDetect
 				.findSimiliarMethodsNodeFeatures(srcMethods);
-		Analysis analysisDeckard = new Analysis(matchesDeckard);
+		Analysis analysisDeckard = new Analysis(matchesDeckard,numSrcMethods,numLibMethods);
 		tpFp = analysisDeckard.tpfp();
-		System.out.println("Number of test code functions = " + srcMethods.size());
-		System.out.println("Number of matches = " + matchesDeckard.size());
-		System.out.println("Number of true positives = " + tpFp[0]);
-		System.out.println("Number of false positives = " + tpFp[1]);
-		System.out.printf("Percentage of true positives %.2f%%\n", 100 * tpFp[0] / (double) matchesDeckard.size());
-		System.out.printf("Percentage of actual matches %.2f%%\n", 100 * tpFp[0] / (double) srcMethods.size());
+		out.println("Number of test code functions = " + srcMethods.size());
+		out.println("Number of matches = " + matchesDeckard.size());
+		out.println("Number of true positives = " + tpFp[0]);
+		out.println("Number of false positives = " + tpFp[1]);
+		out.println("Number of true negatives = " + tpFp[2]);
+		out.println("Number of false negatives = " + tpFp[3]);
+		out.printf("Percentage of true positives %.2f%%\n", 100 * tpFp[0] / (double) matchesDeckard.size());
+		out.printf("Percentage of actual matches %.2f%%\n", 100 * tpFp[0] / (double) srcMethods.size());
+	
+		out.close();
 	}
 
 	/**

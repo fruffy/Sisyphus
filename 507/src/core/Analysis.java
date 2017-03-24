@@ -9,9 +9,13 @@ import com.github.javaparser.ast.type.Type;
 
 public class Analysis {
 	private ArrayList<Method[]> matches;
+	private int numSrcMethods;
+	private int numLibMethods;
 	
-	public Analysis(ArrayList<Method[]> matches){
+	public Analysis(ArrayList<Method[]> matches, int numSrcMethods, int numLibMethods){
 		this.matches = matches;
+		this.numSrcMethods = numSrcMethods;
+		this.numLibMethods = numLibMethods;
 	}
 	
 	/**
@@ -21,6 +25,8 @@ public class Analysis {
 	public int[] tpfp(){
 		int countTP = 0;
 		int countFP = 0;
+		int countTN = 0;
+		int countFN = 0;
 		for(int i = 0; i< this.matches.size(); i++){
 			Method[] match = this.matches.get(i);
 			Method srcMatch = match[0];
@@ -100,7 +106,9 @@ public class Analysis {
 			}
 			
 		}
-		int[] result = {countTP, countFP};
+		countTN = this.numSrcMethods*this.numLibMethods - this.numSrcMethods;
+		countFN = this.numSrcMethods - countTP;
+		int[] result = {countTP, countFP,countTN, countFN};
 		return result;
 	}
 }
