@@ -54,8 +54,8 @@ public class CloneDetector {
 			for (Method ref : methodLibrary) {
 				if (matchMethodDeclaration(src, ref)) {
 					Method[] matched = { src, ref };
-					System.out.println("Match! " + src.getSignature() + " with return type " + src.getReturnType()
-							+ " can be replaced by " + ref.getSignature() + " with return type " + ref.getReturnType());
+/*					System.out.println("Match! " + src.getSignature() + " with return type " + src.getReturnType()
+							+ " can be replaced by " + ref.getSignature() + " with return type " + ref.getReturnType());*/
 
 					matchedMethods.add(matched);
 				}
@@ -98,8 +98,8 @@ public class CloneDetector {
 			}
 			if (finalMatched != null) {
 				matchedMethods.add(finalMatched);
-				System.out.println("Match! " + finalMatched[0].getSignature() + " with return type " + finalMatched[0].getReturnType()
-						+ " can be replaced by " + finalMatched[1].getSignature() + " with return type " + finalMatched[1].getReturnType());
+				/*System.out.println("Match! " + finalMatched[0].getSignature() + " with return type " + finalMatched[0].getReturnType()
+						+ " can be replaced by " + finalMatched[1].getSignature() + " with return type " + finalMatched[1].getReturnType());*/
 			}
 		}
 		return matchedMethods;
@@ -138,9 +138,9 @@ public class CloneDetector {
 			}
 			if (finalMatched != null) {
 				matchedMethods.add(finalMatched);
-				System.out.print("Match! " + finalMatched[0].getSignature() + " with return type " + finalMatched[0].getReturnType()
+/*				System.out.print("Match! " + finalMatched[0].getSignature() + " with return type " + finalMatched[0].getReturnType()
 						+ " can be replaced by " + finalMatched[1].getSignature() + " with return type " + finalMatched[1].getReturnType());
-				System.out.printf(" Confidence %.2f%%\n", match / mismatch);
+				System.out.printf(" Confidence %.2f%%\n", match / mismatch);*/
 			}
 		}
 		return matchedMethods;

@@ -57,7 +57,7 @@ public class Method {
 		//System.out.println("BEFORE: ***********************************************\n" + this.body);
 		this.body = methodDeclaration.getBody().get();
 		this.trimBody();
-		//resolveMethodCalls(methodDeclaration, 3);
+		resolveMethodCalls(methodDeclaration, 3);
 
 		
 		methodDeclaration = normalize(methodDeclaration);

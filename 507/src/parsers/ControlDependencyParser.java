@@ -47,7 +47,7 @@ public class ControlDependencyParser {
 		Graph<NodeWrapper, DefaultEdge> fdt = buildForwardDominanceTree(cfg);
 		buildControlDependenceGraph(cfg, fdt);
 	}
-
+//TODO: Fix potential bug in the generation of the control dependence parser
 	private void buildControlDependenceGraph(Graph<NodeWrapper, DefaultEdge> cfg,
 			Graph<NodeWrapper, DefaultEdge> fdt) {
 		NodeWrapper entry = new NodeWrapper(new EntryStmt());

@@ -24,11 +24,13 @@ import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
 import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserMethodDeclaration;
 import com.github.javaparser.symbolsolver.model.declarations.MethodDeclaration;
 import com.github.javaparser.symbolsolver.model.resolution.SymbolReference;
 import com.github.javaparser.symbolsolver.model.resolution.UnsolvedSymbolException;
+import com.github.javaparser.symbolsolver.model.typesystem.ReferenceType;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
 
@@ -52,7 +54,8 @@ public class MethodSolver {
 		this.canaryMethods = new HashSet<String>();
 		processMethod();
 	}
-
+	
+	
 	class MethodResolveVisitor extends ModifierVisitor<JavaParserFacade> {
 
 		@Override
@@ -217,7 +220,6 @@ public class MethodSolver {
 
 	private void processMethod() {
 		this.methodBody.accept(new MethodResolveVisitor(), JavaParserFacade.get(typeSolver));
-
 	}
 
 }

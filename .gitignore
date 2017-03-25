@@ -39,3 +39,5 @@ javaparser/javaparser-core/src/main/java/com/github/javaparser/metamodel/JavaPar
 experimental/
 
 examples/\.DS_Store
+
+507/results\.txt
