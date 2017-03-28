@@ -1,4 +1,4 @@
-package parsers;
+/*package parsers;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -32,7 +32,7 @@ public class EclipseParser {
 	 *
 	 * @param unit
 	 * @return
-	 */
+
 
 	private static CompilationUnit parse(char[] unit) {
 		ASTParser parser = ASTParser.newParser(AST.JLS8);
@@ -66,4 +66,4 @@ public class EclipseParser {
 	public static void main(String[] args) throws IOException, JavaModelException {
 		createAST(parse(readFileToString("src/examples/TestCode.java")));
 	}
-}
+}*/

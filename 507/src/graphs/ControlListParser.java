@@ -1,4 +1,4 @@
-package parsers;
+package graphs;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -8,7 +8,7 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.jgrapht.graph.DirectedPseudograph;
 
-import core.Method;
+import datastructures.Method;
 import datastructures.NodeWrapper;
 
 public class ControlListParser {

@@ -10,7 +10,7 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
-import core.Method;
+import datastructures.Method;
 
 /*
  * The parser class

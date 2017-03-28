@@ -23,6 +23,7 @@
  *
  */
 
+package java.lang;
 import java.util.Random;
 
 import sun.misc.FloatConsts;

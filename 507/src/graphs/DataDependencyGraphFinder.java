@@ -1,4 +1,4 @@
-package dfg;
+package graphs;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,7 +20,7 @@ import com.github.javaparser.ast.expr.UnaryExpr;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 //import datastructures.NicePair;
 
-import core.Method;
+import datastructures.Method;
 import datastructures.NodeWrapper;
 import visitors.ASTUtil;
 

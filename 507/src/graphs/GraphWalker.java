@@ -6,7 +6,7 @@
  * For further details on licensing please read the information at
  * http://joana.ipd.kit.edu or contact the authors.
  */
-package datastructures;
+package graphs;
 
 import java.util.HashSet;
 import java.util.LinkedList;

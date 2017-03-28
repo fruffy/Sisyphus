@@ -1,4 +1,4 @@
-package parsers;
+package graphs;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -20,9 +20,9 @@ import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.stmt.TryStmt;
 import com.github.javaparser.ast.stmt.WhileStmt;
 
-import core.Method;
 import datastructures.BackEdge;
 import datastructures.EntryStmt;
+import datastructures.Method;
 import datastructures.NodeWrapper;
 
 /**
@@ -137,11 +137,11 @@ public class ControlFlowParser {
 	// - Do Statements
 	// - maybe parallel programming primitives?
 	private NodeWrapper parseRec(Statement statement) {
-		if (statement.getChildNodes().size() == 0) {
+	/*	if (statement.getChildNodes().size() == 0) {
 			System.out.println(statement.getClass());
 			System.err.println("Empty Statement!" + statement.toString());
 			return null;
-		}
+		}*/
 		NodeWrapper currentNode = new NodeWrapper(statement);
 		if (statement instanceof NodeWithStatements) {
 			List<Node> children = currentNode.NODE.getChildNodes();

@@ -1,4 +1,4 @@
-package parsers;
+/*package visitors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,4 +18,4 @@ public class MethodVisitor extends ASTVisitor {
 	public List<MethodDeclaration> getMethods() {
 		return methods;
 	}
-}
+}*/

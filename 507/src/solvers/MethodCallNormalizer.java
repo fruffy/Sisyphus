@@ -1,4 +1,4 @@
-package parsers;
+package solvers;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.AssignExpr;

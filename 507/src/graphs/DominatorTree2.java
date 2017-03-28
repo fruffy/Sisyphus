@@ -1,4 +1,4 @@
-package datastructures;
+package graphs;
 
 /**
  * This file is part of the Joana IFC project. It is developed at the
