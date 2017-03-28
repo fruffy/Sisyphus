@@ -33,7 +33,7 @@ import visitors.ASTUtil;
  * This is a bit of a mess. Here be dragons.
  *
  */
-public class DataDependencyGraphFinder {
+public class DataDependencyGraphBuilder {
 
 	/**
 	 * Returns null if the node isn't an assignment
@@ -239,7 +239,7 @@ public class DataDependencyGraphFinder {
 	}
 
 
-	public DataDependencyGraphFinder(DirectedPseudograph<NodeWrapper, DefaultEdge> cfg, 
+	public DataDependencyGraphBuilder(DirectedPseudograph<NodeWrapper, DefaultEdge> cfg, 
 			Method method,
 			NodeWrapper initialNode){
 		this.cfg = cfg;

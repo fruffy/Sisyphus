@@ -30,7 +30,7 @@ import org.jgrapht.traverse.DepthFirstIterator;
  * (Cooper, Keith D. and Harvey, Timothy J. and Kennedy, Ken).
  * http://dx.doi.org/10.1145/357062.357071
  */
-public class DominatorTree<V, E> {
+public class DominatorTreeBuilder<V, E> {
 
 	private Graph<V, E> graph;
 	private List<V> vertexPreOrder;
@@ -55,7 +55,7 @@ public class DominatorTree<V, E> {
 	 * @param entry
 	 *            the entry node
 	 */
-	public DominatorTree(Graph<V, E> g, V entry) {
+	public DominatorTreeBuilder(Graph<V, E> g, V entry) {
 		this(g, dfsPreOrder(g, entry));
 	}
 
@@ -79,7 +79,7 @@ public class DominatorTree<V, E> {
 	 *            a pre-order DFS traversal of the graph. Its first node is the
 	 *            entry point of the graph.
 	 */
-	public DominatorTree(Graph<V, E> g, List<V> preOrder) {
+	public DominatorTreeBuilder(Graph<V, E> g, List<V> preOrder) {
 		this.graph = g;
 		this.vertexPreOrder = preOrder;
 		// just making sure we have a non-empty graph,

@@ -70,10 +70,10 @@ import org.jgrapht.graph.SimpleDirectedGraph;
  * @param <V> Type of the nodes in the flowgraph
  * @param <E> Type of the edges in the flowgraph
  */
-public class DominatorTree2<V, E> {
+public class DominatorTreeBuilder2<V, E> {
 
-    public static <Y, Z> DominatorTree2<Y, Z> compute(Graph<Y, Z> graph, Y entry) {
-        DominatorTree2<Y, Z> dom = new DominatorTree2<Y, Z>(graph, entry);
+    public static <Y, Z> DominatorTreeBuilder2<Y, Z> compute(Graph<Y, Z> graph, Y entry) {
+        DominatorTreeBuilder2<Y, Z> dom = new DominatorTreeBuilder2<Y, Z>(graph, entry);
         dom.compute();
 
         assert dom.assertConsistence();
@@ -85,7 +85,7 @@ public class DominatorTree2<V, E> {
     private final V start;
 
     @SuppressWarnings("unchecked")
-	public DominatorTree2(Graph<V, E> graph, V start) {
+	public DominatorTreeBuilder2(Graph<V, E> graph, V start) {
         this.graph = graph;
         this.start = start;
         this.dfsnum2node = (V[]) new Object[graph.vertexSet().size()];

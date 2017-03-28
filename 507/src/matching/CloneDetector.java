@@ -56,5 +56,4 @@ public abstract class CloneDetector {
 		}
 		return true;
 	}
-
 }

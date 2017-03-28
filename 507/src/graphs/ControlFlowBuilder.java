@@ -36,7 +36,7 @@ import datastructures.NodeWrapper;
  *            is necessary as we might have multiple entry edges for one single
  *            node.
  */
-public class ControlFlowParser {
+public class ControlFlowBuilder {
 	private DirectedPseudograph<NodeWrapper, DefaultEdge> cfg;
 	private List<NodeWrapper> previousNodes;
 	
@@ -49,7 +49,7 @@ public class ControlFlowParser {
 	 *            The method that will be parsed.
 	 * 
 	 */
-	public ControlFlowParser(Method m) {
+	public ControlFlowBuilder(Method m) {
 		this.cfg = new DirectedPseudograph<>(DefaultEdge.class);
 		this.previousNodes = new LinkedList<NodeWrapper>();
 		parse(m.getBody());

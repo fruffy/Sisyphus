@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import datastructures.Method;
-import graphs.ControlListParser;
 import matching.ASTDetector;
 import matching.DeckardDetector;
 import matching.KrinkeDetector;
@@ -66,7 +65,7 @@ public class CodeHelper {
 		//fileOut.close();
 		//System.out.printf("Serialized data is saved in /tmp/library.lib");
 		//srcparser = (SyntaxParser)xstream.fromXML(new FileInputStream(temp));
-		ControlListParser test = new ControlListParser(srcMethods);
+		//ControlListParser test = new ControlListParser(srcMethods);
 		matchSrcWithLib(srcMethods,libMethods);
 
 		/*

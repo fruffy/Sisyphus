@@ -13,9 +13,9 @@ import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.Type;
 
-import graphs.ControlDependencyParser;
-import graphs.ControlFlowParser;
-import graphs.DataDependencyGraphFinder;
+import graphs.ControlDependenceBuilder;
+import graphs.ControlFlowBuilder;
+import graphs.DataDependencyGraphBuilder;
 import normalizers.StandardForm;
 import solvers.MethodSolver;
 import visitors.ASTUtil;
@@ -44,16 +44,16 @@ public class Method {
 			System.err.println("WARNING: Empty Method");
 			return;
 		}
-		
-		//System.out.println("BEFORE: ***********************************************\n" + this.body);
 		this.body = methodDeclaration.getBody().get();
+		System.out.println(this.methodName);
+		System.out.println("BEFORE: ***********************************************\n" + this.body);
 		this.trimBody();
-		//resolveMethodCalls(methodDeclaration, 3);
-
-		
+	
 		methodDeclaration = normalize(methodDeclaration);
+		resolveMethodCalls(methodDeclaration, 3);
+
 		this.body = methodDeclaration.getBody().get();
-		//System.out.println("AFTER: ++++++++++++++++++++++++++++++++++++++++++++++++\n" + this.body);
+		System.out.println("AFTER: ++++++++++++++++++++++++++++++++++++++++++++++++\n" + this.body);
 
 	}
 	
@@ -110,8 +110,6 @@ public class Method {
 		}
 		List<Node> currentChildren = current.getChildNodes();
 		for (Node child : currentChildren) {
-			//System.out.println("parent class "+current.getClass().toString());
-			//System.out.println("child class "+child.getClass().toString());
 			NodeFeature childMethodFeature = getMethodFeature(child);
 			nodeFeature.combineNodeFeatures(childMethodFeature);
 		}
@@ -150,11 +148,11 @@ public class Method {
 	
 	public DirectedPseudograph<Node, DefaultEdge> constructPDG(Method m){
 		//System.out.println("Building pdg for method: "+this.getMethodName());
-		ControlFlowParser cfp = new ControlFlowParser(m);
+		ControlFlowBuilder cfp = new ControlFlowBuilder(m);
 		DirectedPseudograph<NodeWrapper, DefaultEdge> cfg = cfp.getCFG();
-		ControlDependencyParser cdp = new ControlDependencyParser(cfg);
+		ControlDependenceBuilder cdp = new ControlDependenceBuilder(cfg);
 		cdg = cdp.getCDG();
-		DataDependencyGraphFinder ddgf = new DataDependencyGraphFinder(cfg, this, cfp.getInitialNode());
+		DataDependencyGraphBuilder ddgf = new DataDependencyGraphBuilder(cfg, this, cfp.getInitialNode());
 		ddg = ddgf.findReachingDefs();
 		
 

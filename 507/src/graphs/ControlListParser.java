@@ -26,9 +26,9 @@ public class ControlListParser {
 	private void buildCFG(List<Method> methList) {
 
 		for (Method m : methList) {
-			ControlFlowParser cfgParse = new ControlFlowParser(m);
+			ControlFlowBuilder cfgParse = new ControlFlowBuilder(m);
 			DirectedPseudograph<NodeWrapper, DefaultEdge> cfg = cfgParse.getCFG();
-			ControlDependencyParser cdgParse = new ControlDependencyParser(cfg);
+			ControlDependenceBuilder cdgParse = new ControlDependenceBuilder(cfg);
 			DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg = cdgParse.getCDG();
 			Graph<NodeWrapper, DefaultEdge> fdt = cdgParse.buildForwardDominanceTree(cfg);
 

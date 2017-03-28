@@ -9,7 +9,7 @@ import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.jgrapht.traverse.DepthFirstIterator;
 import org.jgrapht.graph.DefaultEdge;
 
-public class ControlDependencyParser {
+public class ControlDependenceBuilder {
 	private DirectedAcyclicGraph<NodeWrapper, DefaultEdge> cdg;
 
 	/**
@@ -20,7 +20,7 @@ public class ControlDependencyParser {
 	 * @return
 	 * 
 	 */
-	public ControlDependencyParser(Graph<NodeWrapper, DefaultEdge> cfg) {
+	public ControlDependenceBuilder(Graph<NodeWrapper, DefaultEdge> cfg) {
 		// this.cfg = cfg;
 		cdg = new DirectedAcyclicGraph<NodeWrapper, DefaultEdge>(DefaultEdge.class);
 		parse(cfg);
@@ -37,7 +37,7 @@ public class ControlDependencyParser {
 		if (cfg.vertexSet().size() == 0) {
 			return cfg;
 		}
-		DominatorTree<NodeWrapper, DefaultEdge> fdtBuilder = new DominatorTree<>(cfg,
+		DominatorTreeBuilder<NodeWrapper, DefaultEdge> fdtBuilder = new DominatorTreeBuilder<>(cfg,
 				cfg.vertexSet().iterator().next());
 		return fdtBuilder.getDominatorTree();
 	}
