@@ -74,3 +74,6 @@ Changed toReferenceType()
 		return new ReferenceTypeImpl(ref.getCorrespondingDeclaration().asReferenceType(), solvedTypeParameters,
 typeSolver);
 ```
+* Integrated changes
+https://github.com/javaparser/javasymbolsolver/commit/eba1cb8067a401c05e584c60a3031b72c0a008b3
+
