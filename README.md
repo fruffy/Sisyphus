@@ -10,7 +10,7 @@ Run 507
 # Tracking locally modified Library Files:
 * Integrated changes  
 https://github.com/javaparser/javaparser/issues/882
-
+* CPSC_507/javasymbolsolver/java-symbol-solver-core/src/main/java/com/github/javaparser/symbolsolver/javaparsermodel/declarations/JavaParserInterfaceDeclaration.java  
 Changed toReferenceType()  
 ```
 		List<com.github.javaparser.ast.type.Type> superClassTypeParameters = classOrInterfaceType.getTypeArguments()
