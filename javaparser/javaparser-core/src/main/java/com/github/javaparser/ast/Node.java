@@ -33,12 +33,15 @@ import com.github.javaparser.ast.visitor.CloneVisitor;
 import com.github.javaparser.ast.visitor.EqualsVisitor;
 import com.github.javaparser.ast.visitor.HashCodeVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
+import com.github.javaparser.metamodel.InternalProperty;
 import com.github.javaparser.metamodel.JavaParserMetaModel;
 import com.github.javaparser.metamodel.NodeMetaModel;
 import com.github.javaparser.printer.PrettyPrinter;
 import com.github.javaparser.printer.PrettyPrinterConfiguration;
 import java.util.*;
 import static java.util.Collections.unmodifiableList;
+import javax.annotation.Generated;
+import com.github.javaparser.ast.Node;
 
 /**
  * Base class for all nodes of the abstract syntax tree.
@@ -125,18 +128,24 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable,
 
     protected static final PrettyPrinterConfiguration prettyPrinterNoCommentsConfiguration = new PrettyPrinterConfiguration().setPrintComments(false);
 
+    @InternalProperty
     private Range range;
 
+    @InternalProperty
     private Node parentNode;
 
+    @InternalProperty
     private List<Node> childNodes = new LinkedList<>();
 
+    @InternalProperty
     private List<Comment> orphanComments = new LinkedList<>();
 
+    @InternalProperty
     private IdentityHashMap<DataKey<?>, Object> data = null;
 
     private Comment comment;
 
+    @InternalProperty
     private List<AstObserver> observers = new ArrayList<>();
 
     public Node(Range range) {
@@ -144,11 +153,20 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable,
     }
 
     /**
+     * Called in every constructor for node specific code.
+     * It can't be written in the constructor itself because it will
+     * be overwritten during code generation.
+     */
+    protected void customInitialization() {
+    }
+
+    /**
      * This is a comment associated with this node.
      *
      * @return comment property
      */
-    public final Optional<Comment> getComment() {
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
+    public Optional<Comment> getComment() {
         return Optional.ofNullable(comment);
     }
 
@@ -164,6 +182,9 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable,
      * no range information is known, or that it is not of interest.
      */
     public Node setRange(Range range) {
+        if (this.range == range) {
+            return this;
+        }
         notifyPropertyChange(ObservableProperty.RANGE, this.range, range);
         this.range = range;
         return this;
@@ -175,6 +196,9 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable,
      * @param comment to be set
      */
     public final Node setComment(final Comment comment) {
+        if (this.comment == comment) {
+            return this;
+        }
         if (comment != null && (this instanceof Comment)) {
             throw new RuntimeException("A comment can not be commented");
         }
@@ -306,6 +330,9 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable,
      */
     @Override
     public Node setParentNode(Node parentNode) {
+        if (parentNode == this.parentNode) {
+            return this;
+        }
         observers.forEach(o -> o.parentChange(this, this.parentNode, parentNode));
         // remove from old parent, if any
         if (this.parentNode != null) {
@@ -323,7 +350,9 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable,
 
     public static final int ABSOLUTE_END_LINE = -2;
 
-    /** @deprecated use getComment().isPresent() */
+    /**
+     * @deprecated use getComment().isPresent()
+     */
     @Deprecated
     public boolean hasComment() {
         return comment != null;
@@ -338,7 +367,7 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable,
      *
      * @param clazz the type of node to find.
      */
-    public <N extends Node> List<N> getNodesByType(Class<N> clazz) {
+    public <N extends Node> List<N> getChildNodesByType(Class<N> clazz) {
         List<N> nodes = new ArrayList<>();
         for (Node child : getChildNodes()) {
             if (clazz.isInstance(child)) {
@@ -347,6 +376,14 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable,
             nodes.addAll(child.getNodesByType(clazz));
         }
         return nodes;
+    }
+
+    /**
+     * @deprecated use getChildNodesByType
+     */
+    @Deprecated
+    public <N extends Node> List<N> getNodesByType(Class<N> clazz) {
+        return getChildNodesByType(clazz);
     }
 
     /**
@@ -466,6 +503,7 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable,
         return Collections.emptyList();
     }
 
+    @Generated("com.github.javaparser.generator.core.node.RemoveMethodGenerator")
     public boolean remove(Node node) {
         if (node == null)
             return false;
@@ -478,15 +516,18 @@ public abstract class Node implements Cloneable, HasParentNode<Node>, Visitable,
         return false;
     }
 
+    @Generated("com.github.javaparser.generator.core.node.RemoveMethodGenerator")
     public Node removeComment() {
         return setComment((Comment) null);
     }
 
     @Override
+    @Generated("com.github.javaparser.generator.core.node.CloneGenerator")
     public Node clone() {
         return (Node) accept(new CloneVisitor(), null);
     }
 
+    @Generated("com.github.javaparser.generator.core.node.GetMetaModelGenerator")
     public NodeMetaModel getMetaModel() {
         return JavaParserMetaModel.nodeMetaModel;
     }

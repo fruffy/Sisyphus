@@ -16,6 +16,8 @@
 
 package com.github.javaparser.symbolsolver.model.declarations;
 
+import com.github.javaparser.symbolsolver.model.resolution.UnsolvedSymbolException;
+
 import java.util.Optional;
 import java.util.Set;
 
@@ -36,6 +38,25 @@ public interface TypeDeclaration extends Declaration {
      */
     default Set<ReferenceTypeDeclaration> internalTypes() {
         throw new UnsupportedOperationException("InternalTypes not available for " + this.getClass().getCanonicalName());
+    }
+
+    /**
+     * Returns a type declaration for the internal type based on name.
+     * (Does not include internal types inside internal types).
+     */
+    default ReferenceTypeDeclaration getInternalType(String name) {
+        Optional<ReferenceTypeDeclaration> type =
+                this.internalTypes().stream().filter(f -> f.getName().equals(name)).findFirst();
+        return type.orElseThrow(() ->
+                new UnsolvedSymbolException("Internal type not found: " + name));
+    }
+
+    /**
+     * Does this type contain an internal type with the given name?
+     * (Does not include internal types inside internal types).
+     */
+    default boolean hasInternalType(String name) {
+        return this.internalTypes().stream().anyMatch(f -> f.getName().equals(name));
     }
 
     /**
@@ -121,6 +142,16 @@ public interface TypeDeclaration extends Declaration {
     default ReferenceTypeDeclaration asReferenceType() {
         throw new UnsupportedOperationException(String.format("%s is not a reference type", this));
     }
+
+    /**
+     * The package name of the type.
+     */
+    String getPackageName();
+
+    /**
+     * The class(es) wrapping this type.
+     */
+    String getClassName();
 
     /**
      * The fully qualified name of the type declared.

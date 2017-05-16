@@ -16,6 +16,7 @@ import com.github.javaparser.metamodel.ModuleRequiresStmtMetaModel;
 import java.util.EnumSet;
 import static com.github.javaparser.ast.Modifier.TRANSITIVE;
 import static com.github.javaparser.utils.Utils.assertNotNull;
+import javax.annotation.Generated;
 
 /**
  * A require statement in module-info.java. <code>require a.b.C;</code>
@@ -35,10 +36,13 @@ public class ModuleRequiresStmt extends ModuleStmt implements NodeWithStaticModi
         this(null, modifiers, name);
     }
 
+    /**This constructor is used by the parser and is considered private.*/
+    @Generated("com.github.javaparser.generator.core.node.MainConstructorGenerator")
     public ModuleRequiresStmt(Range range, EnumSet<Modifier> modifiers, Name name) {
         super(range);
         setModifiers(modifiers);
         setName(name);
+        customInitialization();
     }
 
     @Override
@@ -51,27 +55,33 @@ public class ModuleRequiresStmt extends ModuleStmt implements NodeWithStaticModi
         v.visit(this, arg);
     }
 
-    @Override
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public EnumSet<Modifier> getModifiers() {
         return modifiers;
     }
 
-    @Override
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public ModuleRequiresStmt setModifiers(final EnumSet<Modifier> modifiers) {
         assertNotNull(modifiers);
+        if (modifiers == this.modifiers) {
+            return (ModuleRequiresStmt) this;
+        }
         notifyPropertyChange(ObservableProperty.MODIFIERS, this.modifiers, modifiers);
         this.modifiers = modifiers;
         return this;
     }
 
-    @Override
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public Name getName() {
         return name;
     }
 
-    @Override
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public ModuleRequiresStmt setName(final Name name) {
         assertNotNull(name);
+        if (name == this.name) {
+            return (ModuleRequiresStmt) this;
+        }
         notifyPropertyChange(ObservableProperty.NAME, this.name, name);
         if (this.name != null)
             this.name.setParentNode(null);
@@ -89,6 +99,7 @@ public class ModuleRequiresStmt extends ModuleStmt implements NodeWithStaticModi
     }
 
     @Override
+    @Generated("com.github.javaparser.generator.core.node.RemoveMethodGenerator")
     public boolean remove(Node node) {
         if (node == null)
             return false;
@@ -96,11 +107,13 @@ public class ModuleRequiresStmt extends ModuleStmt implements NodeWithStaticModi
     }
 
     @Override
+    @Generated("com.github.javaparser.generator.core.node.CloneGenerator")
     public ModuleRequiresStmt clone() {
         return (ModuleRequiresStmt) accept(new CloneVisitor(), null);
     }
 
     @Override
+    @Generated("com.github.javaparser.generator.core.node.GetMetaModelGenerator")
     public ModuleRequiresStmtMetaModel getMetaModel() {
         return JavaParserMetaModel.moduleRequiresStmtMetaModel;
     }

@@ -34,6 +34,7 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.visitor.CloneVisitor;
 import com.github.javaparser.metamodel.InstanceOfExprMetaModel;
 import com.github.javaparser.metamodel.JavaParserMetaModel;
+import javax.annotation.Generated;
 
 /**
  * Usage of the instanceof operator.
@@ -56,10 +57,13 @@ public final class InstanceOfExpr extends Expression implements NodeWithType<Ins
         this(null, expression, type);
     }
 
-    public InstanceOfExpr(final Range range, final Expression expression, final ReferenceType<?> type) {
+    /**This constructor is used by the parser and is considered private.*/
+    @Generated("com.github.javaparser.generator.core.node.MainConstructorGenerator")
+    public InstanceOfExpr(Range range, Expression expression, ReferenceType<?> type) {
         super(range);
         setExpression(expression);
         setType(type);
+        customInitialization();
     }
 
     @Override
@@ -72,19 +76,22 @@ public final class InstanceOfExpr extends Expression implements NodeWithType<Ins
         v.visit(this, arg);
     }
 
-    @Override
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public Expression getExpression() {
         return expression;
     }
 
-    @Override
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public ReferenceType<?> getType() {
         return type;
     }
 
-    @Override
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public InstanceOfExpr setExpression(final Expression expression) {
         assertNotNull(expression);
+        if (expression == this.expression) {
+            return (InstanceOfExpr) this;
+        }
         notifyPropertyChange(ObservableProperty.EXPRESSION, this.expression, expression);
         if (this.expression != null)
             this.expression.setParentNode(null);
@@ -93,9 +100,12 @@ public final class InstanceOfExpr extends Expression implements NodeWithType<Ins
         return this;
     }
 
-    @Override
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public InstanceOfExpr setType(final ReferenceType<?> type) {
         assertNotNull(type);
+        if (type == this.type) {
+            return (InstanceOfExpr) this;
+        }
         notifyPropertyChange(ObservableProperty.TYPE, this.type, type);
         if (this.type != null)
             this.type.setParentNode(null);
@@ -105,6 +115,7 @@ public final class InstanceOfExpr extends Expression implements NodeWithType<Ins
     }
 
     @Override
+    @Generated("com.github.javaparser.generator.core.node.RemoveMethodGenerator")
     public boolean remove(Node node) {
         if (node == null)
             return false;
@@ -112,11 +123,13 @@ public final class InstanceOfExpr extends Expression implements NodeWithType<Ins
     }
 
     @Override
+    @Generated("com.github.javaparser.generator.core.node.CloneGenerator")
     public InstanceOfExpr clone() {
         return (InstanceOfExpr) accept(new CloneVisitor(), null);
     }
 
     @Override
+    @Generated("com.github.javaparser.generator.core.node.GetMetaModelGenerator")
     public InstanceOfExprMetaModel getMetaModel() {
         return JavaParserMetaModel.instanceOfExprMetaModel;
     }

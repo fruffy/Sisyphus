@@ -72,7 +72,7 @@ public class ControlFlowBuilder {
 	 * {@link ControlFlowMethodParser#parseRec(DirectedPseudograph<Node,
 	 * DefaultEdge>, Node, List<Node>)}
 	 *
-	 * @param methBody
+	 * @param methodBody
 	 *            The AST of the method we want to infer a cfg from. *
 	 * 
 	 */
@@ -125,7 +125,7 @@ public class ControlFlowBuilder {
 	 * The returned node of parseRec may be added to a list which forms a
 	 * collection of entry nodes for the subsequent element. *
 	 * 
-	 * @param currentNode
+	 * @param statement
 	 *            The current Node we want to examine and handle. In general
 	 *            this is a block statement which will be decomposed in a for
 	 *            loop.
@@ -305,7 +305,7 @@ public class ControlFlowBuilder {
 	/**
 	 * Clear the old list of preceding nodes and add the current node to it.
 	 * 
-	 * @param targetNode
+	 * @param currentNode
 	 *            The node the newly created edge will point to.
 	 */
 	private void refreshPreviousNodes(NodeWrapper currentNode) {

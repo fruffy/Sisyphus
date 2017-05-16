@@ -21,13 +21,16 @@
 package com.github.javaparser.ast.comments;
 
 import com.github.javaparser.Range;
+import com.github.javaparser.ast.AllFieldsConstructor;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.observer.ObservableProperty;
 import java.util.Optional;
 import static com.github.javaparser.utils.Utils.assertNotNull;
 import com.github.javaparser.ast.visitor.CloneVisitor;
 import com.github.javaparser.metamodel.CommentMetaModel;
+import com.github.javaparser.metamodel.InternalProperty;
 import com.github.javaparser.metamodel.JavaParserMetaModel;
+import javax.annotation.Generated;
 
 /**
  * Abstract class for all AST nodes that represent comments.
@@ -41,11 +44,20 @@ public abstract class Comment extends Node {
 
     private String content;
 
+    @InternalProperty
     private Node commentedNode;
 
+    @AllFieldsConstructor
+    public Comment(String content) {
+        this(null, content);
+    }
+
+    /**This constructor is used by the parser and is considered private.*/
+    @Generated("com.github.javaparser.generator.core.node.MainConstructorGenerator")
     public Comment(Range range, String content) {
         super(range);
         setContent(content);
+        customInitialization();
     }
 
     /**
@@ -53,7 +65,8 @@ public abstract class Comment extends Node {
      *
      * @return text of the comment
      */
-    public final String getContent() {
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
+    public String getContent() {
         return content;
     }
 
@@ -62,8 +75,12 @@ public abstract class Comment extends Node {
      *
      * @param content the text of the comment to set
      */
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public Comment setContent(final String content) {
         assertNotNull(content);
+        if (content == this.content) {
+            return (Comment) this;
+        }
         notifyPropertyChange(ObservableProperty.CONTENT, this.content, content);
         this.content = content;
         return this;
@@ -125,6 +142,7 @@ public abstract class Comment extends Node {
     }
 
     @Override
+    @Generated("com.github.javaparser.generator.core.node.RemoveMethodGenerator")
     public boolean remove(Node node) {
         if (node == null)
             return false;
@@ -132,11 +150,13 @@ public abstract class Comment extends Node {
     }
 
     @Override
+    @Generated("com.github.javaparser.generator.core.node.CloneGenerator")
     public Comment clone() {
         return (Comment) accept(new CloneVisitor(), null);
     }
 
     @Override
+    @Generated("com.github.javaparser.generator.core.node.GetMetaModelGenerator")
     public CommentMetaModel getMetaModel() {
         return JavaParserMetaModel.commentMetaModel;
     }

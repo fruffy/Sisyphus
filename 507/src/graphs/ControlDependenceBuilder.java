@@ -3,6 +3,7 @@ package graphs;
 import java.util.Iterator;
 
 import datastructures.EntryStmt;
+import datastructures.Method;
 import datastructures.NodeWrapper;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DirectedAcyclicGraph;
@@ -15,13 +16,12 @@ public class ControlDependenceBuilder {
 	/**
 	 * Build a new control dependency graph.
 	 * 
-	 * @param m
+	 * @param cfg
 	 *            The source cfg that will be parsed.
 	 * @return
 	 * 
 	 */
 	public ControlDependenceBuilder(Graph<NodeWrapper, DefaultEdge> cfg) {
-		// this.cfg = cfg;
 		cdg = new DirectedAcyclicGraph<NodeWrapper, DefaultEdge>(DefaultEdge.class);
 		parse(cfg);
 	}
@@ -52,6 +52,8 @@ public class ControlDependenceBuilder {
 	private void buildControlDependenceGraph(Graph<NodeWrapper, DefaultEdge> cfg, Graph<NodeWrapper, DefaultEdge> fdt) {
 		NodeWrapper entry = new NodeWrapper(new EntryStmt());
 		NodeWrapper previousNode = entry;
+		printGraph(cfg);
+		printGraph(fdt);
 		DepthFirstIterator<NodeWrapper, DefaultEdge> vertexIterator = new DepthFirstIterator<NodeWrapper, DefaultEdge>(
 				cfg, null);
 		cdg.addVertex(entry);
@@ -68,4 +70,15 @@ public class ControlDependenceBuilder {
 			}
 		}
 	}
+	private void printGraph(Graph<NodeWrapper, DefaultEdge> graph) {
+
+		for (NodeWrapper n : graph.vertexSet()) {
+			System.out.println(n.NODE);
+			for (DefaultEdge e : graph.outgoingEdgesOf(n)) {
+				System.out.println("\t --> " + graph.getEdgeTarget(e).NODE);
+			}
+		}
+		System.out.println("\n***************");
+	}
+
 }

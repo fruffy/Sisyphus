@@ -1,18 +1,22 @@
 package com.github.javaparser.symbolsolver.javaparsermodel;
 
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.*;
+import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
+import com.github.javaparser.ast.stmt.ReturnStmt;
+import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.type.UnknownType;
 import com.github.javaparser.symbolsolver.core.resolution.Context;
 import com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserSymbolDeclaration;
 import com.github.javaparser.symbolsolver.logic.FunctionalInterfaceLogic;
 import com.github.javaparser.symbolsolver.logic.InferenceContext;
-import com.github.javaparser.symbolsolver.model.declarations.ClassDeclaration;
-import com.github.javaparser.symbolsolver.model.declarations.ReferenceTypeDeclaration;
-import com.github.javaparser.symbolsolver.model.declarations.TypeDeclaration;
+import com.github.javaparser.symbolsolver.model.declarations.*;
 import com.github.javaparser.symbolsolver.model.methods.MethodUsage;
 import com.github.javaparser.symbolsolver.model.resolution.SymbolReference;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
@@ -24,6 +28,7 @@ import com.github.javaparser.symbolsolver.resolution.SymbolSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 import com.google.common.collect.ImmutableList;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
@@ -153,6 +158,22 @@ public class TypeExtractor extends DefaultVisitorAdapter {
         return node.getInner().get().accept(this, solveLambdas);
     }
 
+    /**
+     * Java Parser can't differentiate between packages, internal types, and fields.
+     * All three are lumped together into FieldAccessExpr. We need to differentiate them.
+     */
+    private Type solveDotExpressionType(ReferenceTypeDeclaration parentType, FieldAccessExpr node) {
+        // Fields and internal type declarations cannot have the same name.
+        // Thus, these checks will always be mutually exclusive.
+        if (parentType.hasField(node.getName().getId())) {
+            return parentType.getField(node.getName().getId()).getType();
+        } else if (parentType.hasInternalType(node.getName().getId())) {
+            return new ReferenceTypeImpl(parentType.getInternalType(node.getName().getId()), typeSolver);
+        } else {
+            throw new UnsolvedSymbolException(node.getName().getId());
+        }
+    }
+
     @Override
     public Type visit(FieldAccessExpr node, Boolean solveLambdas) {
         // We should understand if this is a static access
@@ -161,23 +182,34 @@ public class TypeExtractor extends DefaultVisitorAdapter {
             SymbolReference<TypeDeclaration> typeAccessedStatically = JavaParserFactory.getContext(node, typeSolver).solveType(staticValue.toString(), typeSolver);
             if (typeAccessedStatically.isSolved()) {
                 // TODO here maybe we have to substitute type typeParametersValues
-                return ((ReferenceTypeDeclaration) typeAccessedStatically.getCorrespondingDeclaration()).getField(node.getField().getId()).getType();
+                return solveDotExpressionType(
+                        typeAccessedStatically.getCorrespondingDeclaration().asReferenceType(), node);
             }
+        } else if (node.getScope().isPresent() && node.getScope().get() instanceof ThisExpr){
+            // If we are accessing through a 'this' expression, first resolve the type
+            // corresponding to 'this'
+            SymbolReference<TypeDeclaration> solve = facade.solve((ThisExpr) node.getScope().get());
+            // If found get it's declaration and get the field in there
+            if (solve.isSolved()){
+                TypeDeclaration correspondingDeclaration = solve.getCorrespondingDeclaration();
+                if (correspondingDeclaration instanceof ReferenceTypeDeclaration){
+                    return solveDotExpressionType(correspondingDeclaration.asReferenceType(), node);
+                }
+            }
+
         } else if (node.getScope().isPresent() && node.getScope().get().toString().indexOf('.') > 0) {
             // try to find fully qualified name
             SymbolReference<ReferenceTypeDeclaration> sr = typeSolver.tryToSolveType(node.getScope().get().toString());
             if (sr.isSolved()) {
-                return sr.getCorrespondingDeclaration().getField(node.getField().getId()).getType();
+                return solveDotExpressionType(sr.getCorrespondingDeclaration(), node);
             }
         }
         Optional<Value> value = null;
         try {
             value = new SymbolSolver(typeSolver).solveSymbolAsValue(node.getField().getId(), node);
         } catch (UnsolvedSymbolException use) {
-            // Deal with badly parsed FieldAccessExpr that are in fact fqn classes
-            if (node.getParentNode().isPresent() && node.getParentNode().get() instanceof FieldAccessExpr) {
-                throw use;
-            }
+            // This node may have a package name as part of its fully qualified name.
+            // We should solve for the type declaration inside this package.
             SymbolReference<ReferenceTypeDeclaration> sref = typeSolver.tryToSolveType(node.toString());
             if (sref.isSolved()) {
                 return new ReferenceTypeImpl(sref.getCorrespondingDeclaration(), typeSolver);
@@ -263,6 +295,25 @@ public class TypeExtractor extends DefaultVisitorAdapter {
 
     @Override
     public Type visit(ThisExpr node, Boolean solveLambdas) {
+        // If 'this' is prefixed by a class eg. MyClass.this
+        if (node.getClassExpr().isPresent()){
+            // Get the class name
+            String className = node.getClassExpr().get().toString();
+            // Attempt to resolve using a typeSolver
+            SymbolReference<ReferenceTypeDeclaration> clazz = typeSolver.tryToSolveType(className);
+            if (clazz.isSolved()){
+                return new ReferenceTypeImpl(clazz.getCorrespondingDeclaration(),typeSolver);
+            }
+            // Attempt to resolve locally in Compilation unit
+            Optional<CompilationUnit> cu = node.getAncestorOfType(CompilationUnit.class);
+            if (cu.isPresent()){
+                Optional<ClassOrInterfaceDeclaration> classByName = cu.get().getClassByName(className);
+                if (classByName.isPresent()){
+                    return new ReferenceTypeImpl(facade.getTypeDeclaration(classByName.get()), typeSolver);
+                }
+            }
+
+        }
         return new ReferenceTypeImpl(facade.getTypeDeclaration(facade.findContainingTypeDecl(node)), typeSolver);
     }
 
@@ -308,22 +359,16 @@ public class TypeExtractor extends DefaultVisitorAdapter {
         if (getParentNode(node) instanceof MethodCallExpr) {
             MethodCallExpr callExpr = (MethodCallExpr) getParentNode(node);
             int pos = JavaParserSymbolDeclaration.getParamPos(node);
-            SymbolReference<com.github.javaparser.symbolsolver.model.declarations.MethodDeclaration> refMethod = facade.solve(callExpr);
+            SymbolReference<MethodDeclaration> refMethod = facade.solve(callExpr);
             if (!refMethod.isSolved()) {
                 throw new UnsolvedSymbolException(getParentNode(node).toString(), callExpr.getName().getId());
             }
             logger.finest("getType on lambda expr " + refMethod.getCorrespondingDeclaration().getName());
-            //logger.finest("Method param " + refMethod.getCorrespondingDeclaration().getParam(pos));
             if (solveLambdas) {
 
                 // The type parameter referred here should be the java.util.stream.Stream.T
                 Type result = refMethod.getCorrespondingDeclaration().getParam(pos).getType();
 
-                // FIXME: here we should replace the type parameters that can be resolved
-                //        for example when invoking myListOfStrings.stream().filter(s -> s.length > 0);
-                //        the MethodDeclaration of filter is:
-                //        Stream<T> filter(Predicate<? super T> predicate)
-                //        but T in this case is equal to String
                 if (callExpr.getScope().isPresent()) {
                     Expression scope = callExpr.getScope().get();
 
@@ -332,8 +377,10 @@ public class TypeExtractor extends DefaultVisitorAdapter {
                     if (scope instanceof NameExpr) {
                         NameExpr nameExpr = (NameExpr) scope;
                         try {
-                            JavaParserFactory.getContext(nameExpr, typeSolver).solveType(nameExpr.getName().getId(), typeSolver);
-                            staticCall = true;
+                            SymbolReference<TypeDeclaration> type = JavaParserFactory.getContext(nameExpr, typeSolver).solveType(nameExpr.getName().getId(), typeSolver);
+                            if (type.isSolved()){
+                                staticCall = true;
+                            }
                         } catch (Exception e) {
 
                         }
@@ -358,27 +405,63 @@ public class TypeExtractor extends DefaultVisitorAdapter {
                 if (functionalMethod.isPresent()) {
                     LambdaExpr lambdaExpr = node;
 
-                    InferenceContext inferenceContext = new InferenceContext(MyObjectProvider.INSTANCE);
+                    InferenceContext lambdaCtx = new InferenceContext(MyObjectProvider.INSTANCE);
+                    InferenceContext funcInterfaceCtx = new InferenceContext(MyObjectProvider.INSTANCE);
+
                     // At this point parameterType
                     // if Function<T=? super Stream.T, ? extends map.R>
                     // we should replace Stream.T
                     Type functionalInterfaceType = ReferenceTypeImpl.undeterminedParameters(functionalMethod.get().getDeclaration().declaringType(), typeSolver);
-                    //inferenceContext.addPair(parameterType, functionalInterfaceType);
-                    //inferenceContext.addPair(parameterType, result);
-                    inferenceContext.addPair(result, functionalInterfaceType);
-                    if (lambdaExpr.getBody() instanceof ExpressionStmt) {
-                        ExpressionStmt expressionStmt = (ExpressionStmt) lambdaExpr.getBody();
-                        Type actualType = facade.getType(expressionStmt.getExpression());
-                        Type formalType = functionalMethod.get().returnType();
 
-                        // if the functional method returns void anyway
-                        // we don't need to bother inferring types
-                        if (!(formalType instanceof VoidType)){
-                            inferenceContext.addPair(formalType, actualType);
-                            result = inferenceContext.resolve(inferenceContext.addSingle(result));
+                    lambdaCtx.addPair(result, functionalInterfaceType);
+
+                    Type actualType;
+
+                    if (lambdaExpr.getBody() instanceof ExpressionStmt) {
+                        actualType = facade.getType(((ExpressionStmt)lambdaExpr.getBody()).getExpression());
+                    } else if (lambdaExpr.getBody() instanceof BlockStmt) {
+                        BlockStmt blockStmt = (BlockStmt) lambdaExpr.getBody();
+                        NodeList<Statement> statements = blockStmt.getStatements();
+
+                        // Get all the return statements in the lambda block
+                        List<ReturnStmt> returnStmts = blockStmt.getNodesByType(ReturnStmt.class);
+
+                        if (returnStmts.size() > 0){
+
+                            actualType = returnStmts.stream()
+                            .map(returnStmt -> {
+                                Optional<Expression> expression = returnStmt.getExpression();
+                                if (expression.isPresent()){
+                                    return facade.getType(expression.get());
+                                } else{
+                                    return VoidType.INSTANCE;
+                                }
+                            })
+                            .filter(x -> x != null && !x.isVoid() && !x.isNull())
+                            .findFirst()
+                            .orElse(VoidType.INSTANCE);
+
+                        } else {
+                            return VoidType.INSTANCE;
                         }
+
+
                     } else {
                         throw new UnsupportedOperationException();
+                    }
+
+                    Type formalType = functionalMethod.get().returnType();
+
+                    // Infer the functional interfaces' return vs actual type
+                    funcInterfaceCtx.addPair(formalType, actualType);
+                    // Substitute to obtain a new type
+                    Type functionalTypeWithReturn = funcInterfaceCtx.resolve(funcInterfaceCtx.addSingle(functionalInterfaceType));
+
+                    // if the functional method returns void anyway
+                    // we don't need to bother inferring types
+                    if (!(formalType instanceof VoidType)){
+                        lambdaCtx.addPair(result, functionalTypeWithReturn);
+                        result = lambdaCtx.resolve(lambdaCtx.addSingle(result));
                     }
                 }
 

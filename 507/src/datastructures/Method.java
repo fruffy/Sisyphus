@@ -79,9 +79,9 @@ public class Method {
 	public BlockStmt getBody() {
 		return this.body;
 	}
-	public String getSignature(){
+/*	public String getSignature(){
 		return this.originalDecl.getSignature();
-	}
+	}*/
 
 
 	public void trimBody() {

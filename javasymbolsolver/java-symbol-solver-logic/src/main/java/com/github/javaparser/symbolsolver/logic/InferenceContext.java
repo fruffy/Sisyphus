@@ -100,7 +100,7 @@ public class InferenceContext {
                     }
                 }
             }
-        } else if (formalType instanceof InferenceVariableType) {
+        } else if (formalType instanceof InferenceVariableType && !actualType.isPrimitive()) {
             ((InferenceVariableType) formalType).registerEquivalentType(actualType);
             if (actualType instanceof InferenceVariableType) {
                 ((InferenceVariableType) actualType).registerEquivalentType(formalType);
@@ -128,6 +128,12 @@ public class InferenceContext {
                     } else if (formalWildcard.isExtends() && actualWildcard.isExtends()) {
                         ((InferenceVariableType) formalType.asWildcard().getBoundedType()).registerEquivalentType(actualWildcard.getBoundedType());
                     }
+                }
+            }
+
+            if (actualType.isReferenceType()){
+                if (formalType.asWildcard().isBounded()){
+                    registerCorrespondance(formalType.asWildcard().getBoundedType(), actualType);
                 }
             }
         } else if (actualType instanceof InferenceVariableType){

@@ -20,7 +20,7 @@ public class CodeHelper {
 
 		File srcfile = new File(srcName);
 		File leetfile = new File("../examples/LeetcodeTest.java");
-		List<File> libCollection = SourceCodeCollector.listClasses(new File("../jre_library/java"));
+		List<File> libCollection = SourceCodeCollector.listClasses(new File("../examples/"));
 		SyntaxParser libparser;
 		SyntaxParser srcparser, leetcodeparser;
 		ArrayList<Method> srcMethods, libMethods, leetcodeMethods;
@@ -81,7 +81,7 @@ public class CodeHelper {
 	 * Find matches between src and library functions
 	 * 
 	 * @param srcMethods
-	 * @param cloneDetect
+	 * @param libMethods
 	 */
 	public static void matchSrcWithLib(ArrayList<Method> srcMethods, ArrayList<Method> libMethods) {
 		

@@ -1,12 +1,5 @@
 package solvers;
 
-import java.io.File;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.expr.AssignExpr;
@@ -15,13 +8,7 @@ import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.nodeTypes.NodeWithStatements;
-import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.stmt.ExpressionStmt;
-import com.github.javaparser.ast.stmt.ForStmt;
-import com.github.javaparser.ast.stmt.ForeachStmt;
-import com.github.javaparser.ast.stmt.IfStmt;
-import com.github.javaparser.ast.stmt.ReturnStmt;
-import com.github.javaparser.ast.stmt.Statement;
+import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
 import com.github.javaparser.symbolsolver.javaparsermodel.JavaParserFacade;
@@ -31,6 +18,9 @@ import com.github.javaparser.symbolsolver.model.resolution.SymbolReference;
 import com.github.javaparser.symbolsolver.model.resolution.UnsolvedSymbolException;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
+
+import java.io.File;
+import java.util.*;
 
 public class MethodSolver {
 	CombinedTypeSolver typeSolver;
@@ -85,6 +75,7 @@ public class MethodSolver {
 
 	private Node modifyMethodName(MethodCallExpr methodCallExpr, JavaParserFacade facade) {
 		SymbolReference<MethodDeclaration> methodRef = facade.solve(methodCallExpr);
+		facade.clearInstances();
 		Optional<com.github.javaparser.ast.body.MethodDeclaration> methodCallAncestor = methodCallExpr
 				.getAncestorOfType(com.github.javaparser.ast.body.MethodDeclaration.class);
 		Node returnNode = null;
@@ -92,12 +83,12 @@ public class MethodSolver {
 			MethodDeclaration methodDecl = methodRef.getCorrespondingDeclaration();
 			//System.out.println("CHECKING..." + methodDecl.getSignature() + " vs " + methodCallAncestor.get().getSignature());
 			if (!methodCallAncestor.isPresent()
-					|| methodDecl.getName().equals(methodCallAncestor.get().getName())) {
+					|| methodDecl.getSignature().toString().equals(methodCallAncestor.get().getSignature().toString())) {
 				System.err.println("Redundant Call!");
 				//return null;
 				return new NameExpr(methodCallExpr.getName());
 			}
-			//System.out.println("matchingDeclaration: " + methodDecl.getQualifiedName());
+			// System.out.println("matchingDeclaration: " + methodDecl.getQualifiedName());
 			if (methodDecl instanceof JavaParserMethodDeclaration) {
 				NameExpr replacementVariable = new NameExpr("output");
 				AssignExpr methodCallAssignment = normalizeMethodCalls(methodCallExpr, methodDecl, replacementVariable);
@@ -111,7 +102,7 @@ public class MethodSolver {
 				Optional<BlockStmt> declarationBody = ((JavaParserMethodDeclaration) methodDecl).getWrappedNode()
 						.getBody();
 				if (declarationBody != null && declarationBody.isPresent()) {
-					// System.out.println(declarationBody.get());
+					//System.out.println(declarationBody.get());
 
 					if (!this.canaryMethods.contains(methodDecl.getQualifiedSignature())) {
 						this.canaryMethods.add(methodDecl.getQualifiedSignature());

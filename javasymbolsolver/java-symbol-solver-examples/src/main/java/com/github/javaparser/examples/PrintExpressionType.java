@@ -44,7 +44,7 @@ public class PrintExpressionType {
         }
 
         @Override
-        public void visit(MethodCallExpr n, JavaParserFacade javaParserFacade) {
+        public void visit(MethodCallExpr n, JavaParserFacade javaParserFacade)  {
             super.visit(n, javaParserFacade);
             System.out.println(n.toString() + " has type " + javaParserFacade.getType(n).describe());
             if (javaParserFacade.getType(n).isReferenceType()) {
@@ -56,12 +56,11 @@ public class PrintExpressionType {
     }
 
     public static void main(String[] args) throws FileNotFoundException, ParseException {
-        TypeSolver typeSolver = new CombinedTypeSolver(new ReflectionTypeSolver(), new JavaParserTypeSolver(new File("java-symbol-solver-examples/src/main/resources/someproject")));
-
-        CompilationUnit agendaCu = JavaParser.parse(new FileInputStream(new File("java-symbol-solver-examples/src/main/resources/someproject/me/tomassetti/Agenda.java")));
-
+        TypeSolver typeSolver = new CombinedTypeSolver(new ReflectionTypeSolver(), new JavaParserTypeSolver(new File("C:\\Projects\\CPSC_507\\javasymbolsolver\\java-symbol-solver-examples\\src\\main\\resources\\someproject")));
+                System.out.println("Working Directory = " +
+                System.getProperty("user.dir"));
+        CompilationUnit agendaCu = JavaParser.parse(new FileInputStream(new File("C:\\Projects\\CPSC_507\\javasymbolsolver\\java-symbol-solver-examples\\src\\main\\resources\\someproject\\me\\tomassetti\\Agenda.java")));
         agendaCu.accept(new TypeCalculatorVisitor(), JavaParserFacade.get(typeSolver));
 
     }
-
 }

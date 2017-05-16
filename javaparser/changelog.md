@@ -1,3 +1,33 @@
+Version 3.2.2
+------------------
+Beta: `TreeStructureVisitor`.
+
+* 770 902 904 901 smaller improvements and fixes
+
+Version 3.2.1
+------------------
+Beta: `TreeStructureVisitor`.
+
+* Maven dependencies were updated to their latest versions 
+* 890 the concept of "method signature" now exists in JavaParser
+* 896 891 889 887 882 789 smaller improvements and fixes
+
+Version 3.2.0
+------------------
+The lexical preservation code is stable!
+
+Beta: `TreeStructureVisitor`.
+
+* 885 884 879 878 smaller improvements and fixes
+
+Version 3.1.4
+------------------
+This is the first version to parse Java 9.
+
+Beta: `TreeStructureVisitor`, and `LexicalPreservingPrinter`.
+
+* 872 873 874 787 Remaining Java 9 work.
+
 Version 3.1.3
 ------------------
 Beta: `TreeStructureVisitor`, and `LexicalPreservingPrinter`.

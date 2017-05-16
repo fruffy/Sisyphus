@@ -31,6 +31,7 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.visitor.CloneVisitor;
 import com.github.javaparser.metamodel.LabeledStmtMetaModel;
 import com.github.javaparser.metamodel.JavaParserMetaModel;
+import javax.annotation.Generated;
 
 /**
  * A statement that is labeled, like <code>label123: println("continuing");</code>
@@ -56,10 +57,13 @@ public final class LabeledStmt extends Statement {
         this(null, label, statement);
     }
 
-    public LabeledStmt(Range range, final SimpleName label, final Statement statement) {
+    /**This constructor is used by the parser and is considered private.*/
+    @Generated("com.github.javaparser.generator.core.node.MainConstructorGenerator")
+    public LabeledStmt(Range range, SimpleName label, Statement statement) {
         super(range);
         setLabel(label);
         setStatement(statement);
+        customInitialization();
     }
 
     @Override
@@ -72,12 +76,17 @@ public final class LabeledStmt extends Statement {
         v.visit(this, arg);
     }
 
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public Statement getStatement() {
         return statement;
     }
 
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public LabeledStmt setStatement(final Statement statement) {
         assertNotNull(statement);
+        if (statement == this.statement) {
+            return (LabeledStmt) this;
+        }
         notifyPropertyChange(ObservableProperty.STATEMENT, this.statement, statement);
         if (this.statement != null)
             this.statement.setParentNode(null);
@@ -86,12 +95,17 @@ public final class LabeledStmt extends Statement {
         return this;
     }
 
-    public final SimpleName getLabel() {
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
+    public SimpleName getLabel() {
         return label;
     }
 
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public LabeledStmt setLabel(final SimpleName label) {
         assertNotNull(label);
+        if (label == this.label) {
+            return (LabeledStmt) this;
+        }
         notifyPropertyChange(ObservableProperty.LABEL, this.label, label);
         if (this.label != null)
             this.label.setParentNode(null);
@@ -101,6 +115,7 @@ public final class LabeledStmt extends Statement {
     }
 
     @Override
+    @Generated("com.github.javaparser.generator.core.node.RemoveMethodGenerator")
     public boolean remove(Node node) {
         if (node == null)
             return false;
@@ -108,11 +123,13 @@ public final class LabeledStmt extends Statement {
     }
 
     @Override
+    @Generated("com.github.javaparser.generator.core.node.CloneGenerator")
     public LabeledStmt clone() {
         return (LabeledStmt) accept(new CloneVisitor(), null);
     }
 
     @Override
+    @Generated("com.github.javaparser.generator.core.node.GetMetaModelGenerator")
     public LabeledStmtMetaModel getMetaModel() {
         return JavaParserMetaModel.labeledStmtMetaModel;
     }

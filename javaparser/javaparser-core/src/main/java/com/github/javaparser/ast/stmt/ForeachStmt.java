@@ -34,6 +34,7 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.visitor.CloneVisitor;
 import com.github.javaparser.metamodel.ForeachStmtMetaModel;
 import com.github.javaparser.metamodel.JavaParserMetaModel;
+import javax.annotation.Generated;
 
 /**
  * A for-each statement.
@@ -58,11 +59,14 @@ public final class ForeachStmt extends Statement implements NodeWithBody<Foreach
         this(null, variable, iterable, body);
     }
 
-    public ForeachStmt(Range range, final VariableDeclarationExpr variable, final Expression iterable, final Statement body) {
+    /**This constructor is used by the parser and is considered private.*/
+    @Generated("com.github.javaparser.generator.core.node.MainConstructorGenerator")
+    public ForeachStmt(Range range, VariableDeclarationExpr variable, Expression iterable, Statement body) {
         super(range);
         setVariable(variable);
         setIterable(iterable);
         setBody(body);
+        customInitialization();
     }
 
     public ForeachStmt(VariableDeclarationExpr variable, String iterable, BlockStmt body) {
@@ -79,22 +83,27 @@ public final class ForeachStmt extends Statement implements NodeWithBody<Foreach
         v.visit(this, arg);
     }
 
-    @Override
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public Statement getBody() {
         return body;
     }
 
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public Expression getIterable() {
         return iterable;
     }
 
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public VariableDeclarationExpr getVariable() {
         return variable;
     }
 
-    @Override
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public ForeachStmt setBody(final Statement body) {
         assertNotNull(body);
+        if (body == this.body) {
+            return (ForeachStmt) this;
+        }
         notifyPropertyChange(ObservableProperty.BODY, this.body, body);
         if (this.body != null)
             this.body.setParentNode(null);
@@ -103,8 +112,12 @@ public final class ForeachStmt extends Statement implements NodeWithBody<Foreach
         return this;
     }
 
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public ForeachStmt setIterable(final Expression iterable) {
         assertNotNull(iterable);
+        if (iterable == this.iterable) {
+            return (ForeachStmt) this;
+        }
         notifyPropertyChange(ObservableProperty.ITERABLE, this.iterable, iterable);
         if (this.iterable != null)
             this.iterable.setParentNode(null);
@@ -113,8 +126,12 @@ public final class ForeachStmt extends Statement implements NodeWithBody<Foreach
         return this;
     }
 
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public ForeachStmt setVariable(final VariableDeclarationExpr variable) {
         assertNotNull(variable);
+        if (variable == this.variable) {
+            return (ForeachStmt) this;
+        }
         notifyPropertyChange(ObservableProperty.VARIABLE, this.variable, variable);
         if (this.variable != null)
             this.variable.setParentNode(null);
@@ -124,6 +141,7 @@ public final class ForeachStmt extends Statement implements NodeWithBody<Foreach
     }
 
     @Override
+    @Generated("com.github.javaparser.generator.core.node.RemoveMethodGenerator")
     public boolean remove(Node node) {
         if (node == null)
             return false;
@@ -131,11 +149,13 @@ public final class ForeachStmt extends Statement implements NodeWithBody<Foreach
     }
 
     @Override
+    @Generated("com.github.javaparser.generator.core.node.CloneGenerator")
     public ForeachStmt clone() {
         return (ForeachStmt) accept(new CloneVisitor(), null);
     }
 
     @Override
+    @Generated("com.github.javaparser.generator.core.node.GetMetaModelGenerator")
     public ForeachStmtMetaModel getMetaModel() {
         return JavaParserMetaModel.foreachStmtMetaModel;
     }

@@ -40,15 +40,15 @@ public class ControlListParser {
 			System.out.println("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 			System.out.println(m.getBody().toString());
 			System.out.println("Control Flow Raw Content ");
-			printGraph(m, cfg);
+			printGraph(cfg);
 			System.out.println("Forward Dominator Raw Content ");
-			printGraph(m, fdt);
+			printGraph(fdt);
 			System.out.println("Control Dependence Raw Content ");
-			printGraph(m, cdg);
+			printGraph(cdg);
 		}
 	}
 
-	private void printGraph(Method m, Graph<NodeWrapper, DefaultEdge> graph) {
+	private void printGraph(Graph<NodeWrapper, DefaultEdge> graph) {
 
 		for (NodeWrapper n : graph.vertexSet()) {
 			System.out.println(n.NODE);
