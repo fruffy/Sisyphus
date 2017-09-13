@@ -1,6 +1,7 @@
 # 507
 
-For  a detailed description of the project please see the [project paper](Sisyphus_ProjectPaper.pdf)
+For  a detailed description of the project please see the [project paper](Sisyphus_ProjectPaper.pdf).
+
 How to install (For now)
 Run ./install.sh  
 Add 507 Project into Eclipse/IntelliJ  
